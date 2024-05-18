@@ -1,0 +1,22 @@
+.avisoPrivacidad{
+  height: 45%;
+  width: 40%;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: white;
+}
+
+.container{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90; 
+}

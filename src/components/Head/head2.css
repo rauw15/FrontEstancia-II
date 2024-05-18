@@ -1,0 +1,7 @@
+#btnH_head2:active{
+  transform: rotate(180deg);
+}
+
+#btnH_head2{
+  transition: 100ms;
+}

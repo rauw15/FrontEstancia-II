@@ -1,0 +1,40 @@
+
+.logo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+#head{
+  z-index: 4;
+  position: absolute;
+  /* width: 100% !important; */
+}
+.footer{
+  z-index: 4;
+  /* height: 4%;
+  width: 100%; */
+}
+
+.opciones-barraLateral{
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.panel{
+  z-index: 6;
+}
+
+.bar{
+  color: #D5D1C7;
+  background-color: #5D5D5D;
+}
+.todo{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+}

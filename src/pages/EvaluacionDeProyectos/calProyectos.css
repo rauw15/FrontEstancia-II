@@ -1,0 +1,124 @@
+.calProyectosCanva{
+  height: 80%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+  /* position: absolute; */
+}
+.container_calproyectos{
+  width: 60rem;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f2f2f2;
+}
+.calProyectos{
+  width: 90%;
+  padding: 2%;
+}
+.inputsCal{
+  border-bottom: 1px solid black;
+}
+
+#imprimirPondedracion_cal{
+  height: 31rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ponderacion_cal{
+  width: 80%;
+}
+  #ponderacionTop{
+    height: 20%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  #nombreProyectoDiv{
+    height: 50%;
+    background-color: white;
+    color: rgba(50, 50, 50, 0.8);
+   }
+  #ponderacionCenter{
+    height: 60%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+    .ponderacionLR{
+      width: 48%
+    } 
+    .ponderacionLR div{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      height: 25%;
+    }
+    .ponderacionLR div select{
+      height: 50%;
+      color: rgba(50, 50, 50, 0.8);
+    }
+    .ponderacionLR div label{
+      height: 50%;
+    }
+  #ponderacionBottom{
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+#puntosTotal_cal{
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.btn_cal{
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+#guardar_cal{
+  width: 30%;
+  color: white;
+  background-color: blue;
+  height: 1.5rem;
+}
+#guardar_cal:hover{
+  background-color: rgba(0, 0, 255, 0.6);
+}
+/* ---- */
+.seccion_cal{
+  width: 90%;
+}
+.link_cal{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: auto; 
+  padding: 1%;
+  width: 88% !important;
+}
+/* ----------- */
+.pdf_cal{
+  margin-top: 1rem;
+  height: 55rem;
+}
+#pdfTop{
+  width: 100%;
+  height: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(50, 50, 50, 0.8);
+}
+#pdfBottom{
+  width: 100%;
+  height: 95%;
+}

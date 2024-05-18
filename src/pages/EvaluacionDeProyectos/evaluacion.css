@@ -1,0 +1,62 @@
+.evaluacionCanva{
+  height: 80%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+  position: absolute;
+}
+input{
+  width: 95%;
+  height: 2rem;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+.container_evaluacion{
+  width: 50rem;
+  height: auto;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f2f2f2;
+}
+
+.proyectos_evaluacion{
+  width: 90%;
+  padding: 2%;
+  overflow: auto;
+}
+#imprimirLista_ev{
+  height: 100%;
+  /* overflow: auto; */
+}
+.tabla_ev{
+  width: 100%;
+  border-collapse: collapse;
+      /* font-size: 0.8rem; */
+  border: 1px solid #dddddd;
+}
+.tabla_ev th{
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: center;
+}
+.tabla_ev td {
+  border-right: 1px solid #dddddd;
+  padding: 8px;
+  text-align: center;
+}
+.tabla_ev tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.tabla_ev tr:hover {
+  background-color: #ddd;
+}
+
+.btn_ev{
+  background-color: green;
+  color: white;
+  padding: 10%;
+}

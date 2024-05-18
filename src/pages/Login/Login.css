@@ -1,0 +1,76 @@
+.head{
+  height: 6%;
+  width: 100%;
+  position: absolute;
+  
+}
+.footer{
+  z-index: 4;
+  height: 4%;
+  width: 100%;
+}
+
+.login{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 86%;
+  z-index: 1;
+}
+
+#form{
+  height: 35%;
+  width: 20rem;
+  transform: scale(1.2);
+  background-color: #EFEDE7;
+}
+
+.formDatos{
+  display: flex;
+  flex-direction: column;
+  padding: 10%;
+  font-size: 1.1rem;
+  color: rgba(50, 50, 50, 0.8);
+}
+
+.formDatos input{
+  margin-bottom: 10%;
+  border: 1px solid rgba(50, 50, 50, 0.2);
+  border-radius: 5px;
+  height: 1.6rem;
+  padding-left: 1rem;
+  color: rgba(68, 68, 68, 0.8);
+  font-weight: bold;
+}
+.formDatos label{
+  margin-bottom: 4%;
+  height: 1.5rem;
+  font-weight: bold;
+}
+
+.formDatos button{
+  border-radius: 5px;
+  height: 2.5rem;
+  width: 30%;
+  margin: auto;
+  background-color: #444444;
+  color: #EFEDE7;
+  font-size: 1.2rem;
+}
+.formDatos button:active{
+  /* background-color: #444444 !important;
+  color: #EFEDE7 !important; */
+  transform: scale(1.1);
+}
+.formDatos button:hover{
+  background-color: #EFEDE7;
+  color: #444444;
+}
+.todo{
+  height: 67rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+}
