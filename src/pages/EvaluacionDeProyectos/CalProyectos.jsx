@@ -3,8 +3,7 @@ import '../EvaluacionDeProyectos/calProyectos.css'
 import Pdf from '../../components/Pdf';
 
 function CalProyectos() {
-  const encodedUrl = encodeURI("../../assets/pdfs/1_proyecto.pdf");
-
+  const encodedUrl = encodeURI("../../src/assets/pdfs/1_proyecto 1.pdf");
   return (
     <div className='calProyectosCanva'>
       <div className='container_calproyectos borde'>
@@ -78,7 +77,7 @@ function CalProyectos() {
         <div className='link_cal borde2'>Ver Video: <a href="">https:&&youtebe.com lorem</a></div>
         <div className='seccion_cal borde pdf_cal'>
           <div id='pdfTop' className='borde'>1_"nombre del archivo fucking.pdf</div>
-          <div id='pdfBottom' className='borde'><Pdf fileUrl={encodedUrl}></Pdf></div>
+          <div id='pdfBottom' className='borde'><Pdf url={encodedUrl}></Pdf></div>
         </div>
       </div>
     </div>
