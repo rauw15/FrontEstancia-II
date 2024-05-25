@@ -2,15 +2,15 @@ import React from 'react'
 import '../EvaluacionDeProyectos/evaluacion.css'
 function Evaluacion() {
   const filas = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 33; i++) {
     filas.push(
       <tr key={i}>
-        <td>1</td>
+        <td>{i+1}</td>
         <td>Estacion Huete</td>
         <td>Fertilizante organico encapsulado de liberacion controlada</td>
-        <td>580</td>
+        <td>{i*50+50}</td>
         <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi at nihil odit? Voluptate debitis odit repellendus modi. Voluptatibus quae impedit consectetur delectus minus. Temporibus adipisci exercitationem animi, magnam sapiente quod!</td>
-        <td><button id={`calificar${i+1}`} className='btn_ev borde'>Calificar</button></td>
+        <td><button id={`calificar${i+1}`} className='btn_ev borde2'>Calificar</button></td>
       </tr>
     );
   }

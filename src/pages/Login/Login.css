@@ -1,28 +1,34 @@
-.head{
-  height: 6%;
+.todoLogin{
+  height: auto;
   width: 100%;
-  position: absolute;
-  
-}
-.footer{
-  z-index: 4;
-  height: 4%;
-  width: 100%;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: space-between; */
+  z-index: 10;
 }
 
-.login{
+#head{
+  z-index: 4;
+}
+
+#logoLogin{
+  z-index: 1;
+  height: auto;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 86%;
-  z-index: 1;
+}
+.login{
+  z-index: 4;
+  position: absolute;
 }
 
 #form{
-  height: 35%;
-  width: 20rem;
-  transform: scale(1.2);
+  height: auto;
+  width: 22rem;
   background-color: #EFEDE7;
+  
 }
 
 .formDatos{
@@ -66,11 +72,7 @@
   background-color: #EFEDE7;
   color: #444444;
 }
-.todo{
-  height: 67rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  z-index: 10;
+
+.footer{
+  z-index: 4;
 }

@@ -1,46 +1,29 @@
-import React, { useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+import React from 'react';
+import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import { zoomPlugin } from '@react-pdf-viewer/zoom';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 function Pdf({ url }) {
-    const [numPages, setNumPages] = useState(null);
-    const [scale, setScale] = useState(1.0);
-    const url2 = '../../src/assets/pdfs/1_proyecto.pdf'
-    function onDocumentLoadSuccess({ numPages }) {
-        setNumPages(numPages);
-    }
-    const handleZoomIn = () => {
-      setScale(scale + 0.1);
-  };
+    const defaultLayoutPluginInstance = defaultLayoutPlugin();
+    const zoomPluginInstance = zoomPlugin();
 
-  const handleZoomOut = () => {
-      setScale(scale - 0.1);
-  };
-  console.log(url)
-  console.log(url2)
     if (!url) {
         return <div>Error: No URL provided for the PDF document.</div>;
     }
+
     return (
-        <div>
-          <div>
-                <button onClick={handleZoomIn}>Zoom +</button>
-                <button onClick={handleZoomOut}>Zoom -</button>
-            </div>
-            <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
-                {Array.from(new Array(numPages), (el, index) => (
-                    <Page key={`page_${index + 1}`} pageNumber={index + 1} scale={scale} />
-                ))}
-            </Document>
+        <div style={{ height: '100%' }}>
+            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
+                <Viewer 
+                    fileUrl={url} 
+                    plugins={[defaultLayoutPluginInstance, zoomPluginInstance]} 
+                    defaultScale={SpecialZoomLevel.PageWidth} 
+                />
+            </Worker>
         </div>
     );
 }
 
 export default Pdf;
-
-
-
-
-//const url2 = '../../src/assets/pdfs/1_proyecto.pdf'

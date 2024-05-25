@@ -6,7 +6,6 @@ import LogoUpChiapas from '../../components/LogoUpChiapas'
 
 
 const fondo = {
-  position: 'absolute',
   opacity: '0.5'
 }
 const op = {
@@ -23,23 +22,42 @@ function Login() {
   };
 
   return (
-    <div className='todo'>
-      <div style={fondo}><LogoUpChiapas></LogoUpChiapas></div>
+    <div className='todoLgoin borde'>
       <div className='head' id='head' style={op}><Head></Head></div>
-      <div className='login'>
-        <div id='form' className='box' onSubmit={handleSubmit}>
-          <form action="" className='formDatos'>
-          <label htmlFor="usuario">Usuario:</label>
-          <input type="text" name='usuario' className='borde'/>
-          <label htmlFor="contrasena">Contraseña:</label>
-          <input type="password" name='contrasena' className='borde' />
-          <button className='borde'>Entrar</button>
-          </form>
-        </div>
+      <div id='logoLogin' className=''>
+        <div className='login'>
+          <div id='form' className='box bordeR' onSubmit={handleSubmit}>
+            <form action="" className='formDatos'>
+              <label htmlFor="usuario">Usuario:</label>
+              <input type="text" name='usuario' className=''/>
+              <label htmlFor="contrasena">Contraseña:</label>
+              <input type="password" name='contrasena' className='' />
+              <button className='borde'>Entrar</button>
+            </form>
+          </div>
       </div>
+      <LogoUpChiapas></LogoUpChiapas>
+      </div>
+      
       <div className="footer" id="footer" style={op}><Footer></Footer></div>
     </div>
   )
 }
 
 export default Login
+
+
+// <div className='head' id='head' style={op}><Head></Head></div>
+// <div style={fondo} id='logoLogin' className=''><LogoUpChiapas></LogoUpChiapas></div>
+// <div className='login borde'>
+//   <div id='form' className='box' onSubmit={handleSubmit}>
+//     <form action="" className='formDatos'>
+//     <label htmlFor="usuario">Usuario:</label>
+//     <input type="text" name='usuario' className=''/>
+//     <label htmlFor="contrasena">Contraseña:</label>
+//     <input type="password" name='contrasena' className='' />
+//     <button className='borde'>Entrar</button>
+//     </form>
+//   </div>
+// </div>
+// <div className="footer" id="footer" style={op}><Footer></Footer></div>

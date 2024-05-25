@@ -1,15 +1,24 @@
 
 .logo{
   display: flex;
-  justify-content: center;
-  align-items: center;
   z-index: 1;
+  height: auto;
+  width: 100%;
+  justify-content: center;
 }
-
+.cal{
+  display: flex;
+  z-index: 1;
+  height: auto;
+  width: 100%;
+  justify-content: center;
+  position: absolute;
+}
 #head{
   z-index: 4;
-  position: absolute;
+  /* position: absolute; */
   /* width: 100% !important; */
+  
 }
 .footer{
   z-index: 4;
@@ -31,7 +40,7 @@
   background-color: #5D5D5D;
 }
 .todo{
-  height: 100%;
+  height: auto;
   width: 100%;
   display: flex;
   flex-direction: column;

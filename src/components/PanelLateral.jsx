@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import DesplieguePanel from '../fragments/DesplieguePanel'
 import url from '../assets/images/ocultar.svg'
 import urlFondo from '../assets/images/logoUp.jpg'
@@ -6,7 +6,7 @@ const panelEstilo = {
   background: '#2D2D2D',
   color: '#FFFFFF',
   height: '100%',
-  width: '20%',
+  width: '20rem',
   position: 'absolute'
 }
 const logo={
@@ -32,11 +32,17 @@ const fondo = {
   borderRadius: '5px'
 }
 
-function PanelLateral() {
+function PanelLateral({onHamburguerClick}) {
+  const [clicked, setClicked] = useState(true);
+
+  const handleClick = () => {
+    setClicked(false);
+    onHamburguerClick();
+  }
   return (
     <div className='panelLateral borde' style={panelEstilo}>
       <div className="bordeW" style={logo}><img src={urlFondo} alt="fUp" style={fondo} /></div>
-      <div className="opciones-barraLateral bordeW" style={botonOcultar}>Ocultar <img src={url} alt="oc" style={img}/></div>
+      <div className="opciones-barraLateral bordeW" style={botonOcultar} onClick={handleClick}>Ocultar <img src={url} alt="oc" style={img}/></div>
       <DesplieguePanel></DesplieguePanel>
     </div>
   )

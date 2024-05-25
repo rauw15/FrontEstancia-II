@@ -26,7 +26,7 @@ function Head({onHamburguerClick}) {
   }
   const btnSalir={
     marginLeft: 'auto',
-    width: '10%',
+    width: '10rem',
     height: '100%',
     
   }
@@ -42,7 +42,7 @@ function Head({onHamburguerClick}) {
   }
   const containerImg={
     height: '80%',
-    width: '2%',
+    width: '2rem',
     cursor: 'pointer'
   }
   return (

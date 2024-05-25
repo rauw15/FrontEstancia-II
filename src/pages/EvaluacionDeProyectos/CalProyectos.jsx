@@ -6,7 +6,7 @@ function CalProyectos() {
   const encodedUrl = encodeURI("../../src/assets/pdfs/1_proyecto 1.pdf");
   return (
     <div className='calProyectosCanva'>
-      <div className='container_calproyectos borde'>
+      <div className='container_calproyectos box'>
         <h2>Cal. de proyectos de "nombre del genero de fucking proyectos"</h2>
         <div className='calProyectos'>
           <div className='inputsCal'>
@@ -74,10 +74,10 @@ function CalProyectos() {
             <button id='guardar_cal' className='borde2'>Guardar</button>
           </div>
         </div>
-        <div className='link_cal borde2'>Ver Video: <a href="">https:&&youtebe.com lorem</a></div>
-        <div className='seccion_cal borde pdf_cal'>
-          <div id='pdfTop' className='borde'>1_"nombre del archivo fucking.pdf</div>
-          <div id='pdfBottom' className='borde'><Pdf url={encodedUrl}></Pdf></div>
+        <div className='link_cal box2 bordeR'>Ver Video: <a href="">https:&&youtebe.com lorem</a></div>
+        <div className='seccion_cal box2 pdf_cal bordeR'>
+          <div id='pdfTop' className=''>1_"nombre del archivo fucking.pdf</div>
+          <div id='pdfBottom' className=''><Pdf url={encodedUrl}></Pdf></div>
         </div>
       </div>
     </div>
