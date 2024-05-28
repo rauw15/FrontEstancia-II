@@ -1,0 +1,21 @@
+.catalogoCanva{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+  /* position: absolute; */
+}
+
+.container-catalogo{
+  height: auto;
+  width: 50rem;
+  display: flex;
+  align-items: center;
+  padding-bottom: 2%;
+}
+
+.catalogo{
+  width: 100%;
+  height: 60rem;
+}

@@ -1,5 +1,6 @@
 import React from 'react'
 import url from '../assets/images/salir.svg'
+import { useNavigate } from 'react-router-dom'
 const btnStyle={
   width:'100%',
   height: '90%',
@@ -15,9 +16,15 @@ const img = {
   height: '90%',
 }
 function BtnSalir() {
+  const navigate = useNavigate();
+  const handleCargar = () => {
+
+    navigate('/login');
+
+  };
   return (
-    <div style={btnStyle}>
-      <button style={btnStyle}>Salir <img src={url} alt="salir" style={img} /></button>
+    <div style={btnStyle} onClick={() => handleCargar()}>
+      <button style={btnStyle}>Salir <img src={url} alt="salir" style={img}  /></button>
     </div>
   )
 }

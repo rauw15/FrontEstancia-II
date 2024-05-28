@@ -1,21 +1,18 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Login.css'
 import Head from '../../components/Head/Head2'
 import Footer from '../../components/Footer'
 import LogoUpChiapas from '../../components/LogoUpChiapas'
 
-
-const fondo = {
-  opacity: '0.5'
-}
 const op = {
   opacity: '0.5'
 }
 function Login() {
-
+  const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    navigate('/inicio/home');
     // Aquí puedes enviar los datos del formulario al servidor
     // utilizando el método POST (por ejemplo, con fetch o axios).
     // No se agregarán los datos al URL.

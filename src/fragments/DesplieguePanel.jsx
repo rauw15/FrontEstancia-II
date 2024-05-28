@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import url from '../assets/images/document.svg';
 import urlDes from '../assets/images/despliegue.svg';
+import pdfFile from '../assets/pdfs/FICHA  Jorge Brandon IDS PYME.pdf';
+import descargaSVG from '../assets/images/descarga.svg'
+
 
 const despliegue = {
     height: '2.2rem',
@@ -9,12 +12,14 @@ const despliegue = {
     alignItems: 'center'
 };
 const despliegue2 = {
-    height: '2rem',
-    width: '90%',
+    height: '1.9rem',
+    width: '80%',
+    marginLeft: '10%',
     paddingRight: '10%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'start',
+    fontSize: '0.9rem',
 };
 const img = {
     height: '80%',
@@ -50,17 +55,23 @@ function DesplieguePanel() {
                 <img src={url} alt="doc" style={img} />Cambiar Contraseña
             </div>
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleConvocatoriaClick}>
-                <img src={url} alt="doc" style={img} />Convocatoria <div style={des}><img src={urlDes} alt="des" /></div>
+                <img src={url} alt="doc" style={img} />Recursos <div style={des}><img src={urlDes} alt="des" /></div>
             </div>
             {showLineamientos && (
               
                 <div>
                   <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/convocatoria')}>
-                    <img src={url} alt="doc" style={img} />Convocatoria
+                    <img src={url} alt="doc" style={img} />Convocatoria feria
                 </div>
                 <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/convocatoria/lineamientos')}>
-                    <img src={url} alt="doc" style={img} />Lineamientos
+                    <img src={url} alt="doc" style={img} />Lineamientos de participación
                 </div>
+                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={pdfFile} download>
+                    <img src={descargaSVG} alt="doc" style={img} />Formato descarga para ficha tecnica
+                </a>
+                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/plantilla-canvas-descargable.pptx'} download>
+                    <img src={descargaSVG} alt="doc" style={img} />Plantilla descargable Modelo Canvas
+                </a>
                 </div>
                 
             )}

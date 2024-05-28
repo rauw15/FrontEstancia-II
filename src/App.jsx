@@ -6,6 +6,7 @@ import Home from './pages/Home/Home';
 import Evaluacion from './pages/EvaluacionDeProyectos/Evaluacion';
 import CalProyectos from './pages/EvaluacionDeProyectos/CalProyectos';
 import Convocatoria from './pages/EvaluacionDeProyectos/Convocatoria';
+import Catalogo from './pages/EvaluacionDeProyectos/Catalogo';
 import './App.css'
 
 
@@ -15,7 +16,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/*' element={<Inicio></Inicio>}></Route>
+        <Route path='/*' element={<Login></Login>}></Route>
           <Route path='/inicio/*' element={<Inicio></Inicio>}>
             <Route path='convocatoria/*' element={<Convocatoria></Convocatoria>}>
               <Route path='lineamientos' element={<Convocatoria></Convocatoria>}></Route>
@@ -26,7 +27,7 @@ function App() {
           </Route>
         </Route>
         <Route path='/login' element={<Login/>} ></Route>
-        <Route path='calProyectos' element={<CalProyectos></CalProyectos>}></Route>
+        <Route path='catalogo' element={<Catalogo></Catalogo>}></Route>
       </Routes>
     </Router>
   )

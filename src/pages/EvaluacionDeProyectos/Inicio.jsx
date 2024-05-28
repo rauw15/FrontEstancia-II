@@ -13,6 +13,7 @@ import Convocatoria from './Convocatoria'
 import './inicio.css'
 function Inicio() {
   const location = useLocation();
+  //------------
   const [showHome, setShowHome] = useState(false);
   const [showEvaluacion, setShowEvaluacion] = useState(false);
   const [showCal, setShowCal] = useState(false);
@@ -42,7 +43,7 @@ function Inicio() {
   useEffect(() => {
     setShowLineamento(location.pathname === '/inicio/convocatoria/lineamientos');
   }, [location]);
-  
+  //------------
   return (
     <div className='todo'>
       {showHome && <Home />}
