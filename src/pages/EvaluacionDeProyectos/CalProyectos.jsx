@@ -2,11 +2,12 @@ import React from 'react'
 import '../EvaluacionDeProyectos/calProyectos.css'
 import Pdf from '../../components/Pdf';
 
+
 function CalProyectos() {
-  const routePDF = '../../src/assets/pdfs/LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
-  const encodedUrl = encodeURI(routePDF);
-  let sNamePDF= routePDF.split("/");
-  let namePDF = sNamePDF[sNamePDF.length-1]
+  const pdfFileName = 'LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
+  const pdfUrl = `${import.meta.env.BASE_URL}src/assets/pdfs/${pdfFileName}`;
+  const encodedUrl = encodeURI(pdfUrl);
+  let namePDF = pdfFileName
 
   return (
     <div className='calProyectosCanva'>

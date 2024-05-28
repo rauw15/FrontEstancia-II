@@ -5,8 +5,9 @@ import '../../pages/EvaluacionDeProyectos/convocatoria.css'
 import url from '../../assets/images/convocatoriaIMG.jpg'
 import Pdf from '../../components/Pdf'
 function Convocatoria() {
-  const routePDF = '../../src/assets/pdfs/LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
-  const encodedUrl = encodeURI(routePDF);
+  const pdfFileName = 'LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
+  const pdfUrl = `${import.meta.env.BASE_URL}src/assets/pdfs/${pdfFileName}`;
+  const encodedUrl = encodeURI(pdfUrl);
   const img = {
     height: '100%',
     width: '100%',
