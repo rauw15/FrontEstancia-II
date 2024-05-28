@@ -6,7 +6,8 @@ import url from '../../assets/images/convocatoriaIMG.jpg'
 import Pdf from '../../components/Pdf'
 function Convocatoria() {
   const pdfFileName = 'LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
-  const pdfUrl = `${import.meta.env.BASE_URL}/../src/assets/pdfs/${pdfFileName}`;
+  //const pdfUrl = `${import.meta.env.BASE_URL}/../srcassets/pdfs/${pdfFileName}`;
+  const pdfUrl = `${import.meta.env.BASE_URL}assets/pdfs/${pdfFileName}`;
   const encodedUrl = encodeURI(pdfUrl);
   const img = {
     height: '100%',
