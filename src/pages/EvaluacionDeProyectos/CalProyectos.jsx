@@ -3,7 +3,11 @@ import '../EvaluacionDeProyectos/calProyectos.css'
 import Pdf from '../../components/Pdf';
 
 function CalProyectos() {
-  const encodedUrl = encodeURI("../../src/assets/pdfs/1_proyecto 1.pdf");
+  const routePDF = '../../src/assets/pdfs/LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
+  const encodedUrl = encodeURI(routePDF);
+  let sNamePDF= routePDF.split("/");
+  let namePDF = sNamePDF[sNamePDF.length-1]
+
   return (
     <div className='calProyectosCanva'>
       <div className='container_calproyectos box'>
@@ -19,48 +23,113 @@ function CalProyectos() {
               <div id="ponderacionCenter" className='ponderacion_cal'>
                 <div className='ponderacionLR'>
                   <div>
-                  <label htmlFor="">1.- Innovación</label>
+                  <label htmlFor="" className='labelInfo'>1.- Nivel de Innovación &nbsp;
+                    <div class="tooltip">?
+                      <span class="tooltiptext bordeW"><p>
+                        <li>Mejora de un producto o servicio</li>
+                        <li>Útil para la sociedad</li>
+                        <li>Oportunidad en el mercado</li>
+                        <li>Ventaja competitiva</li></p>
+                      </span>
+                    </div>
+                  </label>
                   <select name="" id="" className='borde2'>
-                    <option value="">1</option>
+                    <option value="0">---</option>
+                    <option value="7">(7) Excelente</option>
+                    <option value="6">(6) Muy buena</option>
+                    <option value="5">(5) Buena</option>
+                    <option value="4">(4) Regular</option>
+                    <option value="3">(3) Deficiente</option>
+                    <option value="2">(2) No tiene</option>
                   </select>
                   </div>
                   <div>
-                  <label htmlFor="">2.- Actualidad</label>
+                  <label htmlFor="" className='labelInfo'>2.- Factibilidad del Mercado &nbsp;
+                    <div class="tooltip">?
+                      <span class="tooltiptext bordeW"><p>
+                        <li>Potencial de mercado para ser rentable</li>
+                        <li>Logo de la empresa</li>
+                        <li>Conocimiento de la competencia</li>
+                        <li>Satisface las necesidades del cliente</li></p>
+                      </span>
+                    </div>
+                  </label>
                   <select name="" id=""  className='borde2'>
-                    <option value="">1</option>
+                    <option value="0">---</option>
+                    <option value="7">(7) Excelente</option>
+                    <option value="6">(6) Muy buena</option>
+                    <option value="5">(5) Buena</option>
+                    <option value="4">(4) Regular</option>
+                    <option value="3">(3) Deficiente</option>
+                    <option value="2">(2) No tiene</option>
                   </select>
                   </div>
                   
-                  <div><label htmlFor="">3.- Metodología empleada</label>
+                  <div><label htmlFor="" className='labelInfo'>3.- Factibilidad Técnica &nbsp;
+                    <div class="tooltip">?
+                      <span class="tooltiptext bordeW"><p>
+                        <li>Involucra tecnología</li>
+                        <li>Facilidad de obtención de recursos</li>
+                        <li>Capacidad de respuesta al cliente</li></p>
+                      </span>
+                    </div>
+                  
+                  </label>
                   <select name="" id=""  className='borde2'>
-                    <option value="">1</option>
+                    <option value="0">---</option>
+                    <option value="7">(7) Excelente</option>
+                    <option value="6">(6) Muy buena</option>
+                    <option value="5">(5) Buena</option>
+                    <option value="4">(4) Regular</option>
+                    <option value="3">(3) Deficiente</option>
+                    <option value="2">(2) No tiene</option>
                   </select></div>
-                  <div>
-                  <label htmlFor="">4.- Dinámica de la exposición</label>
-                  <select name="" id=""  className='borde2'>
-                    <option value="">1</option>
-                  </select>
-                  </div>
+
                 </div>
                 <div className='ponderacionLR'>
+                <div>
+                  <label htmlFor="" className='labelInfo'>4.- Factibilidad Financiera &nbsp;
+                    <div class="tooltip">?
+                      <span class="tooltiptext bordeW"><p>
+                        <li>Inversión inicial accesible</li>
+                        <li>Periodo de recuperación de inversión</li>
+                        <li>Financiamiento factible</li></p>
+                      </span>
+                    </div>
+                  
+                  </label>
+                  <select name="" id=""  className='borde2'>
+                    <option value="0">---</option>
+                    <option value="7">(7) Excelente</option>
+                    <option value="6">(6) Muy buena</option>
+                    <option value="5">(5) Buena</option>
+                    <option value="4">(4) Regular</option>
+                    <option value="3">(3) Deficiente</option>
+                    <option value="2">(2) No tiene</option>
+                  </select>
+                  </div>
                   <div>
-                    <label htmlFor="">5.- Impacto social/label</label>
+                    <label htmlFor="" className='labelInfo'>5.- Pitch (2 minutos) y prototipo &nbsp;
+                    <div class="tooltip">?
+                      <span class="tooltiptext bordeW"><p>
+                        <li>Buena presentación</li>
+                        <li>Información clara del pitch</li>
+                        <li>Explicación clara de Prototipo</li></p>
+                      </span>
+                    </div>
+                    
+                    </label>
                     <select name="" id=""  className='borde2'>
-                    <option value="">1</option>
+                    <option value="0">---</option>
+                    <option value="7">(7) Excelente</option>
+                    <option value="6">(6) Muy buena</option>
+                    <option value="5">(5) Buena</option>
+                    <option value="4">(4) Regular</option>
+                    <option value="3">(3) Deficiente</option>
+                    <option value="2">(2) No tiene</option>
                   </select>
                   </div>
-                  <div>
-                  <label htmlFor="">6.- Factibilidad de Comercialización</label>
-                  <select name="" id=""  className='borde2'>
-                    <option value="80">80</option>
-                  </select>
-                  </div>
-                  <div>
-                  <label htmlFor="">7.- Posibilidad de desarrollo</label>
-                  <select name="" id=""  className='borde2'>
-                    <option value="">1</option>
-                  </select>
-                  </div>
+                  <div></div>
                 </div>
               </div>
               <div id="ponderacionBottom" className='ponderacion_cal'>
@@ -71,12 +140,12 @@ function CalProyectos() {
             <div id='puntosTotal_cal'>Total: 580</div>
           </div>
           <div className='btn_cal'>
-            <button id='guardar_cal' className='borde2'>Guardar</button>
+            <button id='guardar_cal' className='bordeW'>Guardar</button>
           </div>
         </div>
         <div className='link_cal box2 bordeR'>Ver Video: <a href="">https:&&youtebe.com lorem</a></div>
         <div className='seccion_cal box2 pdf_cal bordeR'>
-          <div id='pdfTop' className=''>1_"nombre del archivo fucking.pdf</div>
+          <div id='pdfTop' className=''>{namePDF}</div>
           <div id='pdfBottom' className=''><Pdf url={encodedUrl}></Pdf></div>
         </div>
       </div>

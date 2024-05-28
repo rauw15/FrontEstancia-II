@@ -22,6 +22,7 @@
 }
 .footer{
   z-index: 4;
+  bottom: 0;
   /* height: 4%;
   width: 100%; */
 }
@@ -32,7 +33,17 @@
 }
 
 .panel{
-  z-index: 6;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: 0.6s;
+}
+.panel.show {
+  transform: translateX(0);
+  z-index: 1000;
 }
 
 .bar{
@@ -46,4 +57,14 @@
   flex-direction: column;
   justify-content: space-between;
   z-index: 10;
+}
+
+.show {
+  transform: translateX(0);
+}
+
+.convocatoria{
+  
+  width: 100%;
+  position: absolute;
 }

@@ -1,3 +1,7 @@
+select:hover{
+  box-shadow: 1px 1px 10px 1px white;
+  transform: scale(1.04);
+}
 .calProyectosCanva{
   height: auto;
   width: 100%;
@@ -21,7 +25,7 @@
   padding: 2%;
 }
 .inputsCal{
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.4);
 }
 
 #imprimirPondedracion_cal{
@@ -51,7 +55,10 @@
     margin-bottom: 1rem;
   }
     .ponderacionLR{
-      width: 48%
+      width: 48%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     } 
     .ponderacionLR div{
       width: 100%;
@@ -82,13 +89,13 @@
 .btn_cal{
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 #guardar_cal{
   width: 30%;
   color: white;
   background-color: blue;
-  height: 1.5rem;
+  height: 1.8rem;
 }
 #guardar_cal:hover{
   background-color: rgba(0, 0, 255, 0.6);
@@ -106,10 +113,11 @@
   height: auto; 
   padding: 1%;
   width: 88% !important;
+  margin-top: 0.5rem;
 }
 /* ----------- */
 .pdf_cal{
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   height: 55rem;
   
 }
@@ -124,4 +132,59 @@
 #pdfBottom{
   width: 100%;
   height: 95%;
+}
+
+
+/* ------------toolTips----------- */
+.labelInfo{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.tooltip {
+  position: relative;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border: 1px solid rgba(50, 50, 50, 0.4);
+  height: 0.8rem !important;
+  width: 0.8rem !important;
+  border-radius: 0.8rem;
+  color: rgba(50, 50, 50, 0.6);;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  min-width: 14rem;
+  height: auto;
+  background-color: #C8C8C8;
+  color: rgba(50, 50, 50, 0.8);
+  text-align: justify;
+  /* border-radius: 5px; */
+
+  padding: 0px 1rem 1rem 1rem;
+  position: absolute;
+  z-index: 10 !important;
+  bottom: 155%; /* Posición por encima del elemento */
+  left: 50%;
+  margin-left: -8rem; /* Margen negativo para centrar el tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* La flecha estará en la parte inferior del tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #C8C8C8 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }

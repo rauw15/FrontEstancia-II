@@ -1,0 +1,52 @@
+.convocatoriaCanva{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+  position: absolute;
+}
+
+.container-convocatoria{
+  height: auto;
+  width: 50rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 2%;
+}
+
+.convocatoria-img{
+  height: 95%;
+  width: 100%;
+}
+.convocatoria-img img{
+  box-shadow: 1px 1px 25px 1px rgba(50, 50, 50, 0.1);
+}
+
+
+.convocatoria-lineamientos{
+  height: 95%;
+  width: 100%;
+}
+
+  .btn-convocatoria{
+    height: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+
+  .btn-convocatoria button{
+    background-color: rgba(100, 100, 100, 0.8);
+    color: white;
+    margin-left: 3%;
+    margin-right: 3%;
+    font-size: 1.2rem;
+    height: 95%;
+    width: 3rem;
+  }
+  .btn-convocatoria button:hover{
+    background-color: rgba(100, 100, 100, 0.4);
+  }
