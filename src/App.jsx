@@ -7,6 +7,8 @@ import Evaluacion from './pages/EvaluacionDeProyectos/Evaluacion';
 import CalProyectos from './pages/EvaluacionDeProyectos/CalProyectos';
 import Convocatoria from './pages/EvaluacionDeProyectos/Convocatoria';
 import Catalogo from './pages/EvaluacionDeProyectos/Catalogo';
+import Formulario from './pages/InscripcionAlumnos/Formulario';
+import Alumno from './pages/Home/Alumno';
 import './App.css'
 
 
@@ -16,7 +18,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/*' element={<Login></Login>}></Route>
+        <Route path='/*' element={<Alumno></Alumno>}></Route>
           <Route path='/inicio/*' element={<Inicio></Inicio>}>
             <Route path='convocatoria/*' element={<Convocatoria></Convocatoria>}>
               <Route path='lineamientos' element={<Convocatoria></Convocatoria>}></Route>
@@ -28,6 +30,11 @@ function App() {
         </Route>
         <Route path='/login' element={<Login/>} ></Route>
         <Route path='catalogo' element={<Catalogo></Catalogo>}></Route>
+        <Route path='/alumno/*' element={<Alumno></Alumno>}>
+          <Route path='inscripcion' element={<Formulario></Formulario>}></Route>
+          <Route path='home' element={<Home></Home>}></Route>
+        </Route>
+
       </Routes>
     </Router>
   )

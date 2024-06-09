@@ -28,7 +28,7 @@
 }
 
 .opciones-barraLateral{
-  border-left: none !important;
+  border-left: none;
   border-right: none !important;
 }
 

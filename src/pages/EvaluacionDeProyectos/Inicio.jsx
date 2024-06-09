@@ -21,7 +21,7 @@ function Inicio() {
   const isInicioEvaluacion = location.pathname === '/inicio/evaluacion'
   const isInicioCal = location.pathname === '/inicio/evaluacion/calProyectos'
   const isInicioCon = location.pathname === '/inicio/convocatoria/*'
-  const [clickedHamburguer, setClickedHamburguer] = useState(false);
+  const [clickedHamburguer, setClickedHamburguer] = useState(true);
   const [showConvocatoria, setShowConvocatoria] = useState(false);
   const [showLineamento, setShowLineamento] = useState(false);
   //----------
@@ -47,7 +47,7 @@ function Inicio() {
   return (
     <div className='todo'>
       {showHome && <Home />}
-      <div className={`panel ${clickedHamburguer ? 'show' : ''}`}>
+      <div className={`panel ${clickedHamburguer ? 'show' : ''}`} style={{ visibility: isInicioHome ? 'hidden' : 'visible' }}>
        {clickedHamburguer && <PanelLateral onHamburguerClick={handleHamburguerClick}></PanelLateral>}
       </div>
       <div className="head" id='head'  style={{ opacity: isInicioHome ? 0.5 : 1 }}>
@@ -55,12 +55,9 @@ function Inicio() {
       </div>
       <div className="logo borde2"  style={{ opacity: isInicioCal ? 0 : (isInicioHome ? 0.5 : 1) }}>
         <LogoUpChiapas></LogoUpChiapas>
-        
         {showEvaluacion && <Evaluacion></Evaluacion>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
-      
-
       </div>
       <div className='cal'>
         {showCal && <CalProyectos />}

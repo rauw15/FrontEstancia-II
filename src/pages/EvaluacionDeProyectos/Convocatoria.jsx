@@ -7,13 +7,12 @@ import Pdf from '../../components/Pdf'
 function Convocatoria() {
   const pdfFileName = 'LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
   //const pdfUrl = `${import.meta.env.BASE_URL}/../srcassets/pdfs/${pdfFileName}`;
-  const pdfUrl = `${import.meta.env.BASE_URL}assets/pdfs/${pdfFileName}`;
+  const pdfUrl = `${import.meta.env.BASE_URL}src/assets/pdfs/${pdfFileName}`;
   const encodedUrl = encodeURI(pdfUrl);
   const img = {
     height: '100%',
     width: '100%',
     objectFit: 'contain',
-    
   }
   //--
   const navigate = useNavigate();
@@ -33,7 +32,7 @@ function Convocatoria() {
   return (
     <div className='convocatoriaCanva'>
       <div className='container-convocatoria'>
-        {showIMG && <div className='convocatoria-img'>
+        {showIMG && <div className='convocatoria-img boxFX'>
           <img src={url} alt="convocatoria" style={img} />
         </div>}
         {showLineamento && <div className='convocatoria-lineamientos box2 bordeR'>

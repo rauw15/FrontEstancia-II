@@ -13,11 +13,25 @@
 .bordeR{
   border-radius: 5px;
 }
+.bordeRed{
+  border: 1px solid red;
+}
 .box{
   box-shadow: 1px 1px 50px 10px rgba(50, 50, 50, 0.4);
 }
 .box2{
-  box-shadow: 1px 1px 25px 10px rgba(50, 50, 50, 0.2);
+  box-shadow: 1px 1px 25px 5px rgba(50, 50, 50, 0.2);
+}
+.box3{
+  box-shadow: 1px 1px 25px 5px rgba(150, 150, 150, 0.4);
+}
+.boxFX{
+  box-shadow: 1px 1px 25px 10px rgba(50, 50, 50, 0.2) !important;
+  transition: 0.2s;
+}
+.boxFX:hover{
+  transform: scale(1.01);
+  box-shadow: 1px 1px 50px 10px rgba(50, 50, 50, 0.4) !important;
 }
 body{
   margin: 0;
@@ -54,8 +68,9 @@ a:link {
   /* min-width: 300px;
   min-height: 200px; */
 } 
+
 .opciones-barraLateral{
-  transition: 30ms;
+  transition: 50ms;
 }
 
 .opciones-barraLateral:hover{
@@ -63,5 +78,5 @@ a:link {
   cursor: pointer;
 }
 .opciones-barraLateral:active{
-  transform: scale(0.9);
+  transform: scale(0.96);
 }

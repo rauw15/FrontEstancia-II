@@ -1,0 +1,54 @@
+input[type=radio]{
+  cursor: pointer;
+}
+
+.formularioHead h1, .formularioHead p{
+  text-align: justify;
+  padding-right: 5rem;
+}
+
+.formulario{
+  display: flex;
+  transition: 0.1s ease;
+}
+.formulario_pregunta{
+  width: auto;
+}
+.formulario_pregunta label{
+  width: 20rem;
+}
+.opciones{
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.formulario:hover{
+  transform: scale(1.006);
+}
+
+.formulario_btns{
+  display: flex;
+  justify-content: space-between;
+}
+  .formulario_btns button{
+    height: 2rem;
+  }
+  #guardar_formulario{
+    color: white;
+    background-color: blue;
+    width: 30%;
+  }
+  #guardar_formulario:hover{
+    background-color: rgba(0, 0, 255, 0.6);
+  }
+  #borrar_formulario{
+    color: blue;
+    border: none;
+    width: 30%;
+    background-color: rgba(0, 0, 0, 0);
+  }
+  #borrar_formulario:hover{
+    color: rgba(0, 0, 255, 0.6);
+  }

@@ -39,7 +39,7 @@ function Home() {
   const navigate = useNavigate();
   const handleCargar = () => {
 
-    navigate('/inicio');
+    navigate('/alumno');
 
   };
 
