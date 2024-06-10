@@ -5,7 +5,7 @@
   justify-content: center;
   margin-top: 2%;
   background-color: rgba(100, 100, 100, 0);
-  position: absolute;
+  /* position: absolute; */
 }
 
 .container-convocatoria{
@@ -18,7 +18,7 @@
 }
 
 .convocatoria-img{
-  height: auto;
+  height: 55rem;
   width: 90%;
   /* overflow-x: hidden;
   overflow-y: auto; */
@@ -32,7 +32,7 @@
 
 
 .convocatoria-lineamientos{
-  height: 95%;
+  height: 60rem;
   width: 100%;
   overflow: auto;
 }

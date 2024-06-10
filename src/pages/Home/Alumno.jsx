@@ -8,6 +8,7 @@ import Footer from '../../components/Footer'
 import PanelLateral from '../../components/PanelLateral'
 import Formulario from '../InscripcionAlumnos/Formulario'
 import Home from './Home'
+import Convocatoria from '../EvaluacionDeProyectos/Convocatoria'
 import './alumno.css'
 
 function Alumno() {
@@ -18,6 +19,9 @@ function Alumno() {
   const isInscripcion = location.pathname === '/alumno/inscripcion';
   const isRaiz = location.pathname === '/';
   const [clickedHamburguer, setClickedHamburguer] = useState(true);
+  const [showConvocatoria, setShowConvocatoria] = useState(false);
+  const [showLineamento, setShowLineamento] = useState(false);
+
   //----------
   const handleHamburguerClick = () => {
     setClickedHamburguer(!clickedHamburguer);
@@ -25,6 +29,12 @@ function Alumno() {
   //---------
   useEffect(() => {
     setShowInscripcion(location.pathname === '/alumno/inscripcion');
+  }, [location]);
+  useEffect(() => {
+    setShowConvocatoria(location.pathname === '/alumno/convocatoria');
+  }, [location]);
+  useEffect(() => {
+    setShowLineamento(location.pathname === '/alumno/convocatoria/lineamientos');
   }, [location]);
   //------------
   return (
@@ -40,9 +50,11 @@ function Alumno() {
         {(isInicioHome || isRaiz) && <LogoUpChiapas></LogoUpChiapas>}
         </div>
         {showInscripcion && <Formulario></Formulario>}
+        {showConvocatoria && <Convocatoria></Convocatoria>}
+        {showLineamento && <Convocatoria></Convocatoria>}
         {isRaiz && <Home/>}
       </div>
-      <div className='footer' id='footer_alumno'  style={{ opacity: isInscripcion ? 0 : (isInicioHome ? 1 : 1) }}>
+      <div id='footer_alumno'  style={{ opacity: isInscripcion ? 1 : (isInicioHome ? 1 : 1) }}>
         
         <Footer></Footer>
       </div>

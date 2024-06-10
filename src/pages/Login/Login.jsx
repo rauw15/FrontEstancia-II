@@ -4,15 +4,17 @@ import './Login.css'
 import Head from '../../components/Head/Head2'
 import Footer from '../../components/Footer'
 import LogoUpChiapas from '../../components/LogoUpChiapas'
-
+import { useAlerta } from '../../fragments/Alerta'
 const op = {
   opacity: '0.5'
 }
 function Login() {
+  const [AlertaComponente, showAlerta] = useAlerta();
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate('/inicio/home');
+    showAlerta(<p>Datos incorrectos..<br></br>
+    </p>)
     // Aquí puedes enviar los datos del formulario al servidor
     // utilizando el método POST (por ejemplo, con fetch o axios).
     // No se agregarán los datos al URL.
@@ -20,6 +22,7 @@ function Login() {
 
   return (
     <div className='todoLgoin borde'>
+      {AlertaComponente}
       <div className='head' id='head' style={op}><Head></Head></div>
       <div id='logoLogin' className=''>
         <div className='login'>

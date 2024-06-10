@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import './Alerta.css';
+import './alerta.css';
 
 const Alerta = ({ message, onClose }) => {
   return ReactDOM.createPortal(
     <div className="alerta-overlay">
       <div className="alerta-box">
-        <p>{message}</p>
+        <div>{message}</div>
         <button onClick={onClose}>Cerrar</button>
       </div>
     </div>,

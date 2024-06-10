@@ -31,7 +31,7 @@ function Head({onHamburguerClick}) {
     
   }
   const titulo={
-    width: '10%',
+    width: '60%',
     position: 'absolute'
   }
   const img={
@@ -48,7 +48,7 @@ function Head({onHamburguerClick}) {
   return (
     <div className='bar head_had2' style={headEstilo}>
       <div id='btnH_head2' style={containerImg} onClick={handleClick}><img src={url} alt="hmb" style={img} /></div>
-      <div className='' id='titulo' style={titulo}>head</div>
+      <div className='' id='titulo' style={titulo}>4TA FERIA DE EMPRENDIMIENTO E INNOVACIÓN SOCIAL</div>
       <div id='btnSalir' style={btnSalir}><BtnSalir></BtnSalir></div>
     </div>
   )

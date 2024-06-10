@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useAlerta } from '../../fragments/Alerta';
 import '../../assets/css/seccioncss.css';
 import '../InscripcionAlumnos/formulario.css';
 
 function Formulario() {
+  const [AlertaComponente, showAlerta] = useAlerta();
   const [correo, setCorreo] = useState('');
   const [nombre, setNombre] = useState('');
   const [cuatrimestre, setCuatrimestre] = useState('');
@@ -30,8 +32,9 @@ function Formulario() {
 
   return (
     <div className='seccion_canva'>
+      {AlertaComponente}
       <div className='seccion_container box bordeR'>
-        <div className='formularioHead seccion_apartadoW box3 bordeW'>
+        <div className='formularioHead seccion_apartado box3 bordeW'>
           <h1>4ta Feria de Emprendimiento e Innovación social 2024</h1>
           <p>Bienvenido a la 4ta Feria de Emprendimiento e Innovación Social 2024, tendrás la oportunidad de presentar tu propuesta de proyecto innovador, con el cual podras demostrar las habilidades, creatividad y lograr resolver problemáticas identificando necesidades de tu entorno.
             El siguiente formulario es para que proporciones los datos generales de inscripción y enseguida daras click a la liga de la Plataforma Virtual de la Incubadora de Empresas Círculo de Innovación, para que descargues los documentos que deberás llenar correctamente y volverás a subir en un documento PDF.</p>
@@ -77,7 +80,7 @@ function Formulario() {
           </div>
         </div>
         <div className='formulario_btns seccion_apartadoW box3 bordeW'>
-          <button id='guardar_formulario' className='bordeW'>Guardar</button>
+            <button id='guardar_formulario' className='bordeW' onClick={() => showAlerta(<><p>Datos Guardados...</p><p>Al cierre de la convocatoria se te enviara usuario y contraseña a <h4>{correo}</h4> para que subas los documentos en <span>pdf</span> de tu proyecto.</p></>)}>Guardar</button>
           <button id="borrar_formulario" onClick={handleBorrarFormulario}>Borrar formulario</button>
         </div>
       </div>

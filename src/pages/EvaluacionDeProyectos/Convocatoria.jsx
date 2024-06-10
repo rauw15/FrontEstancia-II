@@ -1,50 +1,48 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import '../../pages/EvaluacionDeProyectos/convocatoria.css'
-import url from '../../assets/images/convocatoriaIMG.jpg'
-import Pdf from '../../components/Pdf'
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import '../../pages/EvaluacionDeProyectos/convocatoria.css';
+import url from '../../assets/images/convocatoriaIMG.jpg';
+import Pdf from '../../components/Pdf';
+//${import.meta.env.BASE_URL}
 function Convocatoria() {
-  const pdfFileName = 'LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
-  //const pdfUrl = `${import.meta.env.BASE_URL}/../srcassets/pdfs/${pdfFileName}`;
-  const pdfUrl = `${import.meta.env.BASE_URL}src/assets/pdfs/${pdfFileName}`;
+  const pdfFileName = 'LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf';
+  const pdfUrl = `/downloads/${pdfFileName}`;
   const encodedUrl = encodeURI(pdfUrl);
-  const img = {
+
+  const imgStyle = {
     height: '100%',
     width: '100%',
     objectFit: 'contain',
-  }
-  //--
-  const navigate = useNavigate();
+  };
 
-  const handleNavigate = (path) => {
-        navigate(path);
-    };
-  //-----
+  const location = useLocation();
   const [showIMG, setShowIMG] = useState(false);
-  useEffect(() => {
-    setShowIMG(location.pathname === '/inicio/convocatoria');
-  }, [location]);
   const [showLineamento, setShowLineamento] = useState(false);
+
   useEffect(() => {
-    setShowLineamento(location.pathname === '/inicio/convocatoria/lineamientos');
-  }, [location]);
+    setShowIMG(location.pathname === '/inicio/convocatoria' || location.pathname === '/alumno/convocatoria');
+  }, [location.pathname]);
+
+  useEffect(() => {
+    setShowLineamento(location.pathname === '/inicio/convocatoria/lineamientos' || location.pathname === '/alumno/convocatoria/lineamientos');
+  }, [location.pathname]);
+
   return (
     <div className='convocatoriaCanva'>
       <div className='container-convocatoria'>
-        {showIMG && <div className='convocatoria-img boxFX'>
-          <img src={url} alt="convocatoria" style={img} />
-        </div>}
-        {showLineamento && <div className='convocatoria-lineamientos box2 bordeR'>
-          <Pdf url={encodedUrl}></Pdf>
-        </div>}
-          <div className='btn-convocatoria box2 borde2'>
-            <button className='borde2 box2' onClick={() => handleNavigate('/inicio/convocatoria')}>{"<"}</button>
-            <button className='borde2 box2' onClick={() => handleNavigate('/inicio/convocatoria/lineamientos')}>{">"}</button>
+        {showIMG && (
+          <div className='convocatoria-img boxFX'>
+            <img src={url} alt="convocatoria" style={imgStyle} />
           </div>
-        </div>
+        )}
+        {showLineamento && (
+          <div className='convocatoria-lineamientos box2 bordeR'>
+            <Pdf url={encodedUrl} />
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }
 
-export default Convocatoria
+export default Convocatoria;

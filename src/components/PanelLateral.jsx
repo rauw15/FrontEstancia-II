@@ -33,9 +33,16 @@ const fondo = {
   objectFit: 'cover',
   borderRadius: '5px'
 }
+const boton = {
+  height: '2.2rem',
+  display: 'flex',
+  alignItems: 'center',
+  paddingLeft: '1rem'
+};
 
 function PanelLateral({onHamburguerClick}) {
   const navigate = useNavigate();
+  
   const location = useLocation();
   const isInicioHome = location.pathname.startsWith('/inicio')
   const isAlumno = location.pathname.startsWith('/alumno')
@@ -43,17 +50,20 @@ function PanelLateral({onHamburguerClick}) {
       navigate(path);
   };
   const [clicked, setClicked] = useState(true);
-
+  const handleSesion = () => {
+    navigate('/login');
+  };
   const handleClick = () => {
     setClicked(false);
     onHamburguerClick();
   }
   return (
     <div className='panelLateral borde' style={panelEstilo}>
-      <div className="opciones-barraLateral bordeW" style={logo}><img src={urlFondo} alt="fUp" style={fondo} onClick={() => handleNavigate('/inicio/')} /></div>
+      <div className="opciones-barraLateral bordeW" style={logo}><img src={urlFondo} alt="fUp" style={fondo} onClick={() => handleNavigate('/alumno')} /></div>
       <div className="opciones-barraLateral bordeW" style={botonOcultar} onClick={handleClick}>Ocultar <img src={url} alt="oc" style={img}/></div>
       {isInicioHome && <DesplieguePanel></DesplieguePanel>}
       {isAlumno && <DespliegueAlumno></DespliegueAlumno>}
+      <div className='opciones-barraLateral bordeW' style={boton} onClick={() => handleSesion()}>Iniciar sesión</div>
     </div>
   )
 }

@@ -4,4 +4,5 @@
 
 #btnH_head2{
   transition: 100ms;
+  height: 3rem !important;
 }

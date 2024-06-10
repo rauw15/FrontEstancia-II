@@ -63,17 +63,20 @@ function DespliegueAlumno() {
             {showLineamientos && (
               
                 <div>
-                  <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/convocatoria')}>
+                  <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/alumno/convocatoria')}>
                     <img src={url} alt="doc" style={img} />Convocatoria feria
                 </div>
-                <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/convocatoria/lineamientos')}>
+                <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/alumno/convocatoria/lineamientos')}>
                     <img src={url} alt="doc" style={img} />Lineamientos de participación
                 </div>
-                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={pdfFile} download>
-                    <img src={descargaSVG} alt="doc" style={img} />Formato descarga para ficha tecnica
+                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/FICHA Tecnica Emprendimiento e Innovación 2024.docx'} download>
+                    <img src={descargaSVG} alt="doc" style={img} />Formato descargable para ficha tecnica
                 </a>
-                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/plantilla-canvas-descargable.pptx'} download>
+                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/plantilla-canvas-descargable.pptx'} download>
                     <img src={descargaSVG} alt="doc" style={img} />Plantilla descargable Modelo Canvas
+                </a>
+                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/MATERIAL APOYO MODELO CANVAS.pdf'} download>
+                    <img src={descargaSVG} alt="doc" style={img} />Material descargable Apoyo Modelo Canvas
                 </a>
                 </div>
                 

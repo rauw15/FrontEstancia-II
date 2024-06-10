@@ -31,6 +31,9 @@ function App() {
         <Route path='/login' element={<Login/>} ></Route>
         <Route path='catalogo' element={<Catalogo></Catalogo>}></Route>
         <Route path='/alumno/*' element={<Alumno></Alumno>}>
+          <Route path='convocatoria/*' element={<Convocatoria></Convocatoria>}>
+            <Route path='lineamientos' element={<Convocatoria></Convocatoria>}></Route>
+          </Route>
           <Route path='inscripcion' element={<Formulario></Formulario>}></Route>
           <Route path='home' element={<Home></Home>}></Route>
         </Route>
