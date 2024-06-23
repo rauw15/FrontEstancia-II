@@ -143,7 +143,7 @@ function Formulario() {
         <div className='formulario seccion_apartadoW box3 bordeW'>
           <div>
             <label>Contraseña:<span>*</span></label>
-            <input type="text" className='borde2' placeholder='minimo 8 caracteres' minLength={8} value={pass} onChange={(e) => setPass(e.target.value)} required />
+            <input type="password" className='borde2' placeholder='minimo 8 caracteres' minLength={8} value={pass} onChange={(e) => setPass(e.target.value)} required />
           </div>
         </div>
         <div className='formulario seccion_apartadoW box3 bordeW'>
