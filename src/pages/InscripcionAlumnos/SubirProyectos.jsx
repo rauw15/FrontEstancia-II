@@ -54,10 +54,10 @@ function SubirProyectos() {
         }, 1000); 
       } else {
         alert(`Error al guardar los datos: ${response.statusText} : ¿inicio de sesión?`);
-        console.log(response.statusText)
+
       }
     }).catch(error => {
-      console.error('Error:', error);
+
       alert('Error en el servidor');
     });
 

@@ -34,7 +34,7 @@ function Login() {
       });
 
       const result = await response.json();
-      console.log(result);
+
       
       if (response.ok) {
         // Manejar el éxito del inicio de sesión
@@ -46,7 +46,7 @@ function Login() {
         showAlerta(result.message || 'Error en el inicio de sesión', 'error');
       }
     } catch (error) {
-      console.error('Error:', error);
+  
       showAlerta('Error en el servidor', 'error');
     }
   };
