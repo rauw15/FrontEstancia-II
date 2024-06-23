@@ -18,14 +18,18 @@
 }
 .box{
   box-shadow: 1px 1px 50px 10px rgba(50, 50, 50, 0.4);
+  border-radius: 5px;
 }
 .box2{
   box-shadow: 1px 1px 25px 5px rgba(50, 50, 50, 0.2);
+  border-radius: 5px;
 }
 .box3{
   box-shadow: 1px 1px 25px 5px rgba(150, 150, 150, 0.4);
+  border-radius: 5px;
 }
 .boxFX{
+  border-radius: 5px;
   box-shadow: 1px 1px 25px 10px rgba(50, 50, 50, 0.2) !important;
   transition: 0.2s;
 }

@@ -1,0 +1,42 @@
+.sProyectos_descripcion{
+  padding-right: 5rem;
+  text-align: justify;
+}
+
+.form{
+  display: flex;
+  transition: 0.1s ease;
+}
+
+
+.form:hover{
+
+  transform: scale(1.006);
+  
+}
+
+.form_btns{
+  display: flex;
+  justify-content: space-between;
+}
+  .form_btns button{
+    height: 2rem;
+  }
+  #guardar_sProyectos{
+    color: white;
+    background-color: blue;
+    width: 30%;
+  }
+  #guardar_sProyectos:hover{
+    background-color: rgba(0, 0, 255, 0.6);
+  }
+  #borrar_sProyectos{
+    color: blue;
+    border: none;
+    width: 30%;
+    background-color: rgba(0, 0, 0, 0);
+  }
+  #borrar_sProyectos:hover{
+    color: rgba(0, 0, 255, 0.6);
+  }
+

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import url from '../assets/images/document.svg';
 import urlDes from '../assets/images/despliegue.svg';
-import pdfFile from '../assets/pdfs/FICHA  Jorge Brandon IDS PYME.pdf';
+
 import descargaSVG from '../assets/images/descarga.svg'
 
 
@@ -71,7 +71,7 @@ function DesplieguePanel() {
                 <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/convocatoria/lineamientos')}>
                     <img src={url} alt="doc" style={img} />Lineamientos de participación
                 </div>
-                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={pdfFile} download>
+                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={''} download>
                     <img src={descargaSVG} alt="doc" style={img} />Formato descarga para ficha tecnica
                 </a>
                 <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/plantilla-canvas-descargable.pptx'} download>

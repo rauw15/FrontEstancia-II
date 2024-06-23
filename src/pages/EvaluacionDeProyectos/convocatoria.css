@@ -18,17 +18,15 @@
 }
 
 .convocatoria-img{
-  height: 55rem;
-  width: 90%;
+  height: 50rem;
+  width: 99%;
   /* overflow-x: hidden;
   overflow-y: auto; */
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.convocatoria-img img{
-  /* box-shadow: 1px 1px 25px 1px rgba(50, 50, 50, 0.1); */
-}
+
 
 
 .convocatoria-lineamientos{

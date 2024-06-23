@@ -9,6 +9,7 @@ import PanelLateral from '../../components/PanelLateral'
 import Formulario from '../InscripcionAlumnos/Formulario'
 import Home from './Home'
 import Convocatoria from '../EvaluacionDeProyectos/Convocatoria'
+import SubirProyectos from '../InscripcionAlumnos/SubirProyectos'
 import './alumno.css'
 
 function Alumno() {
@@ -21,6 +22,7 @@ function Alumno() {
   const [clickedHamburguer, setClickedHamburguer] = useState(true);
   const [showConvocatoria, setShowConvocatoria] = useState(false);
   const [showLineamento, setShowLineamento] = useState(false);
+  const [showSubir, setShowSubir] = useState(false);
 
   //----------
   const handleHamburguerClick = () => {
@@ -35,6 +37,9 @@ function Alumno() {
   }, [location]);
   useEffect(() => {
     setShowLineamento(location.pathname === '/alumno/convocatoria/lineamientos');
+  }, [location]);
+  useEffect(() => {
+    setShowSubir(location.pathname === '/alumno/subirProyectos');
   }, [location]);
   //------------
   return (
@@ -52,6 +57,7 @@ function Alumno() {
         {showInscripcion && <Formulario></Formulario>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
+        {showSubir && <SubirProyectos></SubirProyectos>}
         {isRaiz && <Home/>}
       </div>
       <div id='footer_alumno'  style={{ opacity: isInscripcion ? 1 : (isInicioHome ? 1 : 1) }}>

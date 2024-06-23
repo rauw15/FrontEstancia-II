@@ -9,6 +9,7 @@ import Convocatoria from './pages/EvaluacionDeProyectos/Convocatoria';
 import Catalogo from './pages/EvaluacionDeProyectos/Catalogo';
 import Formulario from './pages/InscripcionAlumnos/Formulario';
 import Alumno from './pages/Home/Alumno';
+import SubirProyectos from './pages/InscripcionAlumnos/SubirProyectos';
 import './App.css'
 
 
@@ -36,8 +37,9 @@ function App() {
           </Route>
           <Route path='inscripcion' element={<Formulario></Formulario>}></Route>
           <Route path='home' element={<Home></Home>}></Route>
+          <Route path='subirProyecto' element={<SubirProyectos></SubirProyectos>}></Route>
         </Route>
-
+        
       </Routes>
     </Router>
   )

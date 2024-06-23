@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import url from '../assets/images/document.svg';
 import urlDes from '../assets/images/despliegue.svg';
-import pdfFile from '../assets/pdfs/FICHA  Jorge Brandon IDS PYME.pdf';
 import descargaSVG from '../assets/images/descarga.svg'
+import { useAlerta } from './Alerta';
 
 const despliegue = {
   height: '2.2rem',
@@ -35,6 +35,7 @@ const des = {
 
 function DespliegueAlumno() {
   const navigate = useNavigate();
+  const [AlertaComponente, showAlerta] = useAlerta();
   const [showLineamientos, setShowLineamientos] = useState(false);
   const [rotated, setRotated] = useState(false);
   const handleNavigate = (path) => {
@@ -51,10 +52,11 @@ function DespliegueAlumno() {
     };
   return (
     <div>
+        {AlertaComponente}
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/inscripcion')}>
                 <img src={url} alt="doc" style={img} />Inscribirse
             </div>
-            <div className="bordeW opciones-barraLateral" style={despliegue}>
+            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/subirProyectos')}>
                 <img src={url} alt="doc" style={img} />Subir Documentos
             </div>
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleConvocatoriaClick}>
