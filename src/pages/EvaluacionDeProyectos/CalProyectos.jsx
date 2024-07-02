@@ -4,10 +4,10 @@ import Pdf from '../../components/Pdf';
 
 
 function CalProyectos() {
-  const pdfFileName = 'LINEAMIENTOS PARTICIPACION Y EVALUACIONL.pdf';
-  const pdfUrl = `${import.meta.env.BASE_URL}src/assets/pdfs/${pdfFileName}`;
+  const pdfFileName = 'MATERIAL APOYO MODELO CANVAS.pdf';
+  const pdfUrl = `/downloads/${pdfFileName}`;
   const encodedUrl = encodeURI(pdfUrl);
-  let namePDF = pdfFileName
+  let namePDF = pdfFileName;
 
   return (
     <div className='calProyectosCanva'>

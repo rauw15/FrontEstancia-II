@@ -40,7 +40,7 @@ function SubirProyectos() {
 
     const token = localStorage.getItem('token');
 
-    fetch('https://apijwtestancia1.onrender.com/api/app/uploadProject', {
+    fetch(import.meta.env.VITE_API_UPLO, {
       method: 'POST',
       headers: {
         'x-access-token': token

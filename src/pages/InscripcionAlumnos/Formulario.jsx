@@ -73,7 +73,7 @@ function Formulario() {
     }
     else{
       try {
-        const response = await fetch('https://apijwtestancia1.onrender.com/api/auth/signup', {
+        const response = await fetch(import.meta.env.VITE_API_SUP, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

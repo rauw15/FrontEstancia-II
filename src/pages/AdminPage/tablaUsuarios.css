@@ -1,0 +1,78 @@
+.tabla_admin{
+  height: 90vh;
+  overflow: auto;
+}
+.tabla_admin_ev{
+  height: 90vh;
+  overflow: auto;
+}
+.apartado_admin{
+  overflow: auto;
+}
+
+
+.btn_admin{
+  height: 4vh;
+  width: 50%;
+  border: 1px solid rgba(50, 50, 50, 0.1);
+  border-radius: 5px;
+}
+
+.btn_admin:hover{
+  background-color: rgba(50, 50, 50, 0.2);
+}
+.btn_admin:active{
+  transform: scale(0.94) !important;
+}
+
+#agregar_admin{
+  background-color: green;
+  color: white;
+  width: 50% !important;
+}
+#eliminar_admin{
+  background-color: rgba(225, 0, 0, 1);
+  color: white;
+  width: 45% !important;
+}
+#agregar_admin:hover{
+  background-color: rgba(0, 110, 0, 0.4);
+}
+#eliminar_admin:hover{
+  background-color: rgba(225, 0, 0, 0.4);
+}
+.btns_admin{
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  margin-left: 50%;
+}
+
+.modal{
+  position: absolute;
+  background-color: white;
+  margin-top: 10vh;
+  padding: 1rem;
+
+}
+.form_admin{
+  padding-bottom: 2rem;
+}
+#nombre_admin{
+  margin-bottom: 2rem;
+}
+
+.btnB_admin{
+  color: white;
+  background-color: rgba(0, 0, 255, 0.8);
+}
+.btnB_admin:hover{
+  background-color: rgba(0, 0, 255, 0.6);
+}
+.btnR_admin{
+  color: white;
+  background-color: rgba(225, 0, 0, 0.8);
+}
+.btnR_admin:hover{
+  background-color: rgba(225, 0, 0, 0.6);
+}

@@ -56,8 +56,8 @@ function DesplieguePanel() {
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/inicio/evaluacion')}>
                 <img src={url} alt="doc" style={img} />Calificar
             </div>
-            <div className="bordeW opciones-barraLateral" style={despliegue}>
-                <img src={url} alt="doc" style={img} />Cambiar Contraseña
+            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/inicio/tablaAdmin')} >
+                <img src={url} alt="doc" style={img} />Ver usuarios
             </div>
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleConvocatoriaClick}>
                 <img src={url} alt="doc" style={img} />Recursos <div style={des}><img src={urlDes} alt="des" style={rotationStyle} /></div>

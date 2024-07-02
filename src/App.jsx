@@ -10,6 +10,7 @@ import Catalogo from './pages/EvaluacionDeProyectos/Catalogo';
 import Formulario from './pages/InscripcionAlumnos/Formulario';
 import Alumno from './pages/Home/Alumno';
 import SubirProyectos from './pages/InscripcionAlumnos/SubirProyectos';
+import TablaUsuarios from './pages/AdminPage/TablaUsuarios';
 import './App.css'
 
 
@@ -25,6 +26,7 @@ function App() {
               <Route path='lineamientos' element={<Convocatoria></Convocatoria>}></Route>
             </Route>
             <Route path='home' element={<Home></Home>}></Route>
+            <Route path='tablaAdmin' element={<TablaUsuarios></TablaUsuarios>}></Route>
             <Route path='evaluacion/*' element={<Evaluacion></Evaluacion>}>
               <Route path='calProyectos' element={<CalProyectos></CalProyectos>}></Route>
           </Route>

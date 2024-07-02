@@ -5,6 +5,7 @@ import Head from '../../components/Head/Head2';
 import Footer from '../../components/Footer';
 import LogoUpChiapas from '../../components/LogoUpChiapas';
 import { useAlerta } from '../../fragments/Alerta';
+import { fetchWithHiddenError } from '../../helpers/fetchHelper';
 
 const op = {
   opacity: '0.5'
@@ -25,7 +26,7 @@ function Login() {
     };
 
     try {
-      const response = await fetch('https://apijwtestancia1.onrender.com/api/auth/signin', {
+      const response = await fetch(import.meta.env.VITE_API_SING, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -40,7 +41,13 @@ function Login() {
         // Manejar el éxito del inicio de sesión
         localStorage.setItem('token', result.accessToken);
         showAlerta('Inicio de sesión exitoso', 'success');
-        navigate('/alumno'); // Redirige a una página de inicio después del inicio de sesión exitoso
+        if(result.roles[0] == 'ROLE_ADMIN'){
+          navigate('/inicio/tablaAdmin');
+        }
+        else{
+          navigate('/alumno'); 
+        }
+        
       } else {
         // Manejar error del inicio de sesión
         showAlerta(result.message || 'Error en el inicio de sesión', 'error');

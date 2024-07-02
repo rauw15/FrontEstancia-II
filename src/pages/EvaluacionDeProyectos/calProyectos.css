@@ -7,7 +7,8 @@ select:hover{
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 5%;
+  margin-top: 3rem;
+  padding-bottom: 2rem;
 
  position: absolute;
 }
@@ -119,7 +120,7 @@ select:hover{
 /* ----------- */
 .pdf_cal{
   margin-top: 1.5rem;
-  height: 55rem;
+  height: 65rem;
   
 }
 #pdfTop{
