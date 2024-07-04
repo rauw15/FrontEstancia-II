@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/css/seccioncss.css';
 import '../InscripcionAlumnos/subirProyectos.css';
+import '../../assets/css/toolTips.css'
 
 function SubirProyectos() {
   const [nombreProyecto, setNombreProyecto] = useState('');
@@ -111,17 +112,38 @@ function SubirProyectos() {
             <label htmlFor="fichaTecnica">Ficha técnica: <span>*pdf</span></label>
             <input type="file" id="fichaTecnica" className='borde2' accept='application/pdf' onChange={(e) => handleArchivoChange(e, setFichaTecnica)} />
           </div>
+          <div>
+            <div className="tooltip">?
+              <span className="tooltiptextLeft bordeW">
+                <p>*Todos los ejemplos están en "recursos" <br /> disponible para descargar</p>
+              </span>
+            </div>
+          </div>
         </div>
         <div className="seccion_apartadoW form box3">
           <div>
             <label htmlFor="modeloCanva">Modelo canva: <span>*pdf</span></label>
             <input type="file" id="modeloCanva" className='borde2' accept='application/pdf' onChange={(e) => handleArchivoChange(e, setModeloCanva)} />
           </div>
+          <div>
+            <div className="tooltip">?
+              <span className="tooltiptextLeft bordeW">
+                <p>*Todos los ejemplos están en "recursos" <br /> disponible para descargar</p>
+              </span>
+            </div>
+          </div>
         </div>
         <div className="seccion_apartadoW form box3">
           <div>
-            <label htmlFor="pdfProyecto">Pdf del proyecto: <span>*pdf</span></label>
+            <label htmlFor="pdfProyecto">Resumen ejecutivo: <span>*pdf</span></label>
             <input type="file" id="pdfProyecto" className='borde2' accept='application/pdf' onChange={(e) => handleArchivoChange(e, setPdfProyecto)} />
+          </div>
+          <div>
+            <div className="tooltip">?
+              <span className="tooltiptextLeft bordeW">
+                <p>*Todos los ejemplos están en "recursos" <br /> disponible para descargar</p>
+              </span>
+            </div>
           </div>
         </div>
         <div className="seccion_apartado box3 form_btns">

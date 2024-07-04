@@ -80,6 +80,9 @@ function DespliegueAlumno() {
                 <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/MATERIAL APOYO MODELO CANVAS.pdf'} download>
                     <img src={descargaSVG} alt="doc" style={img} />Material descargable Apoyo Modelo Canvas
                 </a>
+                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/Caracteristicas del RESUMEN EJECUTIVO.docx'} download>
+                    <img src={descargaSVG} alt="doc" style={img} />Plantilla descargable Resumen Ejecutivo
+                </a>
                 </div>
                 
             )}

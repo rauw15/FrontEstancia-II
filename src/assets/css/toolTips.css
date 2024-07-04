@@ -1,0 +1,100 @@
+/* ------------toolTips----------- */
+.labelInfo{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.labelInfoLeft{
+  display: flex;
+  flex-direction: row;
+  
+  align-items: center;
+}
+.tooltip {
+  margin-left: 0.5rem;
+  position: relative;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border: 1px solid rgba(50, 50, 50, 0.4);
+  height: 0.8rem !important;
+  width: 0.8rem !important;
+  border-radius: 0.8rem;
+  color: rgba(50, 50, 50, 0.6);
+  z-index: 100 !important;
+  text-align: center;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  min-width: 14rem;
+  height: auto;
+  background-color: #C8C8C8;
+  color: rgba(50, 50, 50, 0.8);
+  text-align: justify;
+  /* border-radius: 5px; */
+
+  padding: 0px 1rem 1rem 1rem;
+  position:absolute;
+  z-index: 110 !important;
+  bottom: 155%; /* Posición por encima del elemento */
+  left: 50%;
+  margin-left: -8rem; /* Margen negativo para centrar el tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptextLeft {
+  visibility: hidden;
+  width: auto;
+  min-width: 15rem;
+  min-height: 2rem;
+  height: auto;
+  background-color: #C8C8C8;
+  color: rgba(50, 50, 50, 0.8);
+  text-align: justify;
+  /* border-radius: 5px; */
+
+  padding: 0px 1rem 1rem 1rem;
+  position:absolute;
+  z-index: 110 !important;
+  right: 205%; /* Posición por encima del elemento */
+  bottom: -400%;
+  margin-left: -8rem; /* Margen negativo para centrar el tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+
+}
+.tooltip .tooltiptextLeft::after {
+  content: "";
+  position: absolute;
+  top: 50%; /* La flecha estará en la parte inferior del tooltip */
+  right: -2%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #C8C8C8 transparent transparent transparent;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* La flecha estará en la parte inferior del tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #C8C8C8 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  z-index: 200;
+}
+.tooltip:hover .tooltiptextLeft {
+  visibility: visible;
+  opacity: 1;
+  z-index: 200;
+}
