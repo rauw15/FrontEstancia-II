@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAlerta } from '../../fragments/Alerta';
+import Alerta, { useAlerta } from '../../fragments/Alerta';
 import '../../assets/css/seccioncss.css';
 import '../InscripcionAlumnos/formulario.css';
 
@@ -13,6 +13,7 @@ function Formulario() {
   const [categoria, setCategoria] = useState('');
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
+  const saludo = sessionStorage.getItem('nameUser');
 
   const navigate = useNavigate();
 
@@ -38,7 +39,14 @@ function Formulario() {
   };
 
   const handleGuardarFormulario = async () => { 
-    let correoPartes = correo.split(".");
+    if(saludo != null){
+      showAlerta(<p>Ya estas inscrito!</p>)
+      setTimeout(() => {
+        navigate('/alumno');
+      }, 3000); 
+    }
+    else{
+      let correoPartes = correo.split(".");
     let formularioEstado= true;
     let llenoEstado = true;
     let mensaje = [];
@@ -111,6 +119,8 @@ function Formulario() {
         showAlerta(<p>Error de conexión. Por favor, intente nuevamente.</p>);
       }
     }
+    }
+    
   };
 
   return (

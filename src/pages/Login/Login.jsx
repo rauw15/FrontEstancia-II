@@ -39,6 +39,7 @@ function Login() {
       
       if (response.ok) {
         // Manejar el éxito del inicio de sesión
+        sessionStorage.setItem('nameUser', result.username)
         localStorage.setItem('token', result.accessToken);
         showAlerta('Inicio de sesión exitoso', 'success');
         if(result.roles[0] == 'ROLE_ADMIN'){

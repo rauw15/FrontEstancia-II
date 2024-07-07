@@ -22,7 +22,7 @@ function TablaUsuarios() {
   const [evaluadores, setEvaluadores] = useState([]);
   const [AlertaComponente, showAlerta] = useAlerta();
   const token = localStorage.getItem('token');
-
+  const [adminUser, setAdminUser] = useState(false);
 
   const handleBorrarFormulario = () => {
     setCorreo('');
@@ -46,8 +46,10 @@ function TablaUsuarios() {
         if (response.ok) {
           setUsuarios(result.usuarios || []);
           setEvaluadores(result.evaluadores || []);
+          setAdminUser(true);
         } else {
-          showAlerta(result.message || 'Error en la solicitud', 'error');
+          setAdminUser(false);
+          showAlerta(`${result.message} usuario admin?` || 'Error en la solicitud', 'error');
         }
       } catch (error) {
         showAlerta('Error en el servidor', 'error');
@@ -75,10 +77,12 @@ function TablaUsuarios() {
   };
 
   const handleAgregarUsuario = async () => {
+    handleGetUsuarios();
     // Lógica para agregar usuario
     if(!nombre || !nombreUsuario || !contraseña || !correo){
       showAlerta(<p>Por favor llena todos los campos.</p>)
-    }else{
+    }
+    else if(adminUser){
       try {
         const response = await fetch(import.meta.env.VITE_API_SUP, {
           method: 'POST',
@@ -101,6 +105,7 @@ function TablaUsuarios() {
               <p>Datos Guardados...</p>
             </>
           );
+          
         } else {
           showAlerta(<><p>Error al guardar los datos. Por favor, intente nuevamente.</p>
           <p>posibles causas:</p>
@@ -109,6 +114,9 @@ function TablaUsuarios() {
       } catch (error) {
         showAlerta(<p>Error de conexión. Por favor, intente nuevamente.</p>);
       }
+    }
+    else{
+      showAlerta(<p>No eres admin!</p>)
     }
     handleBorrarFormulario();
     setMostrarFormularioAgregar(false);

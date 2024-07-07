@@ -86,9 +86,6 @@ function DesplieguePanel() {
                 </div>
                 
             )}
-            <div className="bordeW opciones-barraLateral" style={despliegue}>
-                <img src={url} alt="doc" style={img} />Catálogo <div style={des}><img src={urlDes} alt="des" /></div>
-            </div>
         </div>
     );
 }
