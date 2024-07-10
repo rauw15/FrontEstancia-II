@@ -42,6 +42,9 @@ function DespliegueAlumno() {
         navigate(path);
     };
 
+    const handleSubir = () => {
+      showAlerta(<p>En mantenimiento!</p>)
+  };
     const handleConvocatoriaClick = () => {
         setShowLineamientos(!showLineamientos);
         setRotated(!rotated);
@@ -56,7 +59,7 @@ function DespliegueAlumno() {
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/inscripcion')}>
                 <img src={url} alt="doc" style={img} />Inscribirse
             </div>
-            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/subirProyectos')}>
+            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleSubir}>
                 <img src={url} alt="doc" style={img} />Subir Documentos
             </div>
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleConvocatoriaClick}>
