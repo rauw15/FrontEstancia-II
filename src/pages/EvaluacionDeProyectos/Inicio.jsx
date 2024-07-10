@@ -66,7 +66,7 @@ function Inicio() {
   }
   return (
     <div className='todo'>
-      {showHome && <Home />}
+      
       <div className={`panel ${clickedHamburguer ? 'show' : ''}`} style={{ visibility: isInicioHome ? 'hidden' : 'visible' }}>
        {clickedHamburguer && <PanelLateral onHamburguerClick={handleHamburguerClick}></PanelLateral>}
       </div>
@@ -78,6 +78,7 @@ function Inicio() {
           {(isInicioHome) && <LogoUpChiapas></LogoUpChiapas>}
         </div>
         <div style={contenidoStyle}>
+        {showHome && <Home />}
         {showEvaluacion && <Evaluacion></Evaluacion>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}

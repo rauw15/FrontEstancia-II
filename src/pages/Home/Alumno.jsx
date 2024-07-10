@@ -63,13 +63,16 @@ function Alumno() {
         <div className='logo_alumno' style={{ opacity: isInscripcion ? 0 : (isRaiz ? 0.5 : 1) }}>
         {(isInicioHome || isRaiz) && <LogoUpChiapas></LogoUpChiapas>}
         </div>
+        <div>
+        {isRaiz && <Home/>}
+        </div>
         <div style={contenidoStyle}>
         {showInscripcion && <Formulario></Formulario>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
         {showSubir && <SubirProyectos></SubirProyectos>}
         {showCatalogo && <Catalogo></Catalogo>}
-        {isRaiz && <Home/>}
+        
         </div>
       </div>
       <div id='footer_alumno'  style={{ opacity: isInscripcion ? 1 : (isInicioHome ? 1 : 1) }}>
