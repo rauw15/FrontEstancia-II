@@ -28,6 +28,10 @@
   box-shadow: 1px 1px 25px 5px rgba(150, 150, 150, 0.4);
   border-radius: 5px;
 }
+.box4{
+  box-shadow: 1px 1px 25px 5px rgba(150, 150, 150, 0.2);
+  border-radius: 5px;
+}
 .boxFX{
   border-radius: 5px;
   box-shadow: 1px 1px 25px 10px rgba(50, 50, 50, 0.2) !important;
@@ -46,6 +50,7 @@ body{
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
+  overflow-x: hidden;
 }
 button{
   transition: 50ms;

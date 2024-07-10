@@ -37,7 +37,9 @@ const des = {
 function DesplieguePanel() {
     const navigate = useNavigate();
     const [showLineamientos, setShowLineamientos] = useState(false);
+    const [showAdmin, setShowAdmin] = useState(false);
     const [rotated, setRotated] = useState(false);
+    const [rotated2, setRotated2] = useState(false);
     const handleNavigate = (path) => {
         navigate(path);
     };
@@ -46,19 +48,39 @@ function DesplieguePanel() {
         setShowLineamientos(!showLineamientos);
         setRotated(!rotated);
     };
+    const handleProyectosAdminClick = () => {
+        setShowAdmin(!showAdmin);
+        setRotated2(!rotated2);
+    };
 
     const rotationStyle = {
         transform: rotated ? 'rotate(180deg)' : 'rotate(0deg)',
         transition: 'transform 0.5s ease' // Agrega una transición para una animación suave
       };
+    const rotationStyle2 = {
+        transform: rotated2 ? 'rotate(180deg)' : 'rotate(0deg)',
+        transition: 'transform 0.5s ease'
+    }
     return (
         <div>
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/inicio/evaluacion')}>
                 <img src={url} alt="doc" style={img} />Calificar
             </div>
-            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/inicio/tablaAdmin')} >
-                <img src={url} alt="doc" style={img} />Ver usuarios
+            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleProyectosAdminClick} >
+                <img src={url} alt="doc" style={img} />Administrador <div style={des}><img src={urlDes} alt='des' style={rotationStyle2}></img></div>
             </div>
+            {showAdmin && (
+              
+              <div>
+                <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/tablaAdmin')}>
+                  <img src={url} alt="doc" style={img} />Usuarios Registrados
+              </div>
+              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/proyectosAdmin')}>
+                  <img src={url} alt="doc" style={img} />Proyectos Registrados
+              </div>
+              </div>
+              
+          )}
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleConvocatoriaClick}>
                 <img src={url} alt="doc" style={img} />Recursos <div style={des}><img src={urlDes} alt="des" style={rotationStyle} /></div>
             </div>

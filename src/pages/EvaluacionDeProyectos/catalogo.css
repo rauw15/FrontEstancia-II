@@ -1,21 +1,22 @@
-.catalogoCanva{
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 2%;
-  /* position: absolute; */
-}
 
-.container-catalogo{
-  height: auto;
-  width: 50rem;
+.titulo_catalogo h1{
+  text-align: center;
+  padding: 1rem;
+}
+.categoria_catalogo{
   display: flex;
   align-items: center;
-  padding-bottom: 2%;
+  width: 40%;
+  justify-content: space-around;
+}
+.tabla_catalogo{
+  height: 100vh;
+  overflow: auto;
+}
+.tabla_catalogo th{
+  height: 8rem;
 }
 
-.catalogo{
-  width: 100%;
-  height: 60rem;
+.apartado_catalogo:hover{
+  transform: scale(1.006);
 }

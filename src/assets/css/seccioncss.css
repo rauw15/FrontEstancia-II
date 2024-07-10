@@ -16,12 +16,24 @@
   padding-top: 1%;
   margin-top: 3%;
 }
+.seccion_container2{
+  width: 70rem;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding-bottom: 2%;
+  padding-top: 1%;
+  margin-top: 3%;
+}
 
 .seccion_apartado{
   width: 89%;
   padding: 2%;
   overflow: auto;
   margin-bottom: 1.2rem;
+  transition: 0.1s ease;
 }
 
 .seccion_apartadoW{
@@ -30,6 +42,7 @@
   overflow: auto;
   background-color: white;
   margin-bottom: 1.2rem;
+  transition: 0.1s ease;
 }
 
 .seccion_tabla{
@@ -54,4 +67,5 @@
 
 .seccion_tabla tr:hover {
   background-color: #ddd;
+  
 }

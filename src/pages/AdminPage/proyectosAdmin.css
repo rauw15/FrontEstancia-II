@@ -1,0 +1,36 @@
+.tabla_proyectos_admin{
+  
+}
+
+.adminP_fx:hover{
+  transform: scale(1.006);
+}
+
+.btn_pAdmin{
+  margin-left: 1rem;
+  background-color: rgba(0, 0, 0, 0);
+  
+}
+.btn_pAdmin:hover{
+  background-color: rgba(150, 150, 150, 0.1);
+}
+.apartado_pAdmin{
+  overflow: auto;
+}
+
+.tablaPadmin{
+  height: 100vh;
+  overflow: auto;
+}
+
+.descripcion_pAdmin{
+  text-align: justify !important;
+}
+
+a{
+  color: blue !important;
+}
+.aTablaPadmin{
+  background-color: rgba(0, 0, 0, 0);
+  color: blue;
+}

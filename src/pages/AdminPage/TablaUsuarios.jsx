@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useAlerta } from '../../fragments/Alerta';
 import '../../assets/css/seccioncss.css';
 import '../AdminPage/tablaUsuarios.css';
+import reload from '../../assets/images/reload.svg'
 
 const modStyle = {
   height: '2rem',
   marginTop: '1rem',
   marginLeft: '1rem'
 }
+const reloadStyle = {
+  height: '100%',
+  width: '18%',
+  objectFit: 'contain',
+};
 
 function TablaUsuarios() {
   const [mostrarUsuarios, setMostrarUsuarios] = useState(true);
@@ -32,7 +38,7 @@ function TablaUsuarios() {
   };
 
   const handleGetUsuarios = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     const fetchData = async () => {
       try {
         const response = await fetch(import.meta.env.VITE_API_USU, {
@@ -59,6 +65,10 @@ function TablaUsuarios() {
     fetchData();
   };
 
+  const [ver, setVer] = useState(true);
+  useEffect(()=> {
+    handleGetUsuarios();
+  }, [ver]);
 
   const handleAgregar = () => {
     setMostrarFormularioAgregar(true);
@@ -179,7 +189,7 @@ function TablaUsuarios() {
             {mostrarUsuarios ? usuarios.length : evaluadores.length}
           </h2>
           <div>
-            <button className='btn_admin' onClick={handleGetUsuarios}>Mostrar usuarios registrados.</button>
+          <button className='btn_pAdmin borde2' onClick={handleGetUsuarios} ><img src={reload} alt="reload" style={reloadStyle} /></button>
           </div>
           {mostrarUsuarios ? '' : <div className='btns_admin'>
             <button className='btn_admin bordeW' id='agregar_admin' onClick={handleAgregar}>
@@ -266,7 +276,7 @@ function TablaUsuarios() {
         </div>
       )}
       {mostrarFormularioEliminar && (
-        <div className='modal box'>
+        <div className='modalEliminar box'>
           <div className='modal_contenido'>
             <h2>Eliminar Usuario Evaluador</h2>
             <label>Nombre de usuario que desea eliminar:</label>

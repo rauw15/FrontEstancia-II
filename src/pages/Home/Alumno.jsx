@@ -10,6 +10,7 @@ import Formulario from '../InscripcionAlumnos/Formulario'
 import Home from './Home'
 import Convocatoria from '../EvaluacionDeProyectos/Convocatoria'
 import SubirProyectos from '../InscripcionAlumnos/SubirProyectos'
+import Catalogo from '../EvaluacionDeProyectos/Catalogo'
 import './alumno.css'
 
 function Alumno() {
@@ -23,6 +24,7 @@ function Alumno() {
   const [showConvocatoria, setShowConvocatoria] = useState(false);
   const [showLineamento, setShowLineamento] = useState(false);
   const [showSubir, setShowSubir] = useState(false);
+  const [showCatalogo, setShowCatalogo] = useState(false);
 
   //----------
   const handleHamburguerClick = () => {
@@ -41,7 +43,14 @@ function Alumno() {
   useEffect(() => {
     setShowSubir(location.pathname === '/alumno/subirProyectos');
   }, [location]);
+  useEffect(() => {
+    setShowCatalogo(location.pathname === '/alumno/catalogo');
+  }, [location]);
   //------------
+  const contenidoStyle = {
+    transform: clickedHamburguer ? 'translateX(10rem)' : 'translateX(0)',
+    transition: 'transform 0.5s ease'
+  }
   return (
     <div className='alumnoInicio'>
       <div className={`panel ${clickedHamburguer ? 'show' : ''}`} style={{ visibility: isRaiz ? 'hidden' : 'visible' }}>
@@ -54,11 +63,14 @@ function Alumno() {
         <div className='logo_alumno' style={{ opacity: isInscripcion ? 0 : (isRaiz ? 0.5 : 1) }}>
         {(isInicioHome || isRaiz) && <LogoUpChiapas></LogoUpChiapas>}
         </div>
+        <div style={contenidoStyle}>
         {showInscripcion && <Formulario></Formulario>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
         {showSubir && <SubirProyectos></SubirProyectos>}
+        {showCatalogo && <Catalogo></Catalogo>}
         {isRaiz && <Home/>}
+        </div>
       </div>
       <div id='footer_alumno'  style={{ opacity: isInscripcion ? 1 : (isInicioHome ? 1 : 1) }}>
         

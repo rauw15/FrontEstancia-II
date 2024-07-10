@@ -11,6 +11,8 @@ import Evaluacion from './Evaluacion'
 import CalProyectos from './CalProyectos'
 import Convocatoria from './Convocatoria'
 import TablaUsuarios from '../AdminPage/TablaUsuarios'
+import Catalogo from './Catalogo'
+import ProyectosAdmin from '../AdminPage/ProyectosAdmin'
 import './inicio.css'
 function Inicio() {
   const location = useLocation();
@@ -27,6 +29,8 @@ function Inicio() {
   const [showConvocatoria, setShowConvocatoria] = useState(false);
   const [showLineamento, setShowLineamento] = useState(false);
   const [showTablaUsuarios, setShowTablaUsuarios] = useState(false);
+  const [showCatalogo, setShowCatalogo] = useState(false);
+  const [showProyectosAdmin, setShowProyectosAdmin] = useState(false);
   //----------
   const handleHamburguerClick = () => {
     setClickedHamburguer(!clickedHamburguer);
@@ -49,7 +53,17 @@ function Inicio() {
   useEffect(() => {
     setShowTablaUsuarios(location.pathname === '/inicio/tablaAdmin');
   }, [location]);
+  useEffect(() => {
+    setShowCatalogo(location.pathname === '/inicio/catalogo');
+  }, [location]);
+  useEffect(() => {
+    setShowProyectosAdmin(location.pathname === '/inicio/proyectosAdmin');
+  }, [location]);
   //------------
+  const contenidoStyle = {
+    transform: clickedHamburguer ? 'translateX(10rem)' : 'translateX(0)',
+    transition: 'transform 0.5s ease',
+  }
   return (
     <div className='todo'>
       {showHome && <Home />}
@@ -63,11 +77,15 @@ function Inicio() {
         <div className="logo borde2"  style={{ opacity: isInicioCal ? 0 : (isTabla ? 0 : 1) }}>
           {(isInicioHome) && <LogoUpChiapas></LogoUpChiapas>}
         </div>
+        <div style={contenidoStyle}>
         {showEvaluacion && <Evaluacion></Evaluacion>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
         {showCal && <CalProyectos />}
         {showTablaUsuarios && <TablaUsuarios></TablaUsuarios>}
+        {showCatalogo && <Catalogo></Catalogo>}
+        {showProyectosAdmin && <ProyectosAdmin></ProyectosAdmin>}
+        </div>
       </div>
       
       <div className='footer' id='footer'  style={{ opacity: isInicioCal ? 0 : (isInicioHome ? 0.5 : 1) }}>
