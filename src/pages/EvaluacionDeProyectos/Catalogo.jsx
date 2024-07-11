@@ -58,7 +58,7 @@ function Catalogo() {
             'x-access-token': token,
           },
         });
-
+        //prueba
         const result = await response.json();
         if (response.ok) {
   
