@@ -103,7 +103,7 @@ function SubirProyectos() {
         </div>
         <div className="seccion_apartadoW form box3">
           <div>
-            <label htmlFor="">Liga del video pitch (explicación del proyecto):<span> *youtube o drive</span></label>
+            <label htmlFor="">Liga del video pitch (explicación del proyecto):<span id='anuncio_sProyectos'> *youtube o drive, El video no deberá tener restricción de acceso, para que el evaluador pueda visualizar el video pitch.</span></label>
             <input type="text" className='borde2' value={videoPitch} onChange={(e) => setVideoPitch(e.target.value)} />
           </div>
         </div>

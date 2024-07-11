@@ -54,7 +54,11 @@ function Inicio() {
     setShowTablaUsuarios(location.pathname === '/inicio/tablaAdmin');
   }, [location]);
   useEffect(() => {
-    setShowCatalogo(location.pathname === '/inicio/catalogo');
+    if (location.pathname.startsWith('/inicio/catalogo/')) {
+      setShowCatalogo(true);
+    } else {
+      setShowCatalogo(false);
+    }
   }, [location]);
   useEffect(() => {
     setShowProyectosAdmin(location.pathname === '/inicio/proyectosAdmin');

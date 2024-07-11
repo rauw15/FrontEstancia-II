@@ -34,7 +34,7 @@ function ProyectosAdmin() {
 
         const result = await response.json();
         if (response.ok) {
-          console.log(result)
+   
           return result;
         } else {
           showAlerta(`${result.message} usuario admin?` || 'Error en la solicitud', 'error');
@@ -48,11 +48,19 @@ function ProyectosAdmin() {
       let objetoProyecto = [];
       try {
         const datos = await fetchData();
+        let canva = '';
+        let ficha = '';
+        let resumen = '';
         for (let i = 0; i < datos.length; i++) {
           if (datos[i].proyectos.length > 0) {
-            let canva = datos[i].proyectos[0].canvaModel.split("\\");
-            let ficha = datos[i].proyectos[0].technicalSheet.split("\\");
-            let resumen = datos[i].proyectos[0].projectPdf.split("\\");
+            if(datos[i].proyectos[0].canvaModel == undefined  || datos[i].proyectos[0].technicalSheet == undefined  || datos[i].proyectos[0].projectPdf == undefined ){
+              console.log("archivos no subidos");
+            }
+            else{
+            canva = datos[i].proyectos[0].canvaModel.split("\\");
+            ficha = datos[i].proyectos[0].technicalSheet.split("\\");
+            resumen = datos[i].proyectos[0].projectPdf.split("\\");
+            }
             objetoProyecto.push(
               {
                 nameUser: datos[i].username,
@@ -141,7 +149,7 @@ function ProyectosAdmin() {
                     <td>{proyecto.nameUser}</td>
                     <td>{proyecto.proyectoName}</td>
                     <td>{proyecto.descripcion}</td>
-                    <td><div className='borde2'><a href={proyecto.link}>Video</a></div></td>
+                    <td><div className='borde2'><a className='aTablaPadmin' href={proyecto.link} target='_blank'>Video</a></div></td>
                     <td>
                       <button 
                         className='aTablaPadmin borde2' 

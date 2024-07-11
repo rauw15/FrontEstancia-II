@@ -20,3 +20,13 @@
 .apartado_catalogo:hover{
   transform: scale(1.006);
 }
+.subido{
+  color: green;
+}
+.noSubido{
+  color: red;
+}
+.aTablaPadmin{
+  background-color: rgba(0, 0, 0, 0);
+  color: blue;
+}

@@ -44,7 +44,11 @@ function Alumno() {
     setShowSubir(location.pathname === '/alumno/subirProyectos');
   }, [location]);
   useEffect(() => {
-    setShowCatalogo(location.pathname === '/alumno/catalogo');
+    if (location.pathname.startsWith('/alumno/catalogo/')) {
+      setShowCatalogo(true);
+    } else {
+      setShowCatalogo(false);
+    }
   }, [location]);
   //------------
   const contenidoStyle = {
