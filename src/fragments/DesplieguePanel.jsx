@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import url from '../assets/images/document.svg';
 import urlDes from '../assets/images/despliegue.svg';
-
+import urlDoc from '../assets/images/document.svg';
 import descargaSVG from '../assets/images/descarga.svg'
 
 
@@ -38,8 +38,10 @@ function DesplieguePanel() {
     const navigate = useNavigate();
     const [showLineamientos, setShowLineamientos] = useState(false);
     const [showAdmin, setShowAdmin] = useState(false);
+    const [showCalificar, setShowCalificar] = useState(false);
     const [rotated, setRotated] = useState(false);
     const [rotated2, setRotated2] = useState(false);
+    const [rotated3, setRotated3] = useState(false);
     const handleNavigate = (path) => {
         navigate(path);
     };
@@ -52,6 +54,10 @@ function DesplieguePanel() {
         setShowAdmin(!showAdmin);
         setRotated2(!rotated2);
     };
+    const handleCalificarClick = () => {
+        setShowCalificar(!showCalificar);
+        setRotated3(!rotated3);
+    };
 
     const rotationStyle = {
         transform: rotated ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -61,11 +67,36 @@ function DesplieguePanel() {
         transform: rotated2 ? 'rotate(180deg)' : 'rotate(0deg)',
         transition: 'transform 0.5s ease'
     }
+    const rotationStyle3 = {
+        transform: rotated3 ? 'rotate(180deg)' : 'rotate(0deg',
+        transition: 'transform 0.5s ease'
+    }
+
+    const handleCatalogoClick = (rute) => {
+          console.log("hola")
+      };
+
     return (
         <div>
-            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/inicio/evaluacion')}>
-                <img src={url} alt="doc" style={img} />Calificar
+            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleCalificarClick}>
+                <img src={url} alt="doc" style={img} />Calificar <div style={des}><img src={urlDes} alt='des' style={rotationStyle3}></img></div>
             </div>
+            {showCalificar && (
+                <div>
+                <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCatalogoClick('proyectoSocial')}>
+                  <img src={urlDoc} alt="doc" style={img} />Proyecto Social
+              </div>
+              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCatalogoClick('emprendimientoTecnologico')}>
+                  <img src={urlDoc} alt="doc" style={img} />Emprendimiento Tecnológico
+              </div>
+              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCatalogoClick('innovacionProductosServicios')}>
+                  <img src={urlDoc} alt="doc" style={img} />Innovación en Productos y Servicios
+              </div>
+              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCatalogoClick('energias')}>
+                  <img src={urlDoc} alt="doc" style={img} />Energías Limpias y Sustentabilidad Ambiental
+              </div>
+              </div>
+            )}
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleProyectosAdminClick} >
                 <img src={url} alt="doc" style={img} />Administrador <div style={des}><img src={urlDes} alt='des' style={rotationStyle2}></img></div>
             </div>

@@ -6,7 +6,7 @@
 .categoria_catalogo{
   display: flex;
   align-items: center;
-  width: 40%;
+  width: 40vh;
   justify-content: space-around;
 }
 .tabla_catalogo{

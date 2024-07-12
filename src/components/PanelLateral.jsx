@@ -17,7 +17,7 @@ const panelEstilo = {
   overflowX: 'hidden'
 }
 const logo={
-  height: '20%',
+  height: '20vh',
 }
 const botonOcultar = {
   height: '3rem',

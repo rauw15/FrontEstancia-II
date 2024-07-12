@@ -1,5 +1,5 @@
 .evaluacionCanva{
-  height: 90vh;
+  height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -46,6 +46,7 @@ input{
   border-right: 1px solid #dddddd;
   padding: 8px;
   text-align: center;
+  padding-bottom: 1rem;
 }
 .tabla_ev tr:nth-child(even) {
   background-color: #f2f2f2;

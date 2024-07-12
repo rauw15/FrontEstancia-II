@@ -186,7 +186,11 @@ function TablaUsuarios() {
           </button>
           <h2>
             {mostrarUsuarios ? 'Usuarios Registrados:' : 'Evaluadores Registrados:'}{' '}
-            {mostrarUsuarios ? usuarios.length : evaluadores.length}
+            <span>{mostrarUsuarios ? usuarios.length : evaluadores.length}</span>
+          </h2>
+          <h2>
+            {mostrarUsuarios ? 'Usuarios Registrados sin Evaluadores:' : ' '}{' '}
+            <span>{mostrarUsuarios ? (usuarios.length - evaluadores.length) : ' '}</span>
           </h2>
           <div>
           <button className='btn_pAdmin borde2' onClick={handleGetUsuarios} ><img src={reload} alt="reload" style={reloadStyle} /></button>

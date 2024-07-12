@@ -64,7 +64,7 @@ function Catalogo() {
   
           return result;
         } else {
-          showAlerta(`${result.message} usuario admin?` || 'Error en la solicitud', 'error');
+          showAlerta(`${result.message} Necesitas iniciar sesión` || 'Error en la solicitud', 'error');
         }
       } catch (error) {
         showAlerta('Error en el servidor', 'error');
