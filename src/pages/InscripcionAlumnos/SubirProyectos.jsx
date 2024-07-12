@@ -11,7 +11,7 @@ function SubirProyectos() {
   const [fichaTecnica, setFichaTecnica] = useState(null);
   const [modeloCanva, setModeloCanva] = useState(null);
   const [pdfProyecto, setPdfProyecto] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleArchivoChange = (event, setArchivo) => {
@@ -26,8 +26,10 @@ function SubirProyectos() {
   };
 
   const handleGuardar = () => {
+    setIsLoading(true);
     if (!nombreProyecto || !descripcion || !videoPitch || !fichaTecnica || !modeloCanva || !pdfProyecto) {
       alert('Por favor, complete todos los campos.');
+      setIsLoading(false);
       return;
     }
 
@@ -60,6 +62,8 @@ function SubirProyectos() {
     }).catch(error => {
 
       alert('Error en el servidor');
+    }).finally(() =>{
+      setIsLoading(false);
     });
 
 
@@ -79,6 +83,12 @@ function SubirProyectos() {
 
   return (
     <div className='seccion_canva'>
+      {isLoading && (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Cargando...</p>
+            </div>
+          )}
       <div className='seccion_container box'>
         <div className="seccion_apartado box3 bordeW">
           <div className="sProyectos_descripcion">

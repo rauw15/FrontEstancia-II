@@ -10,6 +10,10 @@ function CalProyectos() {
   const encodedUrl = encodeURI(pdfUrl);
   let namePDF = pdfFileName;
 
+  const handleGuardar = () =>{
+    alert("se va a guradar")
+  }
+
   return (
     <div className='calProyectosCanva'>
       <div className='container_calproyectos box'>
@@ -142,7 +146,7 @@ function CalProyectos() {
             <div id='puntosTotal_cal'>Total: 580</div>
           </div>
           <div className='btn_cal'>
-            <button id='guardar_cal' className='bordeW'>Guardar</button>
+            <button id='guardar_cal' className='bordeW' onClick={handleGuardar}>Guardar</button>
           </div>
         </div>
         <div className='link_cal seccion_apartado box2 bordeR'>Ver Video: <a href="">https:&&youtebe.com lorem</a></div>

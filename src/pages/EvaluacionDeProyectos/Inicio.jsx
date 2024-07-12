@@ -65,7 +65,7 @@ function Inicio() {
   }, [location]);
   //------------
   const contenidoStyle = {
-    transform: clickedHamburguer ? 'translateX(10rem)' : 'translateX(0)',
+    transform: clickedHamburguer ? 'translateX(10rem)' : 'translateX(0rem)',
     transition: 'transform 0.5s ease',
   }
   return (

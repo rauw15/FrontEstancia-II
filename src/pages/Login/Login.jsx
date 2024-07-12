@@ -14,12 +14,14 @@ const op = {
 function Login() {
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [AlertaComponente, showAlerta] = useAlerta();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+    setIsLoading(true);
+
     const data = {
       username: usuario,
       password: contrasena
@@ -36,26 +38,22 @@ function Login() {
 
       const result = await response.json();
 
-      
       if (response.ok) {
-        // Manejar el éxito del inicio de sesión
-        sessionStorage.setItem('nameUser', result.username)
+        sessionStorage.setItem('nameUser', result.username);
         localStorage.setItem('token', result.accessToken);
         showAlerta('Inicio de sesión exitoso', 'success');
-        if(result.roles[0] == 'ROLE_ADMIN'){
+        if (result.roles[0] === 'ROLE_ADMIN') {
           navigate('/inicio/tablaAdmin');
+        } else {
+          navigate('/alumno');
         }
-        else{
-          navigate('/alumno'); 
-        }
-        
       } else {
-        // Manejar error del inicio de sesión
         showAlerta(result.message || 'Error en el inicio de sesión', 'error');
       }
     } catch (error) {
-  
       showAlerta('Error en el servidor', 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -86,6 +84,12 @@ function Login() {
               <button type="submit" className='borde'>Entrar</button>
             </form>
           </div>
+          {isLoading && (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Cargando...</p>
+            </div>
+          )}
         </div>
         <LogoUpChiapas />
       </div>
