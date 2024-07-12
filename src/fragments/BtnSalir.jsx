@@ -18,7 +18,8 @@ const img = {
 function BtnSalir() {
   const navigate = useNavigate();
   const handleCargar = () => {
-
+    localStorage.setItem('token', ' ');
+    sessionStorage.clear();
     navigate('/login');
 
   };

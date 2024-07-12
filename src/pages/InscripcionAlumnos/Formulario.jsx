@@ -14,6 +14,7 @@ function Formulario() {
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
   const saludo = sessionStorage.getItem('nameUser');
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,6 +40,7 @@ function Formulario() {
   };
 
   const handleGuardarFormulario = async () => { 
+    setIsLoading(true);
     if(saludo != null){
       showAlerta(<p>Ya estas inscrito!</p>)
       setTimeout(() => {
@@ -73,10 +75,13 @@ function Formulario() {
     }
     if (llenoEstado === false) {
       showAlerta(<p>Por favor, complete todos los campos.</p>);
+      setIsLoading(false);
     }
     else if(formularioEstado === false){
+      setIsLoading(false);
       showAlerta(<><p>campos invalidos:</p> {mensaje.map((campo, index) => (
         <span key={index}>{campo}</span>
+        
       ))}.</>);
     }
     else{
@@ -117,6 +122,8 @@ function Formulario() {
         }
       } catch (error) {
         showAlerta(<p>Error de conexión. Por favor, intente nuevamente.</p>);
+      } finally{
+        setIsLoading(false);
       }
     }
     }
@@ -126,6 +133,12 @@ function Formulario() {
   return (
     <div className='seccion_canva'>
       {AlertaComponente}
+      {isLoading && (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Cargando...</p>
+            </div>
+          )}
       <div className='seccion_container box bordeR'>
         <div className='formularioHead seccion_apartado box3 bordeW'>
           <h1>4ta Feria de Emprendimiento e Innovación social 2024</h1>
