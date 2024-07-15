@@ -1,12 +1,44 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react'
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAlerta } from '../../fragments/Alerta';
 import '../EvaluacionDeProyectos/evaluacion.css'
 function Evaluacion() {
+  const categoria = ['Proyecto social', 'Emprendimiento Tenológico', 'Innovación en Productos y Servicios', 'Energías Limpias Y Sustentabilidad Ambiental'];
+  const location = useLocation();
+  const [AlertaComponente, showAlerta] = useAlerta();
+  const [showEvaluacionProyecto, setShowEvaluacionProyecto] = useState(false);
+  const [showEvaluacionEmprendimiento, setShowEvaluacionEmprendimiento] = useState(false);
+  const [showEvaluacionInnovacion, setShowEvaluacionInnovacion] = useState(false);
+  const [showEvaluacionEnergia, setShowEvaluacionEnergia] = useState(false);
   const navigate = useNavigate();
 
   const handleNavigate = (path) => {
       navigate(path);
   };
+
+  useEffect(() => {
+    setShowEvaluacionProyecto(
+      location.pathname === '/inicio/evaluacion/proyectoSocial'
+    );
+    
+  }, [location.pathname]);
+  useEffect(() => {
+    setShowEvaluacionEmprendimiento(
+      location.pathname === '/inicio/evaluacion/emprendimientoTecnologico'
+    );
+  }, [location.pathname]);
+  useEffect(() => {
+    setShowEvaluacionInnovacion(
+      location.pathname === '/inicio/evaluacion/innovacionProductosServicios'
+    );
+  }, [location.pathname]);
+  useEffect(() => {
+    setShowEvaluacionEnergia(
+      location.pathname === '/inicio/evaluacion/energias'
+    );
+  }, [location.pathname]);
+
+
   const filas = [];
   for (let i = 0; i < 33; i++) {
     filas.push(
@@ -22,7 +54,13 @@ function Evaluacion() {
   return (
     <div className='evaluacionCanva'>
       <div className='container_evaluacion box bordeR'>
-        <h2>Listado de Proyectos ' <span>Proyecto Social</span> '</h2>
+        <h2>Listado de Proyectos ' 
+            {showEvaluacionProyecto && <span>{categoria[0]}</span>}
+            {showEvaluacionEmprendimiento && <span>{categoria[1]}</span>}
+            {showEvaluacionInnovacion && <span>{categoria[2]}</span>}
+            {showEvaluacionEnergia && <span>{categoria[3]}</span>}
+          '
+        </h2>
         <div className='proyectos_evaluacion borde2'>
           <div className='buscar_ev'>
             <label htmlFor="">&nbsp;Buscar por proyecto:</label>

@@ -53,16 +53,16 @@
   background-color: white;
   margin-top: 10vh;
   padding: 1rem;
-  height: 30rem;
-  width: 51rem;
+  height: auto;
+  width: 65%;
 }
 .modalEliminar{
   position: absolute;
   background-color: white;
   margin-top: 10vh;
   padding: 1rem;
-  height: 15rem;
-  width: 35rem;
+  height: auto;
+  width: 50%;
 }
 .form_admin{
   padding-bottom: 2rem;
@@ -85,4 +85,12 @@
 }
 .btnR_admin:hover{
   background-color: rgba(225, 0, 0, 0.6);
+}
+.opciones_tUsuarios{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.opciones_tUsuarios option{
+  font-size: 1rem;
 }

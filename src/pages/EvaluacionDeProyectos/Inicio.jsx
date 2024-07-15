@@ -39,7 +39,7 @@ function Inicio() {
     setShowHome(location.pathname === '/inicio/home');
   }, [location]);
   useEffect(() => {
-    setShowEvaluacion(location.pathname === '/inicio/evaluacion');
+    setShowEvaluacion(location.pathname.startsWith('/inicio/evaluacion/'));
   }, [location]);
   useEffect(() => {
     setShowCal(location.pathname === '/inicio/evaluacion/calProyectos');
@@ -65,7 +65,7 @@ function Inicio() {
   }, [location]);
   //------------
   const contenidoStyle = {
-    transform: clickedHamburguer ? 'translateX(10rem)' : 'translateX(0rem)',
+    transform: clickedHamburguer ? 'translateX(11rem)' : 'translateX(0rem)',
     transition: 'transform 0.5s ease',
   }
   return (

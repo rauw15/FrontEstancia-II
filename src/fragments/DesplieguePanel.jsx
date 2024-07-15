@@ -7,12 +7,12 @@ import descargaSVG from '../assets/images/descarga.svg'
 
 
 const despliegue = {
-    height: '2.2rem',
+    height: '2.6rem',
     display: 'flex',
     alignItems: 'center'
 };
 const despliegue2 = {
-    height: '1.9rem',
+    height: '2.2rem',
     width: '80%',
     marginLeft: '10%',
     paddingRight: '10%',
@@ -72,8 +72,8 @@ function DesplieguePanel() {
         transition: 'transform 0.5s ease'
     }
 
-    const handleCatalogoClick = (rute) => {
-          console.log("hola")
+    const handleCalClick = (rute) => {
+          navigate(`/inicio/evaluacion/${rute}`)
       };
 
     return (
@@ -83,16 +83,16 @@ function DesplieguePanel() {
             </div>
             {showCalificar && (
                 <div>
-                <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCatalogoClick('proyectoSocial')}>
+                <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCalClick('proyectoSocial')}>
                   <img src={urlDoc} alt="doc" style={img} />Proyecto Social
               </div>
-              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCatalogoClick('emprendimientoTecnologico')}>
+              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCalClick('emprendimientoTecnologico')}>
                   <img src={urlDoc} alt="doc" style={img} />Emprendimiento Tecnológico
               </div>
-              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCatalogoClick('innovacionProductosServicios')}>
+              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCalClick('innovacionProductosServicios')}>
                   <img src={urlDoc} alt="doc" style={img} />Innovación en Productos y Servicios
               </div>
-              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCatalogoClick('energias')}>
+              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleCalClick('energias')}>
                   <img src={urlDoc} alt="doc" style={img} />Energías Limpias y Sustentabilidad Ambiental
               </div>
               </div>

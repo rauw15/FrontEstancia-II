@@ -33,6 +33,10 @@ function App() {
           <Route path='home' element={<Home />} />
           <Route path='tablaAdmin' element={<TablaUsuarios />} />
           <Route path='evaluacion' element={<Evaluacion />}>
+            <Route path='proyectoSocial' element={<Evaluacion />} />
+            <Route path='emprendimientoTecnologico' element={<Evaluacion />} />
+            <Route path='innovacionProductosServicios' element={<Evaluacion />} />
+            <Route path='energias' element={<Evaluacion />} />
             <Route path='calProyectos' element={<CalProyectos />} />
           </Route>
         </Route>

@@ -6,12 +6,12 @@ import descargaSVG from '../assets/images/descarga.svg'
 import { useAlerta } from './Alerta';
 
 const despliegue = {
-  height: '2.2rem',
+  height: '2.6rem',
   display: 'flex',
   alignItems: 'center'
 };
 const despliegue2 = {
-  height: '1.9rem',
+  height: '2.2rem',
   width: '80%',
   marginLeft: '10%',
   paddingRight: '10%',

@@ -11,7 +11,7 @@ const panelEstilo = {
   background: '#2D2D2D',
   color: '#FFFFFF',
   height: '100%',
-  width: '20rem',
+  width: '22rem',
   position: 'absolute',
   overflow: 'auto',
   overflowX: 'hidden'
@@ -20,7 +20,7 @@ const logo={
   height: '20vh',
 }
 const botonOcultar = {
-  height: '3rem',
+  height: '3.2rem',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -38,12 +38,12 @@ const img2 = {
   objectFit: 'contain',
 };
 const despliegue = {
-  height: '2.2rem',
+  height: '2.6rem',
   display: 'flex',
   alignItems: 'center'
 };
 const despliegue2 = {
-  height: '1.9rem',
+  height: '2.2rem',
   width: '80%',
   marginLeft: '10%',
   paddingRight: '10%',
@@ -66,7 +66,7 @@ const fondo = {
   borderRadius: '5px'
 }
 const boton = {
-  height: '2.2rem',
+  height: '2.4rem',
   display: 'flex',
   alignItems: 'center',
   paddingLeft: '1rem'

@@ -23,6 +23,7 @@ function TablaUsuarios() {
   const [nombreUsuario, setNombreUsuario] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [correo, setCorreo] = useState('');
+  const [categoria, setCategoria] = useState('Proyecto Social');
   const [nombreUsuarioEliminar, setNombreUsuarioEliminar] = useState('');
   const [usuarios, setUsuarios] = useState([]);
   const [evaluadores, setEvaluadores] = useState([]);
@@ -104,6 +105,7 @@ function TablaUsuarios() {
             email: correo,
             password: contraseña,
             nombre: nombre,
+            carrera: categoria,
             categoria: 'Evaluador',
             roles: ["moderator"]
           })
@@ -236,9 +238,8 @@ function TablaUsuarios() {
                     <th>Nombre de usuario:</th>
                     <th>email:</th>
                     <th>Nombre:</th>
-                    <th>Carrera:</th>
-                    <th>Cuatrimestre:</th>
-                    <th>Categoria</th>
+                    <th>Categoria a Evaluar:</th>
+                    <th>Nivel</th>
                   </tr>
                 </thead>
                 <tbody>{evaluadores.map((evaluador, index) => (
@@ -247,7 +248,6 @@ function TablaUsuarios() {
                       <td>{evaluador.email}</td>
                       <td>{evaluador.nombre}</td>
                       <td>{evaluador.carrera}</td>
-                      <td>{evaluador.cuatrimestre}</td>
                       <td>{evaluador.categoria}</td>
                     </tr>
                   ))}</tbody>
@@ -269,10 +269,23 @@ function TablaUsuarios() {
               <input type='password' value={contraseña} className='borde2' onChange={(e) => setContraseña(e.target.value)} />
               <label>Correo:</label>
               <input type='text' value={correo} className='borde2' onChange={(e) => setCorreo(e.target.value)} />
-              <label>Rol:</label>
-              <select disabled style={modStyle}>
-                <option value='moderator'>Evaluador</option>
-              </select>
+              <div className='opciones_tUsuarios'>
+                <div>
+                  <label htmlFor="categoria">Categoria a Evaluar:  </label>
+                  <select name="categoria" style={modStyle} className='borde2' onChange={(e) => setCategoria(e.target.value)}>
+                    <option value="Proyecto Social">Proyecto Social</option>
+                    <option value="Emprendimiento Tecnológico.">Emprendimiento Tecnológico.</option>
+                    <option value="Innovación en Productos y Servicios">Innovación en Productos y Servicios</option>
+                    <option value="Energías Limpias y Sustentabilidad Ambiental">Energías Limpias y Sustentabilidad Ambiental</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Rol:</label>
+                  <select disabled style={modStyle}>
+                    <option value='moderator'>Evaluador</option>
+                  </select>
+                </div>
+              </div>
             </form>
             <button onClick={handleAgregarUsuario} className='btn_admin btnB_admin bordeW'>Aceptar</button>
             <button onClick={handleCerrarFormularioAgregar} className='btn_admin btnR_admin bordeW'>Cancelar</button>

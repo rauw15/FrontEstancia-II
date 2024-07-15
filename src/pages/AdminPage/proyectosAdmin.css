@@ -23,12 +23,15 @@
   overflow: auto;
 }
 
-.descripcion_pAdmin{
-  text-align: justify !important;
-}
+
 
 
 .aTablaPadmin{
   background-color: rgba(0, 0, 0, 0);
   color: blue;
+}
+
+.aTablaPadmin a:link{
+  background-color: rgba(0, 0, 0, 0);
+  color: blue !important;
 }
