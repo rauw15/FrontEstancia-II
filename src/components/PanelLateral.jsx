@@ -11,7 +11,7 @@ const panelEstilo = {
   background: '#2D2D2D',
   color: '#FFFFFF',
   height: '100%',
-  width: '22rem',
+  width: '21rem',
   position: 'absolute',
   overflow: 'auto',
   overflowX: 'hidden'

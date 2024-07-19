@@ -8,7 +8,7 @@ import Footer from '../../components/Footer'
 import PanelLateral from '../../components/PanelLateral'
 import Home from '../Home/Home'
 import Evaluacion from './Evaluacion'
-import CalProyectos from './CalProyectos'
+// import CalProyectos from './CalProyectos'
 import Convocatoria from './Convocatoria'
 import TablaUsuarios from '../AdminPage/TablaUsuarios'
 import Catalogo from './Catalogo'
@@ -41,9 +41,9 @@ function Inicio() {
   useEffect(() => {
     setShowEvaluacion(location.pathname.startsWith('/inicio/evaluacion/'));
   }, [location]);
-  useEffect(() => {
-    setShowCal(location.pathname === '/inicio/evaluacion/calProyectos');
-  }, [location]);
+  // useEffect(() => {
+  //   setShowCal(location.pathname === '/inicio/evaluacion/calProyectos');
+  // }, [location]);
   useEffect(() => {
     setShowConvocatoria(location.pathname === '/inicio/convocatoria');
   }, [location]);
@@ -86,7 +86,6 @@ function Inicio() {
         {showEvaluacion && <Evaluacion></Evaluacion>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
-        {showCal && <CalProyectos />}
         {showTablaUsuarios && <TablaUsuarios></TablaUsuarios>}
         {showCatalogo && <Catalogo></Catalogo>}
         {showProyectosAdmin && <ProyectosAdmin></ProyectosAdmin>}

@@ -7,13 +7,12 @@ select:hover{
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 3rem;
   padding-bottom: 2rem;
-
- position: absolute;
+  margin-top: 1rem;
+  position: absolute;
 }
 .container_calproyectos{
-  width: 60rem;
+  width: 64rem;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -111,9 +110,11 @@ select:hover{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: white;
   height: auto; 
   margin-top: 1rem;
+  width: 93%;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
 }
 /* ----------- */
 .pdf_cal{
@@ -136,4 +137,33 @@ select:hover{
 
 .labelInfo{
   height: auto !important;
+}
+
+#cerrar_calProyectos{
+  margin-top: 1rem;
+  border-radius: 100%;
+  background-color: rgba(50, 50, 50, 0.6);
+
+  margin-left: 90%;
+}
+#cerrar_calProyectos:hover{
+  background-color: rgba(50, 50, 50, 0.2);
+}
+.aCalProyectos a:link{
+  background-color: rgba(0, 0, 0, 0);
+  color: blue !important;
+}
+.aCalProyectos{
+  background-color: rgba(0, 0, 0, 0);
+  color: blue !important;
+  position: relative;
+  z-index: 100;
+}
+
+.btn_calPropyecto{
+  cursor: pointer;
+}
+.btn_calPropyecto:hover{
+  background-color: rgba(200, 200, 200, 0.4);
+  transform: scale(1.01);
 }

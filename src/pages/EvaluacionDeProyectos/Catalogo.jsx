@@ -12,7 +12,7 @@ function Catalogo() {
   const [showConvocatoriaEmprendimiento, setShowConvocatoriaEmprendimiento] = useState(false);
   const [showConvocatoriaInnovacion, setShowConvocatoriaInnovacion] = useState(false);
   const [showConvocatoriaEnergia, setShowConvocatoriaEnergia] = useState(false);
-
+  
   useEffect(() => {
     setShowConvocatoriaProyecto(
       location.pathname === '/alumno/catalogo/proyectoSocial' ||

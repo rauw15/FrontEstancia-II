@@ -37,6 +37,10 @@
   box-shadow: 1px 1px 25px 10px rgba(50, 50, 50, 0.2) !important;
   transition: 0.2s;
 }
+.boxMax{
+  box-shadow: 3px 3px 3px 480px rgba(50, 50, 50, 0.3);
+  border-radius: 5px;
+}
 .boxFX:hover{
   transform: scale(1.01);
   box-shadow: 1px 1px 50px 10px rgba(50, 50, 50, 0.4) !important;
@@ -63,7 +67,7 @@ a{
   outline: none !important;
   text-decoration: none !important;
 }
-/* para los links del panel */
+
 a:link {
   color: rgba(250, 250, 250, 1);
 }

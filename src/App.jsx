@@ -37,7 +37,7 @@ function App() {
             <Route path='emprendimientoTecnologico' element={<Evaluacion />} />
             <Route path='innovacionProductosServicios' element={<Evaluacion />} />
             <Route path='energias' element={<Evaluacion />} />
-            <Route path='calProyectos' element={<CalProyectos />} />
+            <Route path='calProyectos' element={<Evaluacion />} />
           </Route>
         </Route>
 

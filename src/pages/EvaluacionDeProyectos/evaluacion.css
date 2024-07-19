@@ -1,5 +1,5 @@
 .evaluacionCanva{
-  height: 100vh;
+  height: auto;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -14,7 +14,7 @@ input{
 }
 .container_evaluacion{
   width: 65rem;
-  height: auto;
+  height: 100vh;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -61,3 +61,4 @@ input{
   color: white;
   padding: 10%;
 }
+
