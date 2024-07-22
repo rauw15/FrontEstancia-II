@@ -90,13 +90,17 @@ function Evaluacion() {
   const handlePol = () => {
     setPol(!pol);
   };
+  let info;
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
-        let info = await handleGetInfo();
-        handleGetProyectos(info);
+        info = await handleGetInfo();
+        
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally{
+        handleGetProyectos(info);
       }
     };
   
