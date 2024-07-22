@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate} from 'react-router-dom';
 import '../EvaluacionDeProyectos/calProyectos.css';
 import Pdf from '../../components/Pdf';
 import '../../assets/css/seccioncss.css';
 import cancelarSVG from '../../assets/images/cancelar.svg';
 import { useAlerta } from '../../fragments/Alerta';
+import urlDes from '../../assets/images/despliegue.svg';
 
-function CalProyectos({ categoria, proyecto, id }) {
+function CalProyectos({ categoria, proyecto, id, handlePol }) {
   const [AlertaComponente, showAlerta] = useAlerta();
+  const [isLoading, setIsLoading] = useState(false);
   const token = localStorage.getItem('token');
+  const nameEvaluador = sessionStorage.getItem('nameUser');
   // console.log(proyecto);
   // console.log(id);
+  // console.log(proyecto[id].nameUser)
   const navigate = useNavigate();
   const [pdfUrl, setPdfUrl] = useState('');
   const [pdfUrl2, setPdfUrl2] = useState('');
@@ -18,10 +22,91 @@ function CalProyectos({ categoria, proyecto, id }) {
   const [verFicha, setVerFicha] = useState(false);
   const [verCanva, setVerCanva] = useState(false);
   const [verResumen, setVerResumen] = useState(false);
+  const [rotated, setRotated] = useState(false);
+  const [rotated2, setRotated2] = useState(false);
+  const [rotated3, setRotated3] = useState(false);
 
-  const handleGuardar = () => {
-    alert("se va a guardar");
-  };
+    // Estados para los inputs
+    const [innovacion, setInnovacion] = useState(0);
+    const [mercado, setMercado] = useState(0);
+    const [tecnica, setTecnica] = useState(0);
+    const [financiera, setFinanciera] = useState(0);
+    const [pitch, setPitch] = useState(0);
+    const [observaciones, setObservaciones] = useState('');
+    //
+    const [calificacionTotal, setCalificacionTotal] = useState('---');
+
+    const handleGuardar = async () => {
+      if (
+        innovacion === 0 ||
+        mercado === 0 ||
+        tecnica === 0 ||
+        financiera === 0 ||
+        pitch === 0 ||
+        observaciones === ''
+      ) {
+        showAlerta('Todos los campos deben estar llenos', 'error');
+        return;
+      }
+      // console.log(`se va a guardar para : ${proyecto[id].nameUser}` );
+      // showAlerta(<><div>{nameEvaluador}, Calificando a: {proyecto[id].nameUser} 
+      //   </div><div><li>innovación: {innovacion}</li> <li>mercado: {mercado}</li> 
+      //   <li>tecnica: {tecnica}</li> <li>financiera: {financiera}</li> <li>pith: {pitch}</li> 
+      //   <li>observaciones: {observaciones}</li> <li>calficacion total: {calificacionTotal}</li><p></p></div></>
+      // );
+      try{
+        setIsLoading(true);
+        const response = await fetch(import.meta.env.VITE_API_CAL, {
+          method: 'POST',
+          headers: {
+            'x-access-token': token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userEvaluador: nameEvaluador,
+            userAlumno: proyecto[id].nameUser,
+            innovacion : innovacion,
+            mercado : mercado,
+            tecnica: tecnica,
+            financiera: financiera,
+            pitch: pitch,
+            observaciones: observaciones,
+            total: calificacionTotal
+          })
+        });
+
+        if(response.ok){
+          showAlerta(
+            <>
+              <h1>Calificado ✅</h1>
+              <><div>{nameEvaluador}, Calificando a: {proyecto[id].nameUser} 
+              </div><div><li>innovación: {innovacion}</li> <li>mercado: {mercado}</li> 
+              <li>tecnica: {tecnica}</li> <li>financiera: {financiera}</li> <li>pith: {pitch}</li> 
+              <li>observaciones: {observaciones}</li> <li>calficacion total: {calificacionTotal}</li><p><span>redirigiendo...</span></p><p></p></div></>
+      
+            </>
+          );
+          
+          setTimeout(() => {
+            handlePol();
+            handleCerrar();
+          }, 4000);
+        }
+        else{
+          setIsLoading(false);
+          showAlerta(<>
+            <p>Error al guardar los datos, Por favor, intente nuevamente.</p>
+          </>);
+        }
+      } catch (error){
+        setIsLoading(false);
+        showAlerta(
+          <p>Error de conexión. Por favor, intente nuevamenre más tarde.</p>
+        );
+      } finally{
+        setIsLoading(false);
+      }
+    };
 
   const handleCerrar = () => {
     navigate(`/inicio/evaluacion/${categoria}`);
@@ -73,16 +158,42 @@ function CalProyectos({ categoria, proyecto, id }) {
 
   const handleFichaClick = (fileName, what) => {
     switch(what){
-      case 1: setVerFicha(true);
+      case 1: setVerFicha(!verFicha); setRotated(!rotated);
       break;
-      case 2 : setVerCanva(true);
+      case 2 : setVerCanva(!verCanva); setRotated2(!rotated2);
       break;
-      case 3 : setVerResumen(true);
+      case 3 : setVerResumen(!verResumen); setRotated3(!rotated3);
       break;
     }
     handleGetArchivos(fileName, what);
   };
+  useEffect(() => {
+    handleTotal();
+  }, [innovacion, mercado, tecnica, financiera, pitch]);
+  let total=0;
+  ////promedio calificación
+  const handleInnovacion=(e)=>{
+    setInnovacion(e);
+  }
+  const handleTotal = () =>{
+    total = (parseFloat(innovacion)+parseFloat(mercado)+parseFloat(tecnica)+parseFloat(financiera)+parseFloat(pitch));
+    setCalificacionTotal(total);
+  } 
+  //-------------
+  const rotationStyle = {
+    transform: rotated ? 'rotate(180deg)' : 'rotate(0deg)',
+    transition: 'transform 0.5s ease' // Agrega una transición para una animación suave
+  };
+  const rotationStyle2 = {
+    transform: rotated2 ? 'rotate(180deg)' : 'rotate(0deg)',
+    transition: 'transform 0.5s ease' // Agrega una transición para una animación suave
+  };
+  const rotationStyle3 = {
+    transform: rotated3 ? 'rotate(180deg)' : 'rotate(0deg)',
+    transition: 'transform 0.5s ease' // Agrega una transición para una animación suave
+  };
 
+  
   return (
     <div className='calProyectosCanva'>
       {AlertaComponente}
@@ -110,7 +221,7 @@ function CalProyectos({ categoria, proyecto, id }) {
                       </span>
                     </div>
                   </label>
-                  <select name="" id="" className='borde2'>
+                  <select name="innovacion" className='borde2' value={innovacion} onChange={(e)=>{handleInnovacion(e.target.value);}}>
                     <option value="0">&nbsp;-------</option>
                     <option value="7">(7) Excelente</option>
                     <option value="6">(6) Muy buena</option>
@@ -131,7 +242,7 @@ function CalProyectos({ categoria, proyecto, id }) {
                       </span>
                     </div>
                   </label>
-                  <select name="" id=""  className='borde2'>
+                  <select name="" id=""  className='borde2' value={mercado} onChange={(e)=>{setMercado(e.target.value); handleTotal();}}>
                     <option value="0">&nbsp;-------</option>
                     <option value="7">(7) Excelente</option>
                     <option value="6">(6) Muy buena</option>
@@ -152,7 +263,7 @@ function CalProyectos({ categoria, proyecto, id }) {
                     </div>
                   
                   </label>
-                  <select name="" id=""  className='borde2'>
+                  <select name="" id=""  className='borde2' value={tecnica} onChange={(e)=>{setTecnica(e.target.value); handleTotal();}}>
                     <option value="0">&nbsp;-------</option>
                     <option value="7">(7) Excelente</option>
                     <option value="6">(6) Muy buena</option>
@@ -175,7 +286,7 @@ function CalProyectos({ categoria, proyecto, id }) {
                     </div>
                   
                   </label>
-                  <select name="" id=""  className='borde2'>
+                  <select name="" id=""  className='borde2' value={financiera} onChange={(e)=>{setFinanciera(e.target.value); handleTotal();}}>
                     <option value="0">&nbsp;-------</option>
                     <option value="7">(7) Excelente</option>
                     <option value="6">(6) Muy buena</option>
@@ -196,7 +307,7 @@ function CalProyectos({ categoria, proyecto, id }) {
                     </div>
                     
                     </label>
-                    <select name="" id=""  className='borde2'>
+                    <select name="" id=""  className='borde2' value={pitch} onChange={(e)=>{setPitch(e.target.value); handleTotal();}}>
                     <option value="0">&nbsp;-------</option>
                     <option value="7">(7) Excelente</option>
                     <option value="6">(6) Muy buena</option>
@@ -211,21 +322,19 @@ function CalProyectos({ categoria, proyecto, id }) {
               </div>
               <div id="ponderacionBottom" className='ponderacion_cal'>
                 <label htmlFor="">Observaciones</label>
-                <textarea name="" id="" cols="30" rows="10"  className='borde2'></textarea>
+                <textarea name="" value={observaciones} onChange={(e)=>setObservaciones(e.target.value)} cols="30" rows="10"  className='borde2'></textarea>
               </div>
             </div>
-            <div id='puntosTotal_cal'>Total: 580</div>
+            <div id='puntosTotal_cal'>Total: {calificacionTotal}</div>
           </div>
 
             <div className='btn_cal'>
               <button id='guardar_cal' className='bordeW' onClick={handleGuardar}>Guardar</button>
             </div>
           </div>
-          <div className='link_cal box2 bordeR'>
+          <div className='seccion_apartado link_cal box2 bordeR'>
             Ver Video:
-            <div style={{ position: 'relative' }}>
-              <a target='_blank' href={proyecto.videoLink} className='aCalProyectos' style={{ zIndex: 10 }}>{proyecto[id].video}</a>
-            </div>
+              <a target='_blank' className='aCalProyectos' href={proyecto[id].video}>&nbsp;{proyecto[id].video}</a>
           </div>
           <div className="seccion_apartado box2">
             <div className='description_cal'>
@@ -233,10 +342,10 @@ function CalProyectos({ categoria, proyecto, id }) {
               <p>{proyecto[id].descripcion}</p>
             </div>
           </div>
-          <div className='seccion_apartado box2 pdf_cal bordeR' style={{ height: verFicha ? '65rem' : '3rem' }}>
+          <div className='seccion_apartado box2 pdf_cal bordeR' style={{ height: verFicha ? '68rem' : '3rem' }}>
             
             <span>*Ficha técnica : </span>
-            <div className='borde2 btn_calPropyecto' onClick={() => handleFichaClick(ficha[ficha.length - 1],1)}>Ver Ficha</div>
+            <div className='bordeW box4 btn_calPropyecto' onClick={() => handleFichaClick(ficha[ficha.length - 1],1)}>Ver Ficha <img src={urlDes} alt="despliSVG" style={rotationStyle} /></div>
             {verFicha && (
               <>
               <div id='pdfTop' className=''>{ficha[ficha.length - 1]}</div>
@@ -245,9 +354,9 @@ function CalProyectos({ categoria, proyecto, id }) {
             )}
             
           </div>
-          <div className='seccion_apartado box2 pdf_cal bordeR' style={{ height: verCanva ? '65rem' : '3rem' }}>
+          <div className='seccion_apartado box2 pdf_cal bordeR' style={{ height: verCanva ? '68rem' : '3rem' }}>
             <span>*Modelo canva : </span>
-            <div className='borde2 btn_calPropyecto' onClick={() => handleFichaClick(canva[canva.length - 1], 2)}>Ver Canva</div>
+            <div className='bordeW box4 btn_calPropyecto' onClick={() => handleFichaClick(canva[canva.length - 1], 2)}>Ver Canva <img src={urlDes} alt="despliSVG" style={rotationStyle2} /></div>
             {verCanva && (
               <>
                 <div id='pdfTop' className=''>{canva[canva.length - 1]}</div>
@@ -256,9 +365,9 @@ function CalProyectos({ categoria, proyecto, id }) {
             )}
             
           </div>
-          <div className='seccion_apartado box2 pdf_cal bordeR' style={{ height: verResumen ? '65rem' : '3rem' }}>
+          <div className='seccion_apartado box2 pdf_cal bordeR' style={{ height: verResumen ? '68rem' : '3rem' }}>
             <span>*Resumen Ejecutivo : </span>
-            <div className='borde2 btn_calPropyecto' onClick={() => handleFichaClick(resumen[resumen.length - 1], 3)}>Ver Resumen</div>
+            <div className='bordeW box4 btn_calPropyecto' onClick={() => handleFichaClick(resumen[resumen.length - 1], 3)}>Ver Resumen <img src={urlDes} alt="despliSVG" style={rotationStyle3} /></div>
             {verResumen && (
               <>
                 <div id='pdfTop' className=''>{resumen[resumen.length - 1]}</div>

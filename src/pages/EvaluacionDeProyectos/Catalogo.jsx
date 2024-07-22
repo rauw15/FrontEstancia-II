@@ -193,7 +193,7 @@ function Catalogo() {
           <div className='titulo_catalogo'>
             <h1 className='box4'>Catálogo de Proyectos</h1>
             <div className='categoria_catalogo borde2'>
-              <h3>Categoria: </h3>
+              <h3>Categoría: </h3>
               {showConvocatoriaProyecto && <p>{categoria[0]}</p>}
               {showConvocatoriaEmprendimiento && <p>{categoria[1]}</p>}
               {showConvocatoriaInnovacion && <p>{categoria[2]}</p>}

@@ -14,9 +14,11 @@ function Evaluacion() {
   const [showEvaluacionEnergia, setShowEvaluacionEnergia] = useState(false);
   const [showCal, setShowCal] = useState(false);
   const [categoriaGlobal, setCategoriaGlobal] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const token = localStorage.getItem('token');
+  const nameEvaluador = sessionStorage.getItem('nameUser');
   const [proyectosCProyecto, setProyectosCProyecto] = useState([0]);
   const [proyectosCEmprendimiento, setProyectosCEmprendimiento] = useState([0]);
   const [proyectosCInnovacion, setProyectosCInnovacion] = useState([0]);
@@ -25,6 +27,12 @@ function Evaluacion() {
 
   const [proyectoUser, setProyectoUser] = useState([]);
   const [idProyectouser, setIdProyectoUser] = useState('');
+  const [calificados, setCalificados] = useState([]);
+  // const [categoriaEvaluador, setCategoriaEvaluador] = useState('');
+  // const [userWho, setUserWho] = useState('');
+  // // const [userWho, setUserWho] = useState('');
+  let verBtnCal = true;
+  let verBtnCal1 = true;
 
   const handleNavigate = (path, id) => {
     setIdProyectoUser(id);
@@ -78,15 +86,28 @@ function Evaluacion() {
 
   }, [location.pathname]);
 
-
-  useEffect(()=> {
-    
-    handleGetProyectos();
-  }, [ver]);
-
-  const handleGetProyectos = async () => {
+  const [pol, setPol] = useState(true);
+  const handlePol = () => {
+    setPol(!pol);
+  };
+  useEffect(() => {
     const fetchData = async () => {
       try {
+        let info = await handleGetInfo();
+        handleGetProyectos(info);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, [pol]);
+
+  const handleGetProyectos = async (info) => {
+    
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
         const response = await fetch(import.meta.env.VITE_API_GETPRALL, {
           method: 'GET',
           headers: {
@@ -99,25 +120,100 @@ function Evaluacion() {
           // console.log(result)
           return result;
         } else {
+          setIsLoading(false);
           showAlerta(`${result.message} Necesitas iniciar sesión` || 'Error en la solicitud', 'error');
         }
       } catch (error) {
         showAlerta('Error en el servidor', 'error');
+      } finally{
+        setIsLoading(false);
       }
     };
-
     const depuracion = async () => {
+      let cual = '';
+      let objetoCalificado = [];
       let objetoProyecto = [];
       let objetoEmprendimiento = [];
       let objetoInnovacion = [];
       let objetoEnergia = [];
+      let aux={
+        calificacion: '',
+        observaciones: '',
+        btn: true,
+      };
       try {
         const datos = await fetchData();
-        for (let i = 0; i < datos.length; i++) {
-          // console.log(datos[i].categoria)
+        // console.log(datos);
+        //----infoDepuracion-----
+        for(let e=0; e<info.length; e++){
           
-          if(datos[i].categoria === 'Proyecto Social'){
+          if(info[e].userEvaluador == nameEvaluador){
+            objetoCalificado.push(
+              {
+                usuarioEvaluador: info[e].userEvaluador,
+                userAlumno: info[e].userAlumno,
+                observaciones: info[e].observaciones,
+                total: info[e].total,
+              }
+            )
+          }
+        }
+        // console.log(objetoCalificado);
+        setCalificados(objetoCalificado);
+        //-------------
+        for(let a=0; a<datos.length; a++){
+          if(datos[a].categoria === 'Evaluador'){
+            if(datos[a].carrera==='Proyecto Social'){
+              if(nameEvaluador === datos[a].username){
+                showAlerta(<div><h3>Categoría a Evaluar:</h3> <span><h4>'{datos[a].carrera}'</h4></span><p><span>Nota:
+                </span>El resto de categorias estarán deshabilitadas.</p></div>)
+                cual = '1';
+              }
+            }
+            else if(datos[a].carrera==='Emprendimiento Tecnológico.'){
+              if(nameEvaluador === datos[a].username){
+                showAlerta(<div><h3>Categoría a Evaluar:</h3> <span><h4>'{datos[a].carrera}'</h4></span><p><span>Nota:
+                </span>El resto de categorias estarán deshabilitadas.</p></div>)
+                cual = '2';
+              }
+            }
+            else if(datos[a].carrera==='Innovación en Productos y Servicios'){
+              if(nameEvaluador === datos[a].username){
+                showAlerta(<div><h3>Categoría a Evaluar:</h3> <span><h4>'{datos[a].carrera}'</h4></span><p><span>Nota:
+                </span>El resto de categorias estarán deshabilitadas.</p></div>)
+                cual = '3';
+              }
+            }
+            else if(datos[a].carrera==='Energías Limpias y Sustentabilidad Ambiental'){
+              if(nameEvaluador === datos[a].username){
+                showAlerta(<div><h3>Categoría a Evaluar:</h3> <span><h4>'{datos[a].carrera}'</h4></span><p><span>Nota:
+                </span>El resto de categorias estarán deshabilitadas.</p></div>)
+                cual = '4';
+              }
+            }
+          }
+          else if(datos[a].categoria === 'admin'){
+            cual = 'admin';
+          }
+        }
+        for (let i = 0; i < datos.length; i++) {
+          // console.log(datos[i].categoria) 
+          if(datos[i].categoria === 'Proyecto Social' && (cual == '1' || cual == 'admin')){
             if (datos[i].proyectos.length > 0) {
+              const resultadoAUX = objetoCalificado.find(objeto => objeto.userAlumno === datos[i].username);
+              if (resultadoAUX) {
+                aux={
+                  calificacion: resultadoAUX.total,
+                  observaciones: resultadoAUX.observaciones,
+                  btn: false,
+                }
+              } else {
+                aux={
+                  calificacion: '--',
+                  observaciones: '--',
+                  btn: true,
+                }
+              }
               objetoProyecto.push(
                 {
                   nameUser: datos[i].username,
@@ -128,15 +224,29 @@ function Evaluacion() {
                   resumen : datos[i].proyectos[0].projectPdf,
                   categoria: datos[i].categoria,
                   video: datos[i].proyectos[0].videoLink,
+                  calificacion: aux.calificacion,
+                  observaciones: aux.observaciones,
+                  btn: aux.btn,
                 }
               );
             }
-            // else{
-            //   console.log("no")
-            // }
           }
-          else if(datos[i].categoria === 'Emprendimiento Tecnológico.'){
+          else if(datos[i].categoria === 'Emprendimiento Tecnológico.' && (cual == '2' || cual=='admin')){
             if (datos[i].proyectos.length > 0) {
+              const resultadoAUX = objetoCalificado.find(objeto => objeto.userAlumno === datos[i].username);
+              if (resultadoAUX) {
+                aux={
+                  calificacion: resultadoAUX.total,
+                  observaciones: resultadoAUX.observaciones,
+                  btn: false,
+                }
+              } else {
+                aux={
+                  calificacion: '--',
+                  observaciones: '--',
+                  btn: true,
+                }
+              }
               objetoEmprendimiento.push(
                 {
                   nameUser: datos[i].username,
@@ -147,12 +257,29 @@ function Evaluacion() {
                   resumen : datos[i].proyectos[0].projectPdf,
                   categoria: datos[i].categoria,
                   video: datos[i].proyectos[0].videoLink,
+                  calificacion: aux.calificacion,
+                  observaciones: aux.observaciones,
+                  btn: aux.btn,
                 }
               );
             }
           }
-          else if(datos[i].categoria === 'Innovación en Productos y Servicios'){
+          else if(datos[i].categoria === 'Innovación en Productos y Servicios' && (cual == '3' || cual=='admin')){
             if (datos[i].proyectos.length > 0) {
+              const resultadoAUX = objetoCalificado.find(objeto => objeto.userAlumno === datos[i].username);
+              if (resultadoAUX) {
+                aux={
+                  calificacion: resultadoAUX.total,
+                  observaciones: resultadoAUX.observaciones,
+                  btn: false,
+                }
+              } else {
+                aux={
+                  calificacion: '--',
+                  observaciones: '--',
+                  btn: true,
+                }
+              }
               objetoInnovacion.push(
                 {
                   nameUser: datos[i].username,
@@ -163,13 +290,29 @@ function Evaluacion() {
                   resumen : datos[i].proyectos[0].projectPdf,
                   categoria: datos[i].categoria,
                   video: datos[i].proyectos[0].videoLink,
+                  calificacion: aux.calificacion,
+                  observaciones: aux.observaciones,
+                  btn: aux.btn,
                 }
               );
             }
-            
           }
-          else if(datos[i].categoria === 'Energías Limpias y Sustentabilidad Ambiental'){
+          else if(datos[i].categoria === 'Energías Limpias y Sustentabilidad Ambiental' && (cual == '4' || cual=='admin')){
             if (datos[i].proyectos.length > 0) {
+              const resultadoAUX = objetoCalificado.find(objeto => objeto.userAlumno === datos[i].username);
+              if (resultadoAUX) {
+                aux={
+                  calificacion: resultadoAUX.total,
+                  observaciones: resultadoAUX.observaciones,
+                  btn: false,
+                }
+              } else {
+                aux={
+                  calificacion: '--',
+                  observaciones: '--',
+                  btn: true,
+                }
+              }
               objetoEnergia.push(
                 {
                   nameUser: datos[i].username,
@@ -180,48 +323,64 @@ function Evaluacion() {
                   resumen : datos[i].proyectos[0].projectPdf,
                   categoria: datos[i].categoria,
                   video: datos[i].proyectos[0].videoLink,
+                  calificacion: aux.calificacion,
+                  observaciones: aux.observaciones,
+                  btn: aux.btn,
                 }
               );
-            }
-            
+            } 
           }
-          
-          
         }
         setProyectosCProyecto(objetoProyecto);
         setProyectosCEmprendimiento(objetoEmprendimiento);
         setProyectosCInnovacion(objetoInnovacion);
         setProyectosCEnergia(objetoEnergia);
       } catch (error) {
-        console.error("Error en depuracion:", error);
+        showAlerta(`Error en la solicitud, inicio de sesión?`, 'error')
       }
     };
-    
     depuracion();
   };
 
-
-
-  // const filas = [];
-  // for (let i = 0; i < 3; i++) {
-  //   filas.push(
-  //     <tr key={i}>
-  //       <td>{i + 1}</td>
-  //       <td>Estacion Huete</td>
-  //       <td>{i * 50 + 50}</td>
-  //       <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi at nihil odit? Voluptate debitis odit repellendus modi. Voluptatibus quae impedit consectetur delectus minus. Temporibus adipisci exercitationem animi, magnam sapiente quod!</td>
-  //       <td><button id={`calificar${i + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos')}>Calificar</button></td>
-  //     </tr>
-  //   );
-  // }
+  const handleGetInfo = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(import.meta.env.VITE_API_OBCAL, {
+          method: 'GET',
+          headers: {
+            'x-access-token': token,
+          },
+        });
+        const result = await response.json();
+        if (response.ok) {
+          // console.log(result)
+          return result;
+        } else {
+          setIsLoading(false);
+          showAlerta(`${result.message} Necesitas iniciar sesión` || 'Error en la solicitud', 'error');
+        }
+      } catch (error) {
+        showAlerta('Error en el servidor', 'error');
+      } finally{
+        setIsLoading(false);
+      };
+    }
 
   return (
     <div className='evaluacionCanva'>
+      {isLoading && (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Cargando...</p>
+            </div>
+          )}
+      {AlertaComponente}
         {showCal &&
-          <CalProyectos categoria = {categoriaGlobal} proyecto = {proyectoUser} id={idProyectouser}></CalProyectos>
+          <CalProyectos categoria = {categoriaGlobal} proyecto = {proyectoUser} id={idProyectouser} handlePol={handlePol}></CalProyectos>
         }
 
       <div className='container_evaluacion box bordeR'>
+      
         <h2>Listado de Proyectos '
           {showEvaluacionProyecto && <span>{categoria[0]}</span>}
           {showEvaluacionEmprendimiento && <span>{categoria[1]}</span>}
@@ -251,36 +410,44 @@ function Evaluacion() {
                   <tr key={index}>
                     <td>{index +1}</td>
                     <td>{proyecto.proyectoName}</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td><button id={`calificar${index + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos', index)}>Calificar</button></td>
+                    <td>{proyecto.calificacion}</td>
+                    <td>{proyecto.observaciones}</td>
+                    <td>
+                      {proyecto.btn ? <button id={`calificar${index + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos', index)}>Calificar</button> : <div>Calificado✅</div>}
+                    </td>
                   </tr>
                 ))}
                 {showEvaluacionEmprendimiento && proyectosCEmprendimiento.map((proyecto, index) => (
                   <tr key={index}>
                     <td>{index +1}</td>
                     <td>{proyecto.proyectoName}</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td><button id={`calificar${index + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos', index)}>Calificar</button></td>
+                    <td>{proyecto.calificacion}</td>
+                    <td>{proyecto.observaciones}</td>
+                    <td>
+                      {proyecto.btn ? <button id={`calificar${index + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos', index)}>Calificar</button> : <div>Calificado✅</div>}
+                    </td>
                   </tr>
                 ))}
                 {showEvaluacionInnovacion && proyectosCInnovacion.map((proyecto, index) => (
                   <tr key={index}>
                     <td>{index +1}</td>
                     <td>{proyecto.proyectoName}</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td><button id={`calificar${index + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos', index)}>Calificar</button></td>
+                    <td>{proyecto.calificacion}</td>
+                    <td>{proyecto.observaciones}</td>
+                    <td>
+                      {proyecto.btn ? <button id={`calificar${index + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos', index)}>Calificar</button> : <div>Calificado✅</div>}
+                    </td>
                   </tr>
                 ))}
                 {showEvaluacionEnergia && proyectosCEnergia.map((proyecto, index) => (
                   <tr key={index}>
                     <td>{index +1}</td>
                     <td>{proyecto.proyectoName}</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td><button id={`calificar${index + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos', index)}>Calificar</button></td>
+                    <td>{proyecto.calificacion}</td>
+                    <td>{proyecto.observaciones}</td>
+                    <td>
+                      {proyecto.btn ? <button id={`calificar${index + 1}`} className='btn_ev borde2' onClick={() => handleNavigate('/inicio/evaluacion/calProyectos', index)}>Calificar</button>: <div>Calificado✅</div>}
+                    </td>
                   </tr>
                 ))}
                 </tbody>

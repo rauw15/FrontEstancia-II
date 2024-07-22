@@ -74,6 +74,7 @@ function ProyectosAdmin() {
             );
           }
         }
+        
         setProyectos(objetoProyecto);
       } catch (error) {
         console.error("Error en depuracion:", error);
@@ -109,7 +110,6 @@ function ProyectosAdmin() {
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Fetch error:', error);
       showAlerta('Error en la solicitud', 'error');
     }
   };

@@ -44,7 +44,12 @@ function Login() {
         showAlerta('Inicio de sesión exitoso', 'success');
         if (result.roles[0] === 'ROLE_ADMIN') {
           navigate('/inicio/tablaAdmin');
-        } else {
+        } 
+        else if(result.roles[0] === 'ROLE_MODERATOR'){
+          // navigate('/inicio/home')
+          navigate('/alumno');
+        }
+        else {
           navigate('/alumno');
         }
       } else {
@@ -65,7 +70,7 @@ function Login() {
         <div className='login'>
           <div id='form' className='box bordeR'>
             <form action="" className='formDatos' onSubmit={handleSubmit}>
-              <label htmlFor="usuario">Usuario:</label>
+              <label htmlFor="usuario" autoFocus>Usuario:</label>
               <input 
                 type="text" 
                 name='usuario' 

@@ -71,18 +71,18 @@ function Inicio() {
   return (
     <div className='todo'>
       
-      <div className={`panel ${clickedHamburguer ? 'show' : ''}`} style={{ visibility: isInicioHome ? 'hidden' : 'visible' }}>
+      <div className={`panel ${clickedHamburguer ? 'show' : ''}`} style={{ visibility: isInicioHome ? 'visible' : 'visible' }}>
        {clickedHamburguer && <PanelLateral onHamburguerClick={handleHamburguerClick}></PanelLateral>}
       </div>
-      <div className="head" id='head'  style={{ opacity: isInicioHome ? 0.5 : 1 }}>
+      <div className="head" id='head'  style={{ opacity: isInicioHome ? 1 : 1 }}>
         <Head onHamburguerClick={handleHamburguerClick}></Head>
       </div>
-      <div className="content_inicio borde2">
+      <div className="content_inicio borde2" >
         <div className="logo borde2"  style={{ opacity: isInicioCal ? 0 : (isTabla ? 0 : 1) }}>
           {(isInicioHome) && <LogoUpChiapas></LogoUpChiapas>}
         </div>
         <div style={contenidoStyle}>
-        {showHome && <Home />}
+        {showHome && <LogoUpChiapas />}
         {showEvaluacion && <Evaluacion></Evaluacion>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
@@ -92,7 +92,7 @@ function Inicio() {
         </div>
       </div>
       
-      <div className='footer' id='footer'  style={{ opacity: isInicioCal ? 0 : (isInicioHome ? 0.5 : 1) }}>
+      <div className='footer' id='footer'  style={{ opacity: isInicioCal ? 0 : (isInicioHome ? 1 : 1) }}>
         
         <Footer></Footer>
       </div>
