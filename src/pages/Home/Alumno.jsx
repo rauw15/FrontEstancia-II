@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route, BrowserRouter as Router, useLocation } from 'react-router-dom'
+import { Routes, Route, BrowserRouter as Router, useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import LogoUpChiapas from '../../components/LogoUpChiapas'
@@ -11,11 +11,14 @@ import Home from './Home'
 import Convocatoria from '../EvaluacionDeProyectos/Convocatoria'
 import SubirProyectos from '../InscripcionAlumnos/SubirProyectos'
 import Catalogo from '../EvaluacionDeProyectos/Catalogo'
+import { useAlerta } from '../../fragments/Alerta';
 import './alumno.css'
 
 function Alumno() {
   //------------
+  const navigate = useNavigate();
   const location = useLocation();
+  const [AlertaComponente, showAlerta] = useAlerta();
   const [showInscripcion, setShowInscripcion] = useState(false);
   const isInicioHome = location.pathname === '/alumno';
   const isInscripcion = location.pathname === '/alumno/inscripcion';
@@ -25,14 +28,22 @@ function Alumno() {
   const [showLineamento, setShowLineamento] = useState(false);
   const [showSubir, setShowSubir] = useState(false);
   const [showCatalogo, setShowCatalogo] = useState(false);
+  const [ver, setVer] = useState('');
 
   //----------
   const handleHamburguerClick = () => {
     setClickedHamburguer(!clickedHamburguer);
   };
+  useEffect(() => {
+    showAlerta(<><p>Convocatoria terminada..</p><p>Gracias por participar</p></>)
+    setTimeout(() => {
+      navigate('/alumno');
+    }, 3000);
+  }, [showInscripcion, showSubir])
   //---------
   useEffect(() => {
     setShowInscripcion(location.pathname === '/alumno/inscripcion');
+    
   }, [location]);
   useEffect(() => {
     setShowConvocatoria(location.pathname === '/alumno/convocatoria');
@@ -41,6 +52,7 @@ function Alumno() {
     setShowLineamento(location.pathname === '/alumno/convocatoria/lineamientos');
   }, [location]);
   useEffect(() => {
+    
     setShowSubir(location.pathname === '/alumno/subirProyectos');
   }, [location]);
   useEffect(() => {
@@ -57,6 +69,7 @@ function Alumno() {
   }
   return (
     <div className='alumnoInicio'>
+      
       <div className={`panel ${clickedHamburguer ? 'show' : ''}`} style={{ visibility: isRaiz ? 'hidden' : 'visible' }}>
        {clickedHamburguer && <PanelLateral onHamburguerClick={handleHamburguerClick}></PanelLateral>}
       </div>
@@ -71,10 +84,10 @@ function Alumno() {
         {isRaiz && <Home/>}
         </div>
         <div style={contenidoStyle}>
-        {showInscripcion && <Formulario></Formulario>}
+        {showInscripcion && AlertaComponente}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
-        {showSubir && <SubirProyectos></SubirProyectos>}
+        {showSubir && AlertaComponente}
         {showCatalogo && <Catalogo></Catalogo>}
         
         </div>
