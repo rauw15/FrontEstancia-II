@@ -55,14 +55,15 @@ function ProyectosAdmin() {
         let resumen = '';
         for (let i = 0; i < datos.length; i++) {
           if (datos[i].proyectos.length > 0) {
+            console.log(datos);
             if(datos[i].proyectos[0].canvaModel == undefined  || datos[i].proyectos[0].technicalSheet == undefined  || datos[i].proyectos[0].projectPdf == undefined ){
               console.log("archivos no subidos");
             }
-            else{
+            // else{
             canva = datos[i].proyectos[0].canvaModel.split("\\");
             ficha = datos[i].proyectos[0].technicalSheet.split("\\");
             resumen = datos[i].proyectos[0].projectPdf.split("\\");
-            }
+           // }
             objetoProyecto.push(
               {
                 nameUser: datos[i].username,
