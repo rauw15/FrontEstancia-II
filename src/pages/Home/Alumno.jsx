@@ -36,9 +36,7 @@ function Alumno() {
   };
   useEffect(() => {
     showAlerta(<><p>Convocatoria terminada..</p><p>Gracias por participar</p></>)
-    setTimeout(() => {
-      navigate('/alumno');
-    }, 3000);
+
   }, [showInscripcion, showSubir])
   //---------
   useEffect(() => {
