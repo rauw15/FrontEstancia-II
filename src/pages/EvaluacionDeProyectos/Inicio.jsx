@@ -13,6 +13,7 @@ import Convocatoria from './Convocatoria'
 import TablaUsuarios from '../AdminPage/TablaUsuarios'
 import Catalogo from './Catalogo'
 import ProyectosAdmin from '../AdminPage/ProyectosAdmin'
+import CalificacionesAdmin from '../AdminPage/CalificacionesAdmin'
 import './inicio.css'
 function Inicio() {
   const location = useLocation();
@@ -31,6 +32,7 @@ function Inicio() {
   const [showTablaUsuarios, setShowTablaUsuarios] = useState(false);
   const [showCatalogo, setShowCatalogo] = useState(false);
   const [showProyectosAdmin, setShowProyectosAdmin] = useState(false);
+  const [showCalificacionesAdmin, setShowCalificacionesAdmin] = useState(false);
   //----------
   const handleHamburguerClick = () => {
     setClickedHamburguer(!clickedHamburguer);
@@ -63,6 +65,9 @@ function Inicio() {
   useEffect(() => {
     setShowProyectosAdmin(location.pathname === '/inicio/proyectosAdmin');
   }, [location]);
+  useEffect(() => {
+    setShowCalificacionesAdmin(location.pathname === '/inicio/calificacionesAdmin');
+  }, [location]);
   //------------
   const contenidoStyle = {
     transform: clickedHamburguer ? 'translateX(11rem)' : 'translateX(0rem)',
@@ -89,6 +94,7 @@ function Inicio() {
         {showTablaUsuarios && <TablaUsuarios></TablaUsuarios>}
         {showCatalogo && <Catalogo></Catalogo>}
         {showProyectosAdmin && <ProyectosAdmin></ProyectosAdmin>}
+        {showCalificacionesAdmin && <CalificacionesAdmin></CalificacionesAdmin>}
         </div>
       </div>
       

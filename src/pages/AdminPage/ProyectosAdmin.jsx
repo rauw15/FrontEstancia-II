@@ -16,6 +16,7 @@ function ProyectosAdmin() {
   const [AlertaComponente, showAlerta] = useAlerta();
   const [archivo, setArchivo] = useState('');
   const [proyectos, setProyectos] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [ver, setVer] = useState(true);
   useEffect(()=> {
@@ -47,6 +48,7 @@ function ProyectosAdmin() {
     const depuracion = async () => {
       let objetoProyecto = [];
       try {
+        setIsLoading(true);
         const datos = await fetchData();
         let canva = '';
         let ficha = '';
@@ -78,6 +80,8 @@ function ProyectosAdmin() {
         setProyectos(objetoProyecto);
       } catch (error) {
         console.error("Error en depuracion:", error);
+      } finally{
+        setIsLoading(false);
       }
     };
 
@@ -122,6 +126,12 @@ function ProyectosAdmin() {
   return (
     <div className='seccion_canva'>
       {AlertaComponente}
+      {isLoading && (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Cargando...</p>
+            </div>
+          )}
       <div className='seccion_container2 box2 apartado_pAdmin'>
         <div className="seccion_apartadoW box3 adminP_fx">
           Proyectos Registrados: {proyectos.length}

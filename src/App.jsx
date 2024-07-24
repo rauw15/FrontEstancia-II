@@ -11,6 +11,7 @@ import Alumno from './pages/Home/Alumno';
 import SubirProyectos from './pages/InscripcionAlumnos/SubirProyectos';
 import TablaUsuarios from './pages/AdminPage/TablaUsuarios';
 import ProyectosAdmin from './pages/AdminPage/ProyectosAdmin';
+import CalificacionesAdmin from './pages/AdminPage/CalificacionesAdmin';
 import './App.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
 
         <Route path='/inicio' element={<Inicio />}>
           <Route path='proyectosAdmin' element={<ProyectosAdmin />} />
+          <Route path='calificacionesAdmin' element={<CalificacionesAdmin />} />
           <Route path='catalogo' element={<Catalogo />}>
             <Route path='proyectoSocial' element={<Catalogo />} />
             <Route path='emprendimientoTecnologico' element={<Catalogo />} />

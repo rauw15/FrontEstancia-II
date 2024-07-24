@@ -109,6 +109,9 @@ function DesplieguePanel() {
               <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/proyectosAdmin')}>
                   <img src={url} alt="doc" style={img} />Proyectos Registrados
               </div>
+              <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/inicio/calificacionesAdmin')}>
+                  <img src={url} alt="doc" style={img} />Calificaciones Registrados
+              </div>
               </div>
               
           )}
