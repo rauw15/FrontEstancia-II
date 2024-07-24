@@ -55,7 +55,7 @@ function ProyectosAdmin() {
         let resumen = '';
         for (let i = 0; i < datos.length; i++) {
           if (datos[i].proyectos.length > 0) {
-            console.log(datos);
+            // console.log(datos);
             if(datos[i].proyectos[0].canvaModel == undefined  || datos[i].proyectos[0].technicalSheet == undefined  || datos[i].proyectos[0].projectPdf == undefined ){
               console.log("archivos no subidos");
             }
