@@ -47,9 +47,9 @@ function App() {
           <Route path='convocatoria' element={<Convocatoria />}>
             <Route path='lineamientos' element={<Convocatoria />} />
           </Route>
-          <Route path='inscripcion' element={<Formulario />} />
+          <Route path='inscripcion' element={<Alumno />} />
           <Route path='home' element={<Home />} />
-          <Route path='subirProyecto' element={<SubirProyectos />} />
+          <Route path='subirProyecto' element={<Alumno />} />
           <Route path='catalogo' element={<Catalogo />}>
             <Route path='proyectoSocial' element={<Catalogo />} />
             <Route path='emprendimientoTecnologico' element={<Catalogo />} />

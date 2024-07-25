@@ -16,6 +16,7 @@ function CalificacionesAdmin() {
   const usuarioAdmin= sessionStorage.getItem('nameUser');
   const [AlertaComponente, showAlerta] = useAlerta();
   const [proyectos, setProyectos] = useState([]);
+  const proyectosOrdenados = proyectos.sort((a, b) => b.total - a.total);
   const [isLoading, setIsLoading] = useState(false);
 
   const [ver, setVer] = useState(true);
@@ -71,15 +72,10 @@ function CalificacionesAdmin() {
   return (
     <div className='seccion_canva'>
       {AlertaComponente}
-      {isLoading && (
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Cargando...</p>
-            </div>
-          )}
-      <div className='seccion_container2 box2 apartado_pAdmin'>
+      
+      <div className='seccion_container3 box2 apartado_pAdmin'>
         <div className="seccion_apartadoW box3 adminP_fx">
-          Calificaciones Registrados: {proyectos.length}
+          Resultados Registrados: {proyectos.length}
           <button className='btn_pAdmin borde2' onClick={handleGetProyectos}>
             <img src={reload} alt="reload" style={reloadStyle} />
           </button>
@@ -101,7 +97,7 @@ function CalificacionesAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {proyectos.map((proyecto, index) => (
+                {proyectosOrdenados.map((proyecto, index) => (
                   <tr key={index}>
                     <td>{proyecto.userEvaluador}</td>
                     <td>{proyecto.userAlumno}</td>
