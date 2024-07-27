@@ -46,7 +46,7 @@ function Login() {
           navigate('/inicio/tablaAdmin');
         } 
         else if(result.roles[0] === 'ROLE_MODERATOR'){
-          navigate('/inicio/home')
+          navigate('/alumno')
           // navigate('/alumno');
         }
         else {
