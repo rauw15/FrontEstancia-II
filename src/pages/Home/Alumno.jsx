@@ -77,6 +77,11 @@ function Alumno() {
       <div className="content_alumno borde2">
         <div className='logo_alumno' style={{ opacity: isInscripcion ? 0 : (isRaiz ? 0.5 : 1) }}>
         {(isInicioHome || isRaiz) && <LogoUpChiapas></LogoUpChiapas>}
+        {(isInicioHome || isRaiz) && (
+          <>
+            <div className='anuncio_alumno'><h1>Gracias por participar!</h1></div>
+          </>
+        )}
         </div>
         <div>
         {isRaiz && <Home/>}
