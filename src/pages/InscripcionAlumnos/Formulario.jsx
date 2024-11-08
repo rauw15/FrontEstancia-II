@@ -121,7 +121,8 @@ function Formulario() {
           <span>nombre de usuario ya registrado!</span></>);
         }
       } catch (error) {
-        showAlerta(<p>Error de conexión. Por favor, intente nuevamente.</p>);
+        showAlerta(<p>Convocatoria Terminada.</p>);
+        //showAlerta(<p>Error de conexión. Por favor, intente nuevamente.</p>);
       } finally{
         setIsLoading(false);
       }

@@ -102,7 +102,7 @@ span{
   transform: scale(0.96);
 }
 
-
+/*loading*/
 .loading-spinner {
   position: fixed;
   top: 50%;

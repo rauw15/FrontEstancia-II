@@ -34,10 +34,10 @@ function Alumno() {
   const handleHamburguerClick = () => {
     setClickedHamburguer(!clickedHamburguer);
   };
-  useEffect(() => {
-    showAlerta(<><p>Convocatoria terminada..</p><p>Gracias por participar</p></>)
+  // useEffect(() => {
+  //   showAlerta(<><p>Convocatoria terminada..</p><p>Gracias por participar</p></>)
 
-  }, [showInscripcion, showSubir])
+  // }, [showInscripcion, showSubir])
   //---------
   useEffect(() => {
     setShowInscripcion(location.pathname === '/alumno/inscripcion');
@@ -87,10 +87,10 @@ function Alumno() {
         {isRaiz && <Home/>}
         </div>
         <div style={contenidoStyle}>
-        {showInscripcion && AlertaComponente}
+        {showInscripcion && <Formulario/>}
         {showConvocatoria && <Convocatoria></Convocatoria>}
         {showLineamento && <Convocatoria></Convocatoria>}
-        {showSubir && AlertaComponente}
+        {showSubir && <SubirProyectos/>}
         {showCatalogo && <Catalogo></Catalogo>}
         
         </div>
