@@ -118,7 +118,7 @@ function PanelLateral({onHamburguerClick}) {
       {isInicioHome && <DesplieguePanel></DesplieguePanel>}
       {isAlumno && <DespliegueAlumno></DespliegueAlumno>}
       <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleRot()}>
-        <img src={urlDoc} alt="doc" style={img} />Catálogo de Proyectos<div style={des}><img src={urlDes} alt="des" style={rotationStyle} /></div>
+        <img src={urlDoc} alt="doc" style={img} />Catálogo de Prwwoyectos<div style={des}><img src={urlDes} alt="des" style={rotationStyle} /></div>
        </div>
        {showCategorias && (
               

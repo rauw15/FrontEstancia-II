@@ -1,78 +1,450 @@
-.todoLogin{
-  height: auto;
-  width: 100%;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between; */
-  z-index: 10;
+/* Variables de colores basadas en el gobierno de Chiapas */
+:root {
+  --color-primary: #0f766e;
+  --color-primary-dark: #0d5b52;
+  --color-primary-light: #14b8a6;
+  --color-secondary: #ec4899;
+  --color-secondary-light: #f9a8d4;
+  --color-background: linear-gradient(135deg, #f0fdfa 0%, #fdf2f8 100%);
+  --color-white: #ffffff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
 }
 
-#head{
+/* Reset y base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.todoLogin {
+  height: 100vh;
+  width: 100%;
+  background: var(--color-background);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Elementos decorativos de fondo */
+.todoLogin::before {
+  content: '';
+  position: absolute;
+  top: -10rem;
+  right: -10rem;
+  width: 20rem;
+  height: 20rem;
+  background: var(--color-primary);
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 6s ease-in-out infinite;
+}
+
+.todoLogin::after {
+  content: '';
+  position: absolute;
+  bottom: -10rem;
+  left: -10rem;
+  width: 20rem;
+  height: 20rem;
+  background: var(--color-secondary);
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+#head {
   z-index: 4;
 }
 
-#logoLogin{
+#logoLogin {
   z-index: 1;
-  height: auto;
+  height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 }
-.login{
+
+.login {
   z-index: 4;
   position: absolute;
-}
-
-#form{
-  height: auto;
-  width: 22rem;
-  background-color: #EFEDE7;
-  
-}
-
-.formDatos{
+  width: 100%;
+  max-width: 28rem;
   display: flex;
   flex-direction: column;
-  padding: 10%;
-  font-size: 1.1rem;
-  color: rgba(50, 50, 50, 0.8);
+  align-items: center;
 }
 
-.formDatos input{
-  margin-bottom: 10%;
-  border: 1px solid rgba(50, 50, 50, 0.2);
-  border-radius: 5px;
-  height: 1.6rem;
-  padding-left: 1rem;
-  color: rgba(68, 68, 68, 0.8);
+/* Header del login */
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  animation: pulse 2s infinite;
+}
+
+.login-icon svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--color-white);
+  stroke-width: 2;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.login-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: var(--color-gray-800);
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  color: var(--color-gray-600);
+  font-size: 1rem;
+}
+
+/* Tarjeta de login */
+.login-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.formDatos {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+/* Grupos de input */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: var(--color-gray-700);
+  font-size: 0.875rem;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.75rem;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.input-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-gray-400);
+  stroke-width: 2;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--radius-xl);
+  background: var(--color-white);
+  font-size: 1rem;
+  color: var(--color-gray-700);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-container input::placeholder {
+  color: var(--color-gray-400);
+}
+
+.input-container input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+  transform: translateY(-1px);
+}
+
+.input-container input:hover {
+  border-color: var(--color-primary-light);
+}
+
+/* Botón de mostrar/ocultar contraseña */
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.password-toggle:hover {
+  background: var(--color-gray-100);
+}
+
+.password-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-gray-400);
+  stroke-width: 2;
+}
+
+.password-toggle:hover svg {
+  color: var(--color-gray-600);
+}
+
+/* Botón de login */
+.login-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-xl);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.login-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.login-button:hover::before {
+  left: 100%;
+}
+
+.login-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+}
+
+.login-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-button:disabled:hover {
+  transform: none;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Contenido del botón */
+.button-content, .button-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 1;
+  color: #e4007c;
+}
+
+.button-content span{
+  color: #e4007c;
   font-weight: bold;
 }
-.formDatos label{
-  margin-bottom: 4%;
-  height: 1.5rem;
-  font-weight: bold;
+
+.button-arrow {
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 2;
+  transition: transform 0.2s ease;
 }
 
-.formDatos button{
-  border-radius: 5px;
-  height: 2.5rem;
-  width: 30%;
-  margin: auto;
-  background-color: #444444;
-  color: #EFEDE7;
-  font-size: 1.2rem;
-}
-.formDatos button:active{
-  /* background-color: #444444 !important;
-  color: #EFEDE7 !important; */
-  transform: scale(1.1);
-}
-.formDatos button:hover{
-  background-color: #EFEDE7;
-  color: #444444;
+.login-button:hover .button-arrow {
+  transform: translateX(0.25rem);
 }
 
-.footer{
+/* Spinner de carga */
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid transparent;
+  border-top: 2px solid var(--color-white);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Footer de la tarjeta */
+.login-card-footer {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #f0fdfa, #fdf2f8);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--color-gray-600);
+  font-size: 0.875rem;
+}
+
+.security-badge svg {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 2;
+}
+
+/* Enlace de soporte */
+.login-support {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.login-support p {
+  color: var(--color-gray-600);
+  font-size: 0.875rem;
+}
+
+.support-link {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.support-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary);
+  transition: width 0.2s ease;
+}
+
+.support-link:hover::after {
+  width: 100%;
+}
+
+.support-link:hover {
+  color: var(--color-primary-dark);
+}
+
+.footer {
   z-index: 4;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  #logoLogin {
+    padding: 0.5rem;
+  }
+  
+  .login {
+    max-width: 90%;
+  }
+  
+  .formDatos {
+    padding: 1.5rem;
+  }
+  
+  .login-title {
+    font-size: 1.5rem;
+  }
+  
+  .login-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .login-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+/* Estados de focus para accesibilidad */
+.login-button:focus-visible,
+.password-toggle:focus-visible,
+.support-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Transiciones suaves para todos los elementos interactivos */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
