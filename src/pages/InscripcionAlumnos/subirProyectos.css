@@ -1,45 +1,176 @@
-.sProyectos_descripcion{
-  padding-right: 5rem;
-  text-align: justify;
+:root {
+  --color-primary: #0f766e;
+  --color-primary-dark: #0d5b52;
+  --color-primary-light: #14b8a6;
+  --color-secondary: #ec4899;
+  --color-secondary-light: #f9a8d4;
+  --color-background: linear-gradient(135deg, #f0fdfa 0%, #fdf2f8 100%);
 }
 
-.form{
+body {
+  background: var(--color-background);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.seccion_canva {
+  padding: 2rem;
+}
+
+.seccion_container {
+  max-width: 800px;
+  margin: auto;
+  background-color: #ffffffee;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  backdrop-filter: blur(5px);
+}
+
+.sProyectos_descripcion h1 {
+  color: var(--color-primary-dark);
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.sProyectos_descripcion p {
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.sProyectos_descripcion span {
+  color: var(--color-secondary);
+  font-weight: bold;
+}
+
+.form {
+  margin-bottom: 1.5rem;
+}
+
+.form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: var(--color-primary-dark);
+}
+
+textarea,
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.2s ease-in-out;
+  margin-top: 0.3rem;
+}
+
+textarea:focus,
+input:focus {
+  border-color: var(--color-primary-light);
+  outline: none;
+}
+
+.form_btns {
   display: flex;
-  transition: 0.1s ease;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
 }
 
-
-.form:hover{
-
-  transform: scale(1.006);
-  
+#guardar_sProyectos,
+#borrar_sProyectos {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-.form_btns{
+#guardar_sProyectos {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+#guardar_sProyectos:hover {
+  background-color: var(--color-primary-dark);
+}
+
+#borrar_sProyectos {
+  background-color: var(--color-secondary);
+  color: #fff;
+}
+
+#borrar_sProyectos:hover {
+  background-color: var(--color-secondary-light);
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+  background-color: var(--color-secondary);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tooltiptextLeft {
+  visibility: hidden;
+  width: 220px;
+  background-color: var(--color-primary-dark);
+  color: #fff;
+  text-align: left;
+  border-radius: 8px;
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 1;
+  left: 130%;
+  top: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptextLeft {
+  visibility: visible;
+  opacity: 1;
+}
+
+.loading-spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffffbb;
+  z-index: 1000;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-  .form_btns button{
-    height: 2rem;
-  }
-  #guardar_sProyectos{
-    color: white;
-    background-color: blue;
-    width: 30%;
-  }
-  #guardar_sProyectos:hover{
-    background-color: rgba(0, 0, 255, 0.6);
-  }
-  #borrar_sProyectos{
-    color: blue;
-    border: none;
-    width: 30%;
-    background-color: rgba(0, 0, 0, 0);
-  }
-  #borrar_sProyectos:hover{
-    color: rgba(0, 0, 255, 0.6);
-  }
 
-#anuncio_sProyectos{
-  font-size: 0.9rem;
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid var(--color-primary);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

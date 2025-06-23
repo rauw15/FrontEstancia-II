@@ -62,28 +62,28 @@ function DespliegueAlumno() {
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/subirProyectos')}>
                 <img src={url} alt="doc" style={img} />Subir Documentos
             </div>
-            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={handleConvocatoriaClick}>
+            <div className="bordeW opciones-barraLateral sidebar" style={despliegue} onClick={handleConvocatoriaClick}>
                 <img src={url} alt="doc" style={img} />Recursos <div style={des}><img src={urlDes} alt="des" style={rotationStyle} /></div>
             </div>
             {showLineamientos && (
               
                 <div>
-                  <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/alumno/convocatoria')}>
+                  <div className="bordeW opciones-barraLateral sub-barralLateral sidebar" style={despliegue2} onClick={() => handleNavigate('/alumno/convocatoria')}>
                     <img src={url} alt="doc" style={img} />Convocatoria feria
                 </div>
-                <div className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} onClick={() => handleNavigate('/alumno/convocatoria/lineamientos')}>
+                <div className="bordeW opciones-barraLateral sub-barralLateral sidebar" style={despliegue2} onClick={() => handleNavigate('/alumno/convocatoria/lineamientos')}>
                     <img src={url} alt="doc" style={img} />Lineamientos de participación
                 </div>
-                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/FICHA Tecnica Emprendimiento e Innovación 2024.docx'} download>
+                <a className="bordeW opciones-barraLateral sub-barralLateral sidebar" style={despliegue2} href={'/downloads/FICHA Tecnica Emprendimiento e Innovación 2024.docx'} download>
                     <img src={descargaSVG} alt="doc" style={img} />Formato descargable para ficha tecnica
                 </a>
-                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/plantilla-canvas-descargable.pptx'} download>
+                <a className="bordeW opciones-barraLateral sub-barralLateral sidebar" style={despliegue2} href={'/downloads/plantilla-canvas-descargable.pptx'} download>
                     <img src={descargaSVG} alt="doc" style={img} />Plantilla descargable Modelo Canvas
                 </a>
-                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/MATERIAL APOYO MODELO CANVAS.pdf'} download>
+                <a className="bordeW opciones-barraLateral sub-barralLateral sidebar" style={despliegue2} href={'/downloads/MATERIAL APOYO MODELO CANVAS.pdf'} download>
                     <img src={descargaSVG} alt="doc" style={img} />Material descargable Apoyo Modelo Canvas
                 </a>
-                <a className="bordeW opciones-barraLateral sub-barralLateral" style={despliegue2} href={'/downloads/Caracteristicas del RESUMEN EJECUTIVO.docx'} download>
+                <a className="bordeW opciones-barraLateral sub-barralLateral sidebar" style={despliegue2} href={'/downloads/Caracteristicas del RESUMEN EJECUTIVO.docx'} download>
                     <img src={descargaSVG} alt="doc" style={img} />Plantilla descargable Resumen Ejecutivo
                 </a>
                 </div>

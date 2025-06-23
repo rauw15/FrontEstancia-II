@@ -6,3 +6,22 @@
   transition: 100ms;
   height: 3rem !important;
 }
+
+.head_had2 {
+  background: #008080 !important;
+  color: #fff !important;
+  min-height: 60px;
+  border-bottom: 1px solid #ddd;
+  font-family: sans-serif;
+}
+
+#titulo {
+  color: #fff !important;
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+#btnSalir button, #btnSalir span, #btnSalir {
+  color: #fff !important;
+}

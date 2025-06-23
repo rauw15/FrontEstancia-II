@@ -43,13 +43,17 @@ function App() {
           </Route>
         </Route>
 
+        <Route path='/alumno/inscripcion' element={<Formulario />} />
+        <Route path='/alumno/subirProyecto' element={<SubirProyectos />} />
+        <Route path='/alumno/catalogo/proyectoSocial' element={<Catalogo />} />
+        <Route path='/alumno/catalogo/emprendimientoTecnologico' element={<Catalogo />} />
+        <Route path='/alumno/catalogo/innovacionProductosServicios' element={<Catalogo />} />
+        <Route path='/alumno/catalogo/energias' element={<Catalogo />} />
         <Route path='/alumno' element={<Alumno />}>
           <Route path='convocatoria' element={<Convocatoria />}>
             <Route path='lineamientos' element={<Convocatoria />} />
           </Route>
-          <Route path='inscripcion' element={<Alumno />} />
           <Route path='home' element={<Home />} />
-          <Route path='subirProyecto' element={<Alumno />} />
           <Route path='catalogo' element={<Catalogo />}>
             <Route path='proyectoSocial' element={<Catalogo />} />
             <Route path='emprendimientoTecnologico' element={<Catalogo />} />

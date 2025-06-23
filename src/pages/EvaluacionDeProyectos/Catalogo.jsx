@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAlerta } from '../../fragments/Alerta';
 import '../../assets/css/seccioncss.css';
 import '../EvaluacionDeProyectos/catalogo.css';
@@ -7,6 +7,7 @@ import '../EvaluacionDeProyectos/catalogo.css';
 function Catalogo() {
   const categoria = ['Proyecto social', 'Emprendimiento Tenológico', 'Innovación en Productos y Servicios', 'Energías Limpias Y Sustentabilidad Ambiental'];
   const location = useLocation();
+  const navigate = useNavigate();
   const [AlertaComponente, showAlerta] = useAlerta();
   const [showConvocatoriaProyecto, setShowConvocatoriaProyecto] = useState(false);
   const [showConvocatoriaEmprendimiento, setShowConvocatoriaEmprendimiento] = useState(false);
@@ -187,6 +188,13 @@ function Catalogo() {
 
   return (
     <div className='catalogoCanva seccion_canva'>
+<button
+  className="boton-pequeno"
+  onClick={() => navigate('/alumno')}
+>
+  Volver al menú principal
+</button>
+
       {AlertaComponente}
       <div className='container-catalogo seccion_container2 box'>
         <div className='seccion_apartadoW box3 apartado_catalogo'>

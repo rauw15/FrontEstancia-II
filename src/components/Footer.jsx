@@ -14,7 +14,7 @@ const footerEstilo={
 
 function Footer() {
   return (
-    <div className='bar' style={footerEstilo}>
+    <div className='bar footer-moderno'>
       <div></div>
       <div>Suchiapa <br></br>
           Carretera Tuxtla Gutierrez. - Portillo Zaragoza Km 21+500 <br></br>

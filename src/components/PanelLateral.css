@@ -1,0 +1,117 @@
+.panelLateral {
+    background: #2D2D2D;
+    color: #FFFFFF;
+    height: 100%;
+    width: 21rem;
+    position: absolute;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .logo {
+    height: 20vh;
+  }
+  
+  .fondo {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .boton-ocultar {
+    height: 3.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4%;
+    cursor: pointer;
+  }
+  
+  .icono {
+    height: 70%;
+    width: 10%;
+    object-fit: contain;
+  }
+  
+  .despliegue {
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .des {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 1rem;
+  }
+  
+  .desplegable {
+    transition: transform 0.5s ease;
+  }
+  
+  .rotado {
+    transform: rotate(180deg);
+  }
+  
+  .despliegue2 {
+    height: 2.2rem;
+    width: 80%;
+    margin-left: 10%;
+    padding-right: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  .boton-sesion {
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    cursor: pointer;
+  }
+  
+  /* Utilidades opcionales */
+  .borde {
+    border-right: 1px solid #555;
+  }
+  
+  .bordeW {
+    border-bottom: 1px solid #444;
+  }
+  
+  .footer-moderno {
+    background: #e4007c !important;
+    color: #fff !important;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    text-align: center;
+    width: 100%;
+    font-size: 0.95rem;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    border-top: 1px solid #c20065;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px 0 rgba(228,0,124,0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .footer-moderno > div {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .footer-moderno br {
+    display: none;
+  }
+  

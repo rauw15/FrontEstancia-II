@@ -1,168 +1,158 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import '../../assets/css/seccioncss.css';
-import '../InscripcionAlumnos/subirProyectos.css';
-import '../../assets/css/toolTips.css'
+import "./subirProyectos.css";
 
-function SubirProyectos() {
-  const [nombreProyecto, setNombreProyecto] = useState('');
-  const [descripcion, setDescripcion] = useState('');
-  const [videoPitch, setVideoPitch] = useState('');
-  const [fichaTecnica, setFichaTecnica] = useState(null);
-  const [modeloCanva, setModeloCanva] = useState(null);
-  const [pdfProyecto, setPdfProyecto] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+const FormularioEntregaProyecto = () => {
+  const [formulario, setFormulario] = useState({
+    nombreProyecto: "",
+    descripcion: "",
+    videoPitch: "",
+    fichaTecnica: null,
+    modeloCanva: null,
+    pdfProyecto: null,
+  });
   const navigate = useNavigate();
 
-  const handleArchivoChange = (event, setArchivo) => {
-    const file = event.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      setArchivo(file);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormulario({ ...formulario, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (files[0] && files[0].type === "application/pdf") {
+      setFormulario({ ...formulario, [name]: files[0] });
     } else {
-      event.target.value = '';
-      setArchivo(null);
-      alert('Por favor, sube un archivo PDF.');
+      alert("Por favor, sube un archivo PDF válido.");
+      e.target.value = "";
     }
   };
 
-  const handleGuardar = () => {
-    setIsLoading(true);
-    if (!nombreProyecto || !descripcion || !videoPitch || !fichaTecnica || !modeloCanva || !pdfProyecto) {
-      alert('Por favor, complete todos los campos.');
-      setIsLoading(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Validación básica
+    const {
+      nombreProyecto,
+      descripcion,
+      videoPitch,
+      fichaTecnica,
+      modeloCanva,
+      pdfProyecto,
+    } = formulario;
+
+    if (
+      !nombreProyecto ||
+      !descripcion ||
+      !videoPitch ||
+      !fichaTecnica ||
+      !modeloCanva ||
+      !pdfProyecto
+    ) {
+      alert("Por favor completa todos los campos.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append('nombreProyecto', nombreProyecto);
-    formData.append('descripcion', descripcion);
-    formData.append('videoPitch', videoPitch);
-    formData.append('fichaTecnica', fichaTecnica);
-    formData.append('modeloCanva', modeloCanva);
-    formData.append('pdfProyecto', pdfProyecto);
-
-    const token = localStorage.getItem('token');
-
-    fetch(import.meta.env.VITE_API_UPLO, {
-      method: 'POST',
-      headers: {
-        'x-access-token': token
-      },
-      body: formData,
-    }).then(response => {
-      if (response.ok) {
-        alert('Datos guardados con éxito.');
-        setTimeout(() => {
-          navigate('/alumno');
-        }, 1000); 
-      } else {
-        alert(`Error al guardar los datos: ${response.statusText} : ¿inicio de sesión?`);
-
-      }
-    }).catch(error => {
-
-      alert('Error en el servidor');
-    }).finally(() =>{
-      setIsLoading(false);
-    });
-
-
-  };
-
-  const handleBorrarFormulario = () => {
-    setNombreProyecto('');
-    setDescripcion('');
-    setVideoPitch('');
-    setFichaTecnica(null);
-    setModeloCanva(null);
-    setPdfProyecto(null);
-    document.getElementById('fichaTecnica').value = '';
-    document.getElementById('modeloCanva').value = '';
-    document.getElementById('pdfProyecto').value = '';
+    alert("Formulario enviado con éxito (aquí puedes agregar la lógica real de envío).");
   };
 
   return (
-    <div className='seccion_canva'>
-      {isLoading && (
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Cargando...</p>
-            </div>
-          )}
-      <div className='seccion_container box'>
-        <div className="seccion_apartado box3 bordeW">
-          <div className="sProyectos_descripcion">
-            <h1>Formulario de Entrega de Proyectos</h1>
-            <p>Este formulario se utiliza para que los alumnos suban los documentos de sus proyectos en formato 
-              <span> PDF</span>.</p> 
-            <p>Por favor, asegúrate de que los archivos estén correctamente nombrados y sean legibles.</p>
-            <span> *Todos los campos son necesarios llenarlos</span>
-          </div>
-        </div>
-        <div className="seccion_apartadoW form box3">
-          <div>
-            <label>Nombre del proyeto: <span>*</span></label>
-            <input type="text" className='borde2' value={nombreProyecto} onChange={(e) => setNombreProyecto(e.target.value)} />
-          </div>
-        </div>
-        <div className="seccion_apartadoW form box3">
-          <div>
-            <label htmlFor="">Descripción del proyecto: <span>*</span></label><br />
-            <textarea name="" id="" cols="50" rows="5" className='borde2' placeholder='escribe aqui una breve descripción del proyecto.' value={descripcion} onChange={(e) => setDescripcion(e.target.value)}></textarea>
-          </div>
-        </div>
-        <div className="seccion_apartadoW form box3">
-          <div>
-            <label htmlFor="">Liga del video pitch (explicación del proyecto):<span id='anuncio_sProyectos'> *youtube o drive, El video no deberá tener restricción de acceso, para que el evaluador pueda visualizar el video pitch.</span></label>
-            <input type="text" className='borde2' value={videoPitch} onChange={(e) => setVideoPitch(e.target.value)} />
-          </div>
-        </div>
-        <div className="seccion_apartadoW form box3">
-          <div>
-            <label htmlFor="fichaTecnica">Ficha técnica: <span>*pdf</span></label>
-            <input type="file" id="fichaTecnica" className='borde2' accept='application/pdf' onChange={(e) => handleArchivoChange(e, setFichaTecnica)} />
-          </div>
-          <div>
-            <div className="tooltip">?
-              <span className="tooltiptextLeft bordeW">
-                <p>*Todos los ejemplos están en "recursos" <br /> disponible para descargar</p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="seccion_apartadoW form box3">
-          <div>
-            <label htmlFor="modeloCanva">Modelo canva: <span>*pdf</span></label>
-            <input type="file" id="modeloCanva" className='borde2' accept='application/pdf' onChange={(e) => handleArchivoChange(e, setModeloCanva)} />
-          </div>
-          <div>
-            <div className="tooltip">?
-              <span className="tooltiptextLeft bordeW">
-                <p>*Todos los ejemplos están en "recursos" <br /> disponible para descargar</p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="seccion_apartadoW form box3">
-          <div>
-            <label htmlFor="pdfProyecto">Resumen ejecutivo: <span>*pdf</span></label>
-            <input type="file" id="pdfProyecto" className='borde2' accept='application/pdf' onChange={(e) => handleArchivoChange(e, setPdfProyecto)} />
-          </div>
-          <div>
-            <div className="tooltip">?
-              <span className="tooltiptextLeft bordeW">
-                <p>*Todos los ejemplos están en "recursos" <br /> disponible para descargar</p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="seccion_apartado box3 form_btns">
-          <button id='guardar_sProyectos' className='bordeW' onClick={handleGuardar}>Guardar</button>
-          <button id='borrar_sProyectos' onClick={handleBorrarFormulario}>Borrar formulario</button>
-        </div>
+    <div className="formulario-container">
+      <button
+        onClick={() => navigate('/alumno')}
+        style={{
+          marginBottom: '1.5rem',
+          background: 'linear-gradient(135deg, #0f766e, #14b8a6)',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '0.5rem',
+          padding: '0.5rem 1.5rem',
+          fontWeight: 500,
+          cursor: 'pointer',
+          boxShadow: '0 2px 8px rgba(15, 118, 110, 0.15)',
+        }}
+      >
+        Volver al menú principal
+      </button>
+      <div className="formulario-header">
+        <h1>Entrega de Proyecto</h1>
+        <p>
+          Llena este formulario para entregar los documentos requeridos de tu proyecto.
+          Asegúrate de que los archivos estén en formato PDF y correctamente nombrados.
+        </p>
+        <span className="formulario-note">* Todos los campos son obligatorios.</span>
       </div>
+
+      <form className="formulario" onSubmit={handleSubmit}>
+        <label>
+          Nombre del proyecto:
+          <input
+            type="text"
+            name="nombreProyecto"
+            value={formulario.nombreProyecto}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label>
+          Descripción del proyecto:
+          <textarea
+            name="descripcion"
+            rows="4"
+            value={formulario.descripcion}
+            onChange={handleChange}
+            required
+          ></textarea>
+        </label>
+
+        <label>
+          Liga del video pitch (explicación del proyecto): <span className="formulario-note">*youtube o drive, El video no deberá tener restricción de acceso, para que el evaluador pueda visualizar el video pitch.</span>
+          <input
+            type="text"
+            name="videoPitch"
+            value={formulario.videoPitch}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label>
+          Ficha técnica (PDF):
+          <input
+            type="file"
+            name="fichaTecnica"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            required
+          />
+        </label>
+
+        <label>
+          Modelo Canva (PDF):
+          <input
+            type="file"
+            name="modeloCanva"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            required
+          />
+        </label>
+
+        <label>
+          Resumen ejecutivo (PDF):
+          <input
+            type="file"
+            name="pdfProyecto"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            required
+          />
+        </label>
+
+        <button type="submit">Enviar</button>
+      </form>
     </div>
   );
-}
+};
 
-export default SubirProyectos;
+export default FormularioEntregaProyecto;

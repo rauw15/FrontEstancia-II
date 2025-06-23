@@ -1,54 +1,86 @@
-input[type=radio]{
-  cursor: pointer;
+:root {
+  --color-primary: #0f766e;
+  --color-primary-dark: #0d5b52;
+  --color-primary-light: #14b8a6;
+  --color-secondary: #ec4899;
+  --color-secondary-light: #f9a8d4;
+  --color-background: linear-gradient(135deg, #f0fdfa 0%, #fdf2f8 100%);
 }
 
-.formularioHead h1, .formularioHead p{
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--color-background);
+}
+
+.formulario-container {
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #ffffffee;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.formulario-header h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.formulario-header p {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 2rem;
+  line-height: 1.6;
   text-align: justify;
-  padding-right: 5rem;
 }
 
-.formulario{
+.formulario {
   display: flex;
-  transition: 0.1s ease;
+  flex-direction: column;
+  gap: 1.2rem;
 }
-.formulario_pregunta{
-  width: auto;
-}
-.formulario_pregunta label{
-  width: 20rem;
-}
-.opciones{
+
+.formulario label {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.formulario input,
+.formulario select {
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.2s ease-in-out;
+}
+
+.formulario input:focus,
+.formulario select:focus {
+  border-color: var(--color-primary-light);
+  outline: none;
+}
+
+.formulario button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
   margin-top: 1rem;
-  text-align: left;
 }
 
-.formulario:hover{
-  transform: scale(1.006);
+.formulario button:hover {
+  background-color: var(--color-primary-dark);
 }
-
-.formulario_btns{
-  display: flex;
-  justify-content: space-between;
-}
-  .formulario_btns button{
-    height: 2rem;
-  }
-  #guardar_formulario{
-    color: white;
-    background-color: blue;
-    width: 30%;
-  }
-  #guardar_formulario:hover{
-    background-color: rgba(0, 0, 255, 0.6);
-  }
-  #borrar_formulario{
-    color: blue;
-    border: none;
-    width: 30%;
-    background-color: rgba(0, 0, 0, 0);
-  }
-  #borrar_formulario:hover{
-    color: rgba(0, 0, 255, 0.6);
-  }
