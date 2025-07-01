@@ -12,11 +12,11 @@ const apiFetch = async (endpoint, options = {}) => {
   let refreshToken = localStorage.getItem('refreshToken');
 
   const defaultHeaders = {
-    'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` }),
+    ...(token && { 'x-access-token': token }),
   };
-  if (options.body instanceof FormData) {
-    delete defaultHeaders['Content-Type'];
+  // Si es FormData, no agregues Content-Type, pero sí x-access-token
+  if (!(options.body instanceof FormData)) {
+    defaultHeaders['Content-Type'] = 'application/json';
   }
   const config = {
     ...options,

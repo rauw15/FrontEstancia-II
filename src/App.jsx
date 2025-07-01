@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './AuthProvider';
 import Inicio from './pages/EvaluacionDeProyectos/Inicio';
 import Login from './pages/Login/Login';
 import Home from './pages/Home/Home';
@@ -17,57 +18,59 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path='/login' element={<Login />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path='/login' element={<Login />} />
 
-        <Route path='/inicio' element={<Inicio />}>
-          <Route path='proyectosAdmin' element={<ProyectosAdmin />} />
-          <Route path='calificacionesAdmin' element={<CalificacionesAdmin />} />
-          <Route path='lineamientos' element={<Lineamientos />} />
-          <Route path='catalogo' element={<Catalogo />}>
-            <Route path='proyectoSocial' element={<Catalogo />} />
-            <Route path='emprendimientoTecnologico' element={<Catalogo />} />
-            <Route path='innovacionProductosServicios' element={<Catalogo />} />
-            <Route path='energias' element={<Catalogo />} />
+          <Route path='/inicio' element={<Inicio />}>
+            <Route path='proyectosAdmin' element={<ProyectosAdmin />} />
+            <Route path='calificacionesAdmin' element={<CalificacionesAdmin />} />
+            <Route path='lineamientos' element={<Lineamientos />} />
+            <Route path='catalogo' element={<Catalogo />}>
+              <Route path='proyectoSocial' element={<Catalogo />} />
+              <Route path='emprendimientoTecnologico' element={<Catalogo />} />
+              <Route path='innovacionProductosServicios' element={<Catalogo />} />
+              <Route path='energias' element={<Catalogo />} />
+            </Route>
+            <Route path='convocatoria' element={<Convocatoria />}>
+              <Route path='lineamientos' element={<Convocatoria />} />
+            </Route>
+            <Route path='home' element={<Home />} />
+            <Route path='tablaAdmin' element={<TablaUsuarios />} />
+            <Route path='evaluacion' element={<Evaluacion />}>
+              <Route path='proyectoSocial' element={<Evaluacion />} />
+              <Route path='emprendimientoTecnologico' element={<Evaluacion />} />
+              <Route path='innovacionProductosServicios' element={<Evaluacion />} />
+              <Route path='energias' element={<Evaluacion />} />
+              <Route path='calProyectos' element={<Evaluacion />} />
+            </Route>
           </Route>
-          <Route path='convocatoria' element={<Convocatoria />}>
-            <Route path='lineamientos' element={<Convocatoria />} />
-          </Route>
-          <Route path='home' element={<Home />} />
-          <Route path='tablaAdmin' element={<TablaUsuarios />} />
-          <Route path='evaluacion' element={<Evaluacion />}>
-            <Route path='proyectoSocial' element={<Evaluacion />} />
-            <Route path='emprendimientoTecnologico' element={<Evaluacion />} />
-            <Route path='innovacionProductosServicios' element={<Evaluacion />} />
-            <Route path='energias' element={<Evaluacion />} />
-            <Route path='calProyectos' element={<Evaluacion />} />
-          </Route>
-        </Route>
 
-        <Route path='/alumno/inscripcion' element={<Formulario />} />
-        <Route path='/alumno/subirProyecto' element={<SubirProyectos />} />
-        <Route path='/alumno/lineamientos' element={<Lineamientos />} />
-        <Route path='/alumno/catalogo/proyectoSocial' element={<Catalogo />} />
-        <Route path='/alumno/catalogo/emprendimientoTecnologico' element={<Catalogo />} />
-        <Route path='/alumno/catalogo/innovacionProductosServicios' element={<Catalogo />} />
-        <Route path='/alumno/catalogo/energias' element={<Catalogo />} />
-        <Route path='/alumno' element={<Alumno />}>
-          <Route path='convocatoria' element={<Convocatoria />}>
-            <Route path='lineamientos' element={<Convocatoria />} />
+          <Route path='/alumno/inscripcion' element={<Formulario />} />
+          <Route path='/alumno/subirProyecto' element={<SubirProyectos />} />
+          <Route path='/alumno/lineamientos' element={<Lineamientos />} />
+          <Route path='/alumno/catalogo/proyectoSocial' element={<Catalogo />} />
+          <Route path='/alumno/catalogo/emprendimientoTecnologico' element={<Catalogo />} />
+          <Route path='/alumno/catalogo/innovacionProductosServicios' element={<Catalogo />} />
+          <Route path='/alumno/catalogo/energias' element={<Catalogo />} />
+          <Route path='/alumno' element={<Alumno />}>
+            <Route path='convocatoria' element={<Convocatoria />}>
+              <Route path='lineamientos' element={<Convocatoria />} />
+            </Route>
+            <Route path='home' element={<Home />} />
+            <Route path='catalogo' element={<Catalogo />}>
+              <Route path='proyectoSocial' element={<Catalogo />} />
+              <Route path='emprendimientoTecnologico' element={<Catalogo />} />
+              <Route path='innovacionProductosServicios' element={<Catalogo />} />
+              <Route path='energias' element={<Catalogo />} />
+            </Route>
           </Route>
-          <Route path='home' element={<Home />} />
-          <Route path='catalogo' element={<Catalogo />}>
-            <Route path='proyectoSocial' element={<Catalogo />} />
-            <Route path='emprendimientoTecnologico' element={<Catalogo />} />
-            <Route path='innovacionProductosServicios' element={<Catalogo />} />
-            <Route path='energias' element={<Catalogo />} />
-          </Route>
-        </Route>
 
-        <Route path='/*' element={<Alumno />} />
-      </Routes>
-    </Router>
+          <Route path='/*' element={<Alumno />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

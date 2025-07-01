@@ -2,11 +2,9 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-// 1. Asegúrate de que los imports necesarios estén presentes
-import { useAlerta } from '../../fragments/Alerta'; // O la ruta correcta a tu hook
-import * as apiService from '../../services/apiService'; // Importa el servicio de API
-
+import { useAlerta } from '../../fragments/Alerta';
+import * as apiService from '../../services/apiService';
+import { useAuth } from '../../AuthProvider';
 import './Login.css';
 import Head from '../../components/Head/Head2';
 import Footer from '../../components/Footer';
@@ -25,27 +23,15 @@ function Login() {
   
   // Hooks
   const navigate = useNavigate();
-  
-  // 2. Llama al hook useAlerta aquí, en el nivel superior del componente.
-  // Esto define 'AlertaComponente' y 'showAlerta' para que todo el componente pueda usarlos.
-  const [AlertaComponente, showAlerta] = useAlerta(); 
+  const [AlertaComponente, showAlerta] = useAlerta();
+  const auth = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
-      const result = await apiService.login({
-        username: usuario,
-        password: contrasena
-      });
-      
-      console.log('%c✅ Inicio de sesión exitoso:', 'color: green; font-weight: bold;', result);
-
-      sessionStorage.setItem('nameUser', result.username);
-      localStorage.setItem('token', result.accessToken);
-
-      // 3. Ahora 'showAlert' está DEFINIDO y se puede llamar sin errores.
+      const result = await auth.login(usuario, contrasena);
       showAlerta('Inicio de sesión exitoso', 'success');
       
       if (result.roles.includes('ROLE_ADMIN')) {
@@ -59,7 +45,6 @@ function Login() {
     } catch (error) {
       console.error('%c❌ Falló el inicio de sesión:', 'color: red; font-weight: bold;', error);
       
-      // 3. También funciona aquí, en el bloque catch.
       showAlerta(error.message || 'Usuario o contraseña incorrectos', 'error');
     } finally {
       setIsLoading(false);

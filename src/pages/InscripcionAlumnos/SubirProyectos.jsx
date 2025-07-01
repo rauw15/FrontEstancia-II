@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthProvider';
 import "./subirProyectos.css";
 import { createProject } from '../../services/apiService'; // <-- Importa la función
 
@@ -13,6 +14,7 @@ const FormularioEntregaProyecto = () => {
     pdfProyecto: null,
   });
   const navigate = useNavigate();
+  const { isLoggedIn, user } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +33,11 @@ const FormularioEntregaProyecto = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isLoggedIn) {
+      alert("Debes iniciar sesión para enviar un proyecto.");
+      navigate('/login');
+      return;
+    }
     const {
       nombreProyecto,
       descripcion,
@@ -60,6 +67,9 @@ const FormularioEntregaProyecto = () => {
     formData.append('fichaTecnica', fichaTecnica);
     formData.append('modeloCanva', modeloCanva);
     formData.append('pdfProyecto', pdfProyecto);
+    // Ya no se envía 'estatus', el backend lo calcula automáticamente
+    const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId');
+    if (userId) formData.append('userId', userId);
 
     try {
       await createProject(formData);
