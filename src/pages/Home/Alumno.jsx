@@ -8,7 +8,6 @@ const Alumno = () => {
   const [activeSection, setActiveSection] = useState('inicio');
   const [scrollY, setScrollY] = useState(0);
   const navigate = useNavigate();
-  const [catalogMenuOpen, setCatalogMenuOpen] = useState(false);
   const [fade, setFade] = useState(true);
   const [downloadsMenuOpen, setDownloadsMenuOpen] = useState(false);
 
@@ -812,41 +811,6 @@ useEffect(() => {
       color: var(--color-gray-400);
     }
 
-    /* Menú desplegable de catálogo */
-    .catalog-dropdown {
-      position: absolute;
-      top: 110%;
-      left: 0;
-      background: var(--color-white);
-      border: 1px solid var(--color-gray-200);
-      border-radius: 0.5rem;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      z-index: 10;
-      min-width: 280px;
-      overflow: hidden;
-    }
-
-    .catalog-dropdown button {
-      width: 100%;
-      padding: 1rem 1.5rem;
-      background: none;
-      border: none;
-      color: var(--color-gray-700);
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border-bottom: 1px solid var(--color-gray-100);
-    }
-
-    .catalog-dropdown button:last-child {
-      border-bottom: none;
-    }
-
-    .catalog-dropdown button:hover {
-      background: var(--color-gray-50);
-      color: var(--color-primary);
-    }
-
     /* Responsive Design */
     @media (min-width: 640px) {
       .hero-buttons {
@@ -912,8 +876,20 @@ useEffect(() => {
 
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
-            {[{label: 'Inicio', action: () => setActiveSection('inicio')},
+            {[{label: 'Inicio', action: () => {
+                const section = document.getElementById('hero-section');
+                if(section){
+                  section.scrollIntoView({ behavior: 'smooth'});
+                }
+              setActiveSection('inicio')}},
               {label: 'Inscribirse', action: () => navigate('/alumno/inscripcion')},
+              {label: 'Convocatoria', action: () => {
+                const section = document.getElementById('convocatoria-section');
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActiveSection('convocatoria');
+              }},
               {label: 'Proyectos', action: () => {
                 const section = document.getElementById('categorias-participacion');
                 if (section) {
@@ -921,7 +897,13 @@ useEffect(() => {
                 }
                 setActiveSection('proyectos');
               }},
-              {label: 'Premios', action: () => setActiveSection('premios')},
+              {label: 'Descargables', action: () => {
+                const section = document.getElementById('cta-section');
+                if(section) {
+                  section.scrollIntoView({ behavior: 'smooth'});
+                }
+                setActiveSection('descargables');
+              }},
             ].map((item) => (
               <button
                 key={item.label}
@@ -999,7 +981,7 @@ useEffect(() => {
       </header>
 
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="hero-section" id='hero-section'>
         
         <div className="hero-content">
           <div className="hero-text">
@@ -1039,38 +1021,12 @@ useEffect(() => {
                 Inscribirse ahora
                 <ChevronRight size={20} />
               </button>
-              <div style={{ position: 'relative' }}>
-                <button
-                  className="btn-secondary"
-                  onClick={() => setCatalogMenuOpen((open) => !open)}
-                >
-                  Ver Catálogo de Proyectos
-                </button>
-                {catalogMenuOpen && (
-                  <div className="catalog-dropdown">
-                    <button
-                      onClick={() => { setCatalogMenuOpen(false); navigate('/alumno/catalogo/proyectoSocial'); }}
-                    >
-                      Proyecto Social
-                    </button>
-                    <button
-                      onClick={() => { setCatalogMenuOpen(false); navigate('/alumno/catalogo/emprendimientoTecnologico'); }}
-                    >
-                      Emprendimiento Tecnológico
-                    </button>
-                    <button
-                      onClick={() => { setCatalogMenuOpen(false); navigate('/alumno/catalogo/innovacionProductosServicios'); }}
-                    >
-                      Innovación en Productos y Servicios
-                    </button>
-                    <button
-                      onClick={() => { setCatalogMenuOpen(false); navigate('/alumno/catalogo/energias'); }}
-                    >
-                      Energías Limpias y Sustentabilidad Ambiental
-                    </button>
-                  </div>
-                )}
-              </div>
+              <button
+                className="btn-secondary"
+                onClick={() => navigate('/alumno/lineamientos', '_blank')}
+              >
+                Lineamientos de participación
+              </button>
             </div>
             <p className="hero-description">
               Conecta, innova y transforma tu comunidad. Únete a la plataforma de emprendimiento 
@@ -1151,7 +1107,7 @@ useEffect(() => {
       </section>
 
       {/* CTA Section */}
-      <section className="cta-section">
+      <section className="cta-section" id='cta-section'>
         <div className="cta-content">
           <div className="cta-card">
             <h2>¿Listo para cambiar el mundo?</h2>
@@ -1230,6 +1186,7 @@ useEffect(() => {
                   const section = document.getElementById('convocatoria-section');
                   if (section) section.scrollIntoView({ behavior: 'smooth' });
                 }}>Convocatoria</a></li>
+                <li><a href='#' onClick={(e) => { e.preventDefault(); navigate('/alumno/lineamientos', '_blank');}}>Lineamientos de participación</a></li>
               </ul>
             </div>
             

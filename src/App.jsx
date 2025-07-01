@@ -5,6 +5,7 @@ import Home from './pages/Home/Home';
 import Evaluacion from './pages/EvaluacionDeProyectos/Evaluacion';
 import CalProyectos from './pages/EvaluacionDeProyectos/CalProyectos';
 import Convocatoria from './pages/EvaluacionDeProyectos/Convocatoria';
+import Lineamientos from './pages/EvaluacionDeProyectos/Lineamientos';
 import Catalogo from './pages/EvaluacionDeProyectos/Catalogo';
 import Formulario from './pages/InscripcionAlumnos/Formulario';
 import Alumno from './pages/Home/Alumno';
@@ -23,6 +24,7 @@ function App() {
         <Route path='/inicio' element={<Inicio />}>
           <Route path='proyectosAdmin' element={<ProyectosAdmin />} />
           <Route path='calificacionesAdmin' element={<CalificacionesAdmin />} />
+          <Route path='lineamientos' element={<Lineamientos />} />
           <Route path='catalogo' element={<Catalogo />}>
             <Route path='proyectoSocial' element={<Catalogo />} />
             <Route path='emprendimientoTecnologico' element={<Catalogo />} />
@@ -45,6 +47,7 @@ function App() {
 
         <Route path='/alumno/inscripcion' element={<Formulario />} />
         <Route path='/alumno/subirProyecto' element={<SubirProyectos />} />
+        <Route path='/alumno/lineamientos' element={<Lineamientos />} />
         <Route path='/alumno/catalogo/proyectoSocial' element={<Catalogo />} />
         <Route path='/alumno/catalogo/emprendimientoTecnologico' element={<Catalogo />} />
         <Route path='/alumno/catalogo/innovacionProductosServicios' element={<Catalogo />} />
