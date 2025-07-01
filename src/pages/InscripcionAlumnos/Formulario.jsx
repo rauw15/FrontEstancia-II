@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./formulario.css";
+import { register } from '../../services/apiService'; // <-- Importa la función de registro
 
 const Formulario = () => {
   const [formulario, setFormulario] = useState({
@@ -21,10 +22,26 @@ const Formulario = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formulario);
-    alert("Formulario enviado correctamente");
+    // Mapea los campos del formulario a los que espera el backend
+    const userData = {
+      username: formulario.usuario,
+      email: formulario.correo,
+      password: formulario.contrasena,
+      nombre: formulario.nombre,
+      carrera: formulario.programa,
+      cuatrimestre: formulario.cuatrimestre,
+      categoria: formulario.categoria,
+      roles: ["user"] // Puedes ajustar esto si quieres permitir roles distintos
+    };
+    try {
+      await register(userData);
+      alert("Registro exitoso. Ahora puedes iniciar sesión.");
+      navigate('/login'); // Redirige al login o donde prefieras
+    } catch (error) {
+      alert(error.message || "Error al registrar usuario");
+    }
   };
 
   return (

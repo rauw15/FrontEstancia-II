@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./subirProyectos.css";
+import { createProject } from '../../services/apiService'; // <-- Importa la función
 
 const FormularioEntregaProyecto = () => {
   const [formulario, setFormulario] = useState({
@@ -28,9 +29,8 @@ const FormularioEntregaProyecto = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validación básica
     const {
       nombreProyecto,
       descripcion,
@@ -52,7 +52,22 @@ const FormularioEntregaProyecto = () => {
       return;
     }
 
-    alert("Formulario enviado con éxito (aquí puedes agregar la lógica real de envío).");
+    // Construir FormData para archivos
+    const formData = new FormData();
+    formData.append('nombreProyecto', nombreProyecto);
+    formData.append('descripcion', descripcion);
+    formData.append('videoPitch', videoPitch);
+    formData.append('fichaTecnica', fichaTecnica);
+    formData.append('modeloCanva', modeloCanva);
+    formData.append('pdfProyecto', pdfProyecto);
+
+    try {
+      await createProject(formData);
+      alert("Proyecto enviado con éxito.");
+      navigate('/alumno');
+    } catch (error) {
+      alert("Error al enviar el proyecto: " + (error.message || 'Error desconocido'));
+    }
   };
 
   return (

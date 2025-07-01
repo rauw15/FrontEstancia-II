@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Users, Lightbulb, Trophy, Calendar, Upload, FileText, ChevronRight, Star, Target, Heart, Zap } from 'lucide-react';
 import { useNavigate, Outlet } from 'react-router-dom';
+import { logout as apiLogout } from '../../services/apiService';
 
 const Alumno = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -893,6 +894,16 @@ useEffect(() => {
     }
   `;
 
+  // Sincroniza isLoggedIn con el token de localStorage
+  useEffect(() => {
+    const checkLogin = () => {
+      setIsLoggedIn(!!localStorage.getItem('token'));
+    };
+    checkLogin();
+    window.addEventListener('storage', checkLogin);
+    return () => window.removeEventListener('storage', checkLogin);
+  }, []);
+
   return (
     <>
       <style>{styles}</style>
@@ -931,6 +942,19 @@ useEffect(() => {
                 {item.label}
               </button>
             ))}
+            {isLoggedIn && (
+              <button
+                className="nav-item logout-btn"
+                onClick={() => {
+                  apiLogout();
+                  setIsLoggedIn(false);
+                  navigate('/login');
+                }}
+                style={{ marginLeft: '1rem' }}
+              >
+                Salir
+              </button>
+            )}
           </nav>
 
           {/* User Section */}
