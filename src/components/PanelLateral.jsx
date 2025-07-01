@@ -7,6 +7,7 @@ import urlFondo from '../assets/images/logoUp.jpg';
 import urlDoc from '../assets/images/document.svg';
 import urlDes from '../assets/images/despliegue.svg';
 import Alerta, { useAlerta } from '../fragments/Alerta';
+import { logout } from '../services/apiService';
 
 const user = {
   name: sessionStorage.getItem('nameUser') || 'Invitado',
@@ -36,7 +37,11 @@ function PanelLateral({ onHamburguerClick }) {
   };
 
   const handleSesion = () => {
-    navigate('/login');
+    if (user.name === 'Invitado') {
+      navigate('/login');
+    } else {
+      logout();
+    }
     setIsOpen(false);
     if (onHamburguerClick) onHamburguerClick();
   };

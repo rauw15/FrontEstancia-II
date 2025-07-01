@@ -5,7 +5,7 @@ import '../../assets/css/seccioncss.css';
 import '../EvaluacionDeProyectos/catalogo.css';
 
 function Catalogo() {
-  const categoria = ['Proyecto social', 'Emprendimiento Tenológico', 'Innovación en Productos y Servicios', 'Energías Limpias Y Sustentabilidad Ambiental'];
+  const categoria = ['Proyecto social', 'Emprendimiento Tecnológico', 'Innovación en Productos y Servicios', 'Energías Limpias Y Sustentabilidad Ambiental'];
   const location = useLocation();
   const navigate = useNavigate();
   const [AlertaComponente, showAlerta] = useAlerta();
@@ -216,6 +216,7 @@ function Catalogo() {
                 <tr>
                   <th>Usuario:</th>
                   <th>Nombre del Proyecto:</th>
+                  <th>Descripción:</th>
                   <th>Estado:</th>
                 </tr>
               </thead>

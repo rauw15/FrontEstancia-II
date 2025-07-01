@@ -1,62 +1,66 @@
+// Login.jsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// 1. Asegúrate de que los imports necesarios estén presentes
+import { useAlerta } from '../../fragments/Alerta'; // O la ruta correcta a tu hook
+import * as apiService from '../../services/apiService'; // Importa el servicio de API
+
 import './Login.css';
 import Head from '../../components/Head/Head2';
 import Footer from '../../components/Footer';
 import LogoUpChiapas from '../../components/LogoUpChiapas';
-import { useAlerta } from '../../fragments/Alerta';
-import { fetchWithHiddenError } from '../../helpers/fetchHelper';
 
 const op = {
   opacity: '0.5'
 };
 
 function Login() {
+  // Estados del componente
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [AlertaComponente, showAlerta] = useAlerta();
+  
+  // Hooks
   const navigate = useNavigate();
+  
+  // 2. Llama al hook useAlerta aquí, en el nivel superior del componente.
+  // Esto define 'AlertaComponente' y 'showAlerta' para que todo el componente pueda usarlos.
+  const [AlertaComponente, showAlerta] = useAlerta(); 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
-    const data = {
-      username: usuario,
-      password: contrasena
-    };
-
     try {
-      const response = await fetch(import.meta.env.VITE_API_SING, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+      const result = await apiService.login({
+        username: usuario,
+        password: contrasena
       });
+      
+      console.log('%c✅ Inicio de sesión exitoso:', 'color: green; font-weight: bold;', result);
 
-      const result = await response.json();
+      sessionStorage.setItem('nameUser', result.username);
+      localStorage.setItem('token', result.accessToken);
 
-      if (response.ok) {
-        sessionStorage.setItem('nameUser', result.username);
-        localStorage.setItem('token', result.accessToken);
-        showAlerta('Inicio de sesión exitoso', 'success');
-        if (result.roles[0] === 'ROLE_ADMIN') {
-          navigate('/inicio/tablaAdmin');
-        } 
-        else if(result.roles[0] === 'ROLE_MODERATOR'){
-          navigate('/inicio/home')
-        }
-        else {
-          navigate('/alumno');
-        }
+      // 3. Ahora 'showAlert' está DEFINIDO y se puede llamar sin errores.
+      showAlerta('Inicio de sesión exitoso', 'success');
+      
+      if (result.roles.includes('ROLE_ADMIN')) {
+        navigate('/inicio/tablaAdmin');
+      } else if (result.roles.includes('ROLE_MODERATOR')) {
+        navigate('/inicio/home');
       } else {
-        showAlerta(result.message || 'Error en el inicio de sesión', 'error');
+        navigate('/inicio/dashboard'); // Ruta para usuarios normales
       }
+
     } catch (error) {
-      showAlerta('Error en el servidor', 'error');
+      console.error('%c❌ Falló el inicio de sesión:', 'color: red; font-weight: bold;', error);
+      
+      // 3. También funciona aquí, en el bloque catch.
+      showAlerta(error.message || 'Usuario o contraseña incorrectos', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -64,10 +68,13 @@ function Login() {
 
   return (
     <div className='todoLogin'>
-      {AlertaComponente}
+      {/* AlertaComponente se renderiza aquí y es controlado por showAlert */}
+      {AlertaComponente} 
+      
       <div className='head' id='head' style={op}><Head /></div>
       
       <div id='logoLogin'>
+        {/* ... El resto de tu código JSX no necesita cambios ... */}
         <div className='login'>
           {/* Header del login */}
           <div className='login-header'>
