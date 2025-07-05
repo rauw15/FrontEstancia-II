@@ -63,8 +63,8 @@ const Alumno = () => {
   };
 
   const images = [
-    '/src/assets/images/5 FERIA EMPRENDIMIENTO.png',
-    '/src/assets/images/5 FERIA EMPRENDIMIENTO B.png'
+    '/downloads/5 FERIA EMPRENDIMIENTO.png',
+    '/downloads/5 FERIA EMPRENDIMIENTO B.png'
   ];
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -973,7 +973,7 @@ useEffect(() => {
         <div className="header-content">
           <div className="logo-section">
             <div className="logo-icon">
-              <img src="/src/assets/images/Logo Upchiapas png.png" alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
+              <img src="\downloads\Logo Upchiapas png.png" alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
             </div>
             <div className="logo-text">
               <h1>UP Chiapas</h1>
@@ -1268,12 +1268,12 @@ useEffect(() => {
                     minWidth: 220,
                     padding: '0.5rem 0'
                   }}>
-                    <a href="\src\downloads\Caracteristicas RESUMEN EJECUTIVO.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Características del Resumen Ejecutivo</a>
-                    <a href="\src\downloads\FICHA Tecnica Emprendimiento e Innovación 2025.docx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Ficha Técnica Emprendimiento e Innovación</a>
-                    <a href="\src\downloads\LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Lineamientos Participación y Evaluación</a>
-                    <a href="\src\downloads\MATERIAL APOYO MODELO CANVAS.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Material Apoyo Modelo Canvas</a>
-                    <a href="\src\downloads\plantilla-canvas-descargable.pptx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Plantilla Canvas Descargable</a>
-                    <a href="\src\downloads\CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Convocatoria</a>
+                    <a href="\downloads\Caracteristicas RESUMEN EJECUTIVO.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Características del Resumen Ejecutivo</a>
+                    <a href="\downloads\FICHA Tecnica Emprendimiento e Innovación 2025.docx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Ficha Técnica Emprendimiento e Innovación</a>
+                    <a href="\downloads\LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Lineamientos Participación y Evaluación</a>
+                    <a href="\downloads\MATERIAL APOYO MODELO CANVAS.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Material Apoyo Modelo Canvas</a>
+                    <a href="\downloads\plantilla-canvas-descargable.pptx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Plantilla Canvas Descargable</a>
+                    <a href="\downloads\CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Convocatoria</a>
                   </div>
                 )}
               </div>
@@ -1289,7 +1289,7 @@ useEffect(() => {
             <div className="footer-brand">
               <div className="footer-logo">
                 <div className="logo-icon">
-                  <img src="/src/assets/images/Logo Upchiapas png.png" alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
+                  <img src="\downloads\Logo Upchiapas png.png" alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
                 </div>
                 <div className="logo-text">
                   <h1>UP Chiapas</h1>
