@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAlerta } from '../../fragments/Alerta';
-import { RefreshCw, FileText, Video, Download, Loader2, Search, ChevronRight, Menu, X, Users, Trophy, Calendar, ChevronDown, Award } from 'lucide-react';
+import { RefreshCw, FileText, Video, Download, Loader2, Search, ChevronRight, Menu, X, Users, Trophy, Calendar, ChevronDown, Award, Lightbulb, Upload, Star, Target, Heart, Zap, BarChart3, Settings, Shield, UserCheck, TrendingUp, Activity } from 'lucide-react';
 import BtnSalir from '../../fragments/BtnSalir';
 import descargaSVG from '../../assets/images/descarga.svg';
 import { useNavigate, Routes, Route } from 'react-router-dom';
@@ -12,6 +12,9 @@ import TablaUsuarios from './TablaUsuarios';
 import CalificacionesAdmin from './CalificacionesAdmin';
 // Importamos el componente
 import BtnExportarExcel from '../../fragments/BtnExportarExcel';
+// Importar imágenes
+import rombosImg from '../../assets/images/rombos.png';
+import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
 
 const AdminPanel = () => {
   const token = localStorage.getItem('token');
@@ -161,7 +164,7 @@ const AdminPanel = () => {
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('/src/assets/images/rombos.png');
+      background-image: url(${rombosImg});
       background-repeat: repeat;
       background-size: 300px;
       opacity: 0.15;
@@ -736,7 +739,7 @@ const AdminPanel = () => {
           <div className="header-content">
             <div className="logo-section">
               <div className="logo-icon">
-                <img src="/src/assets/images/Logo Upchiapas png.png" alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
+                <img src={logoUpImg} alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
               </div>
               <div className="logo-text">
                 <h1>UP Chiapas</h1>

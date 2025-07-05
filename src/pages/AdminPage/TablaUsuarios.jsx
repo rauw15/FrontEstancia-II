@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAlerta } from '../../fragments/Alerta';
-import { RefreshCw, Plus, Trash2, User, Users, ChevronDown, ChevronUp, Trophy, Calendar, FileText, X, Menu, ClipboardCheck, Download, ChevronRight } from 'lucide-react';
+import { RefreshCw, Plus, Trash2, User, Users, ChevronDown, ChevronUp, Trophy, Calendar, FileText, X, Menu, ClipboardCheck, Download, ChevronRight, Lightbulb, Star, Target, Heart, Zap, Edit, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BtnSalir from '../../fragments/BtnSalir';
 import '../../assets/css/seccioncss.css';
 // Importamos el componente
 import BtnExportarExcel from '../../fragments/BtnExportarExcel';
-
-
+// Importar imágenes
+import rombosImg from '../../assets/images/rombos.png';
+import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
 
 const TablaUsuarios = () => {
   const [mostrarUsuarios, setMostrarUsuarios] = useState(true);
@@ -202,7 +203,7 @@ const TablaUsuarios = () => {
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('/src/assets/images/rombos.png');
+      background-image: url(${rombosImg});
       background-repeat: repeat;
       background-size: 300px;
       opacity: 0.15;
@@ -855,7 +856,7 @@ const TablaUsuarios = () => {
           <div className="header-content">
             <div className="logo-section">
               <div className="logo-icon">
-                <img src="/src/assets/images/Logo Upchiapas png.png" alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
+                <img src={logoUpImg} alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
               </div>
               <div className="logo-text">
                 <h1>UP Chiapas</h1>

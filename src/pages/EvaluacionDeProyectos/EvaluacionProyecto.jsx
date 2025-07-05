@@ -4,6 +4,9 @@ import { ChevronRight, ClipboardCheck, Star, MessageSquare, Send, ChevronDown, M
 import BtnSalir from '../../fragments/BtnSalir';
 import '../../assets/css/seccioncss.css';
 import './catalogo.css';
+// Importar imágenes
+import rombosImg from '../../assets/images/rombos.png';
+import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
 
 const tiposProyectos = [
   { value: 'proyectoSocial', label: 'Proyecto Social' },
@@ -114,7 +117,7 @@ const EvaluacionProyecto = () => {
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('/src/assets/images/rombos.png');
+      background-image: url(${rombosImg});
       background-repeat: repeat;
       background-size: 300px;
       opacity: 0.15;
@@ -681,7 +684,7 @@ const EvaluacionProyecto = () => {
           <div className="header-content">
             <div className="logo-section">
               <div className="logo-icon">
-                <img src="/src/assets/images/Logo Upchiapas png.png" alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
+                <img src={logoUpImg} alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
               </div>
               <div className="logo-text">
                 <h1>UP Chiapas</h1>
