@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useAlerta } from '../../fragments/Alerta';
-import { RefreshCw, Award, User, ChevronDown, Download, X, Menu, FileText, Calendar, ChevronRight, ClipboardCheck } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { RefreshCw, FileText, Video, Download, Loader2, Search, ChevronRight, Menu, X, Users, Trophy, Calendar, ChevronDown, Award } from 'lucide-react';
 import BtnSalir from '../../fragments/BtnSalir';
-import '../../assets/css/seccioncss.css';
+import descargaSVG from '../../assets/images/descarga.svg';
+import { useNavigate, Routes, Route } from 'react-router-dom';
+import Catalogo from '../EvaluacionDeProyectos/Catalogo';
+import Convocatoria from '../EvaluacionDeProyectos/Convocatoria';
+import Lineamientos from '../EvaluacionDeProyectos/Lineamientos';
+import ProyectosAdmin from './ProyectosAdmin';
+import TablaUsuarios from './TablaUsuarios';
+import CalificacionesAdmin from './CalificacionesAdmin';
 // Importamos el componente
 import BtnExportarExcel from '../../fragments/BtnExportarExcel';
 
-function CalificacionesAdmin() {
+const AdminPanel = () => {
   const token = localStorage.getItem('token');
-  const usuarioAdmin = sessionStorage.getItem('nameUser');
   const [AlertaComponente, showAlerta] = useAlerta();
+  const [archivo, setArchivo] = useState('');
   const [proyectos, setProyectos] = useState([]);
-  const proyectosOrdenados = proyectos.sort((a, b) => b.total - a.total);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [showCalificar, setShowCalificar] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showRecursos, setShowRecursos] = useState(false);
@@ -27,39 +33,108 @@ function CalificacionesAdmin() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Filtrar proyectos
+  const filteredProyectos = proyectos.filter(proyecto => {
+    const matchesSearch = proyecto.nameUser.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      proyecto.proyectoName.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
+
   useEffect(() => {
     handleGetProyectos();
+    // eslint-disable-next-line
   }, []);
 
   const handleGetProyectos = async () => {
-    if(usuarioAdmin === 'adminAdministraidor') {
+    const fetchData = async () => {
       try {
-        setIsLoading(true);
-        const response = await fetch(import.meta.env.VITE_API_OBCAL, {
+        const response = await fetch(import.meta.env.VITE_API_GETPR, {
           method: 'GET',
           headers: {
             'x-access-token': token,
           },
         });
-
         const result = await response.json();
         if (response.ok) {
-          setProyectos(result);
+          return result;
         } else {
           showAlerta(`${result.message} usuario admin?` || 'Error en la solicitud', 'error');
         }
       } catch (error) {
         showAlerta('Error en el servidor', 'error');
+      }
+    };
+    const depuracion = async () => {
+      let objetoProyecto = [];
+      try {
+        setIsLoading(true);
+        const datos = await fetchData();
+        let canva = '';
+        let ficha = '';
+        let resumen = '';
+        for (let i = 0; i < datos.length; i++) {
+          if (datos[i].proyectos.length > 0) {
+            if (datos[i].proyectos[0].canvaModel == undefined || datos[i].proyectos[0].technicalSheet == undefined || datos[i].proyectos[0].projectPdf == undefined) {
+              console.log("archivos no subidos");
+            }
+            canva = datos[i].proyectos[0].canvaModel.split("\\");
+            ficha = datos[i].proyectos[0].technicalSheet.split("\\");
+            resumen = datos[i].proyectos[0].projectPdf.split("\\");
+            objetoProyecto.push({
+              nameUser: datos[i].username,
+              proyectoName: datos[i].proyectos[0].name,
+              descripcion: datos[i].proyectos[0].description,
+              link: datos[i].proyectos[0].videoLink,
+              ficha: ficha[ficha.length - 1],
+              canva: canva[canva.length - 1],
+              resumen: resumen[resumen.length - 1],
+            });
+          }
+        }
+        setProyectos(objetoProyecto);
+      } catch (error) {
+        console.error("Error en depuracion:", error);
       } finally {
         setIsLoading(false);
       }
-    } else {
-      showAlerta(<span>Solo usuario admin!</span>, 'error');
+    };
+    depuracion();
+  };
+
+  const handleGetArchivos = async (fileName) => {
+    try {
+      const encodedUsername = encodeURIComponent(fileName.trim());
+      const response = await fetch(`${import.meta.env.VITE_API_DESAR}/${encodedUsername}`, {
+        method: 'GET',
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(errorData || 'Error en la solicitud');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `${fileName}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      showAlerta('Error en la solicitud', 'error');
     }
   };
 
+  const handleFichaClick = (fileName) => {
+    setArchivo(fileName);
+    handleGetArchivos(fileName);
+  };
+
   const styles = `
-    /* Estilos consistentes con AdminPanel */
+    /* Estilos consistentes con Alumno */
     :root {
       --color-primary: #0f766e;
       --color-primary-dark: #0d5b52;
@@ -228,7 +303,7 @@ function CalificacionesAdmin() {
 
     .dropdown-item {
       padding: 0.75rem 1.5rem;
-      color: var(--color-primary) !important;
+      color: var(--color-gray-700);
       background: none;
       border: none;
       width: 100%;
@@ -240,12 +315,11 @@ function CalificacionesAdmin() {
       align-items: center;
       gap: 0.75rem;
       border-radius: 0.5rem;
-      font-weight: 500;
     }
 
     .dropdown-item:hover {
       background: var(--color-primary-light);
-      color: var(--color-white) !important;
+      color: var(--color-white);
     }
 
     .dropdown-item::before {
@@ -282,6 +356,19 @@ function CalificacionesAdmin() {
       display: flex;
       align-items: center;
       gap: 1rem;
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      color: var(--color-gray-500);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      color: var(--color-gray-700);
     }
 
     /* Menú móvil */
@@ -364,32 +451,29 @@ function CalificacionesAdmin() {
     }
 
     .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       margin-bottom: 2rem;
     }
 
-    .header-title {
+    .header-content {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    .header-title h2 {
-      font-size: 1.5rem;
+    .header-title h1 {
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--color-gray-800);
-      margin: 0;
+      margin-bottom: 0.5rem;
     }
 
-    .count-badge {
-      background: var(--color-primary-light);
-      color: var(--color-white);
-      padding: 0.25rem 0.75rem;
-      border-radius: 2rem;
+    .projects-count {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-gray-600);
       font-size: 0.875rem;
-      font-weight: 600;
     }
 
     .refresh-btn {
@@ -409,51 +493,162 @@ function CalificacionesAdmin() {
       color: var(--color-primary);
     }
 
-    .table-container {
-      overflow-x: auto;
-      border-radius: 0.75rem;
-      border: 1px solid var(--color-gray-200);
+    .filters-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .seccion_tabla {
+    .search-box {
+      position: relative;
       width: 100%;
-      border-collapse: collapse;
+      max-width: 500px;
     }
 
-    .seccion_tabla thead {
-      background: var(--color-gray-50);
+    .search-icon {
+      position: absolute;
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-gray-400);
+      width: 18px;
+      height: 18px;
     }
 
-    .seccion_tabla th {
-      padding: 1rem;
-      text-align: left;
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3.5rem;
+      border: 1px solid var(--color-gray-200);
+      border-radius: 0.5rem;
       font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary-light);
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+    }
+
+    /* Proyectos */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--color-white);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--color-gray-200);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .project-card:hover {
+      border-color: var(--color-primary-light);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(15, 118, 110, 0.15);
+    }
+
+    .project-header {
+      margin-bottom: 1rem;
+    }
+
+    .project-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .project-title {
+      font-size: 1.125rem;
       font-weight: 600;
-      color: var(--color-gray-700);
-      border-bottom: 1px solid var(--color-gray-200);
+      color: var(--color-gray-800);
     }
 
-    .seccion_tabla td {
-      padding: 1rem;
-      font-size: 0.875rem;
+    .project-user {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       color: var(--color-gray-600);
-      border-bottom: 1px solid var(--color-gray-200);
+      font-size: 0.875rem;
     }
 
-    .seccion_tabla tr:last-child td {
-      border-bottom: none;
+    .user-avatar {
+      width: 1.5rem;
+      height: 1.5rem;
+      background: var(--color-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: 0.75rem;
+      font-weight: 500;
     }
 
-    .seccion_tabla tr:hover td {
+    .project-description {
+      color: var(--color-gray-600);
+      font-size: 0.875rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .action-btn {
       background: var(--color-gray-50);
+      border: 1px solid var(--color-gray-200);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .highlight-cell {
-      font-weight: 600;
-      color: var(--color-primary);
+    .action-btn:hover {
+      background: var(--color-gray-100);
+      border-color: var(--color-gray-300);
     }
 
-    /* Loading state */
+    .action-btn.video {
+      background: rgba(236, 72, 153, 0.05);
+      border-color: rgba(236, 72, 153, 0.2);
+    }
+
+    .action-btn.video:hover {
+      background: rgba(236, 72, 153, 0.1);
+      border-color: rgba(236, 72, 153, 0.3);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .empty-state h3 {
+      font-size: 1.25rem;
+      color: var(--color-gray-700);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      color: var(--color-gray-500);
+      font-size: 0.875rem;
+    }
+
+    /* Loading overlay */
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -488,23 +683,6 @@ function CalificacionesAdmin() {
       100% { transform: rotate(360deg); }
     }
 
-    /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: 3rem 0;
-    }
-
-    .empty-state h3 {
-      font-size: 1.25rem;
-      color: var(--color-gray-700);
-      margin-bottom: 0.5rem;
-    }
-
-    .empty-state p {
-      color: var(--color-gray-500);
-      font-size: 0.875rem;
-    }
-
     /* Responsive */
     @media (max-width: 1024px) {
       .desktop-nav {
@@ -513,6 +691,10 @@ function CalificacionesAdmin() {
 
       .mobile-menu-btn {
         display: block;
+      }
+
+      .user-section {
+        margin-left: auto;
       }
     }
 
@@ -526,11 +708,22 @@ function CalificacionesAdmin() {
         padding: 1.5rem;
       }
 
-      .seccion_tabla th, 
-      .seccion_tabla td {
-        padding: 0.75rem;
-        font-size: 0.75rem;
+      .projects-grid {
+        grid-template-columns: 1fr;
       }
+
+      .header-content {
+        padding: 1rem;
+      }
+    }
+
+    .dropdown-parent .dropdown-item {
+      color: #111 !important;
+    }
+
+    .dropdown-parent .dropdown-item:hover {
+      color: #111 !important;
+      background: var(--color-primary-light);
     }
   `;
 
@@ -551,18 +744,18 @@ function CalificacionesAdmin() {
               </div>
             </div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - MEJORADO */}
             <nav className="desktop-nav">
               {/* Calificar */}
               <button
                 className="nav-item"
-                onClick={() => navigate('/admin')}
+                onClick={() => navigate('/admin/EvaluacionProyecto')}
               >
-                <ClipboardCheck size={18} />
-                Inicio
+                <Award size={18} />
+                Calificar
               </button>
 
-              {/* Administrador */}
+              {/* Administrador - MEJORADO */}
               <div className="dropdown-parent">
                 <button
                   className={`nav-item ${showAdmin ? 'nav-active' : ''}`}
@@ -570,7 +763,7 @@ function CalificacionesAdmin() {
                   aria-expanded={showAdmin}
                   aria-haspopup="true"
                 >
-                  <User size={18} />
+                  <Users size={18} />
                   Administrador
                   <ChevronDown size={16} className={`transition-transform ${showAdmin ? 'rotate-180' : ''}`} />
                 </button>
@@ -583,7 +776,7 @@ function CalificacionesAdmin() {
                         setShowAdmin(false);
                       }}
                     >
-                      <User size={16} className="icon" />
+                      <Users size={16} className="icon" />
                       Usuarios Registrados
                     </button>
                     <button 
@@ -593,14 +786,14 @@ function CalificacionesAdmin() {
                         setShowAdmin(false);
                       }}
                     >
-                      <Award size={16} className="icon" />
+                      <Trophy size={16} className="icon" />
                       Calificaciones Registradas
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* Recursos */}
+              {/* Recursos - MEJORADO */}
               <div className="dropdown-parent">
                 <button
                   className={`nav-item ${showRecursos ? 'nav-active' : ''}`}
@@ -613,7 +806,7 @@ function CalificacionesAdmin() {
                   <ChevronDown size={16} className={`transition-transform ${showRecursos ? 'rotate-180' : ''}`} />
                 </button>
                 {showRecursos && (
-                    <div className="dropdown">
+                  <div className="dropdown">
                     <a 
                       className="dropdown-item" 
                       href={'/downloads/CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf'} 
@@ -669,7 +862,7 @@ function CalificacionesAdmin() {
                       <Download size={16} className="icon" />
                       Resumen Ejecutivo
                     </a>
-                    </div>
+                  </div>
                 )}
               </div>
             </nav>
@@ -725,15 +918,6 @@ function CalificacionesAdmin() {
                     <button 
                       className="mobile-dropdown-item" 
                       onClick={() => {
-                        navigate('/admin/proyectosAdmin');
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      Proyectos Registrados
-                    </button>
-                    <button 
-                      className="mobile-dropdown-item" 
-                      onClick={() => {
                         navigate('/admin/calificacionesAdmin');
                         setIsMenuOpen(false);
                       }}
@@ -753,15 +937,15 @@ function CalificacionesAdmin() {
                 </button>
                 {showRecursos && (
                   <div className="mobile-dropdown">
-                    <button 
-                      className="mobile-dropdown-item" 
-                      onClick={() => {
-                        navigate('/admin/convocatoria');
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      Convocatoria feria
-                    </button>
+                    <a 
+                        className="dropdown-item" 
+                        href={'/downloads/CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf'} 
+                        download
+                        onClick={() => setShowRecursos(false)}
+                      >
+                        <Download size={16} className="icon" />
+                        Convocatoria
+                    </a>
                     <button 
                       className="mobile-dropdown-item" 
                       onClick={() => {
@@ -771,6 +955,38 @@ function CalificacionesAdmin() {
                     >
                       Lineamientos de participación
                     </button>
+                    <a 
+                      className="mobile-dropdown-item" 
+                      href={'/downloads/FICHA Tecnica Emprendimiento e Innovación 2025.docx'} 
+                      download
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Formato ficha técnica
+                    </a>
+                    <a 
+                      className="mobile-dropdown-item" 
+                      href={'/downloads/plantilla-canvas-descargable.pptx'} 
+                      download
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Plantilla Modelo Canvas
+                    </a>
+                    <a 
+                      className="mobile-dropdown-item" 
+                      href={'/downloads/MATERIAL APOYO MODELO CANVAS.pdf'} 
+                      download
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Material Apoyo Canvas
+                    </a>
+                    <a 
+                      className="mobile-dropdown-item" 
+                      href={'/downloads/Caracteristicas del RESUMEN EJECUTIVO.pdf'} 
+                      download
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Plantilla Resumen Ejecutivo
+                    </a>
                   </div>
                 )}
               </div>
@@ -778,87 +994,27 @@ function CalificacionesAdmin() {
           )}
         </header>
 
-        <div className="admin-container">
-          <div className="admin-content">
-            {AlertaComponente}
-            
-            {isLoading && (
-              <div className="loading-overlay">
-                <div className="loading-content">
-                  <RefreshCw className="loading-spinner" size={32} />
-                  <span className="loading-text">Cargando calificaciones...</span>
-                </div>
-              </div>
-            )}
-
-            <div className="admin-header">
-              <div className="header-title">
-                <Award size={24} />
-                <h2>Calificaciones Registradas</h2>
-                <span className="count-badge">{proyectos.length}</span>
-              </div>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <BtnExportarExcel
-                  datos={proyectosOrdenados}
-                  nombreArchivo="Calificaciones"
-                  className="refresh-btn"
-                />
-                <button 
-                  className="refresh-btn" 
-                  onClick={handleGetProyectos}
-                  disabled={isLoading}
-                >
-                  <RefreshCw size={18} />
-                </button>
-              </div>
-            </div>
-
-            <div className="table-container">
-              <table className="seccion_tabla">
-                <thead>
-                  <tr>
-                    <th>Evaluador</th>
-                    <th>Alumno</th>
-                    <th>Innovación</th>
-                    <th>Mercado</th>
-                    <th>Técnica</th>
-                    <th>Financiera</th>
-                    <th>Pitch</th>
-                    <th>Observaciones</th>
-                    <th className="highlight-cell">Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {proyectosOrdenados.length > 0 ? (
-                    proyectosOrdenados.map((proyecto, index) => (
-                      <tr key={index}>
-                        <td>{proyecto.userEvaluador}</td>
-                        <td>{proyecto.userAlumno}</td>
-                        <td>{proyecto.innovacion}</td>
-                        <td>{proyecto.mercado}</td>
-                        <td>{proyecto.tecnica}</td>
-                        <td>{proyecto.financiera}</td>
-                        <td>{proyecto.pitch}</td>
-                        <td>{proyecto.observaciones}</td>
-                        <td className="highlight-cell">{proyecto.total}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="9" className="empty-state">
-                        <h3>No hay calificaciones registradas</h3>
-                        <p>No se encontraron calificaciones en la base de datos</p>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+        {AlertaComponente}
+        {isLoading && (
+          <div className="loading-overlay">
+            <div className="loading-content">
+              <Loader2 className="loading-spinner" size={32} />
+              <span className="loading-text">Cargando proyectos...</span>
             </div>
           </div>
-        </div>
+        )}
+        <Routes>
+          <Route path='/' element={<ProyectosAdmin />} />
+          <Route path='proyectos' element={<ProyectosAdmin />} />
+          <Route path='usuarios' element={<TablaUsuarios />} />
+          <Route path='calificaciones' element={<CalificacionesAdmin />} />
+          <Route path='catalogo' element={<Catalogo />} />
+          <Route path='convocatoria' element={<Convocatoria />} />
+          <Route path='lineamientos' element={<Lineamientos />} />
+        </Routes>
       </div>
     </>
   );
-}
+};
 
-export default CalificacionesAdmin;
+export default AdminPanel;

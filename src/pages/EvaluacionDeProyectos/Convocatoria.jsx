@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../../pages/EvaluacionDeProyectos/convocatoria.css';
-import url from '/downloads/convocatoria.jpg';
+import url from '/downloads/CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf';
 import Pdf from '../../components/Pdf';
 //${import.meta.env.BASE_URL}
 function Convocatoria() {

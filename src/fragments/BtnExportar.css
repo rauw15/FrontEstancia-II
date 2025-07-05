@@ -1,0 +1,25 @@
+.btn-exportar-excel {
+  background: #10b981;
+  color:   #0d5b52;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-exportar-excel:hover {
+  background: #0d9f6e;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-exportar-excel:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}

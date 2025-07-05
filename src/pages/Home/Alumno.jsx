@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Users, Lightbulb, Trophy, Calendar, Upload, FileText, ChevronRight, Star, Target, Heart, Zap } from 'lucide-react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, Routes, Route } from 'react-router-dom';
 import { logout as apiLogout } from '../../services/apiService';
+import Catalogo from '../EvaluacionDeProyectos/Catalogo';
+import Convocatoria from '../EvaluacionDeProyectos/Convocatoria';
+import Lineamientos from '../EvaluacionDeProyectos/Lineamientos';
+import Formulario from '../InscripcionAlumnos/Formulario';
+import SubirProyectos from '../InscripcionAlumnos/SubirProyectos';
+import Home from './Home';
 
 const Alumno = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -856,6 +862,11 @@ useEffect(() => {
         flex: 0 0 auto;
       }
     }
+
+    /* Margen especial para la tarjeta de Energías limpias */
+    .energia-margin {
+      margin-top: 3.5rem;
+    }
   `;
 
   // Sincroniza isLoggedIn con el token de localStorage
@@ -893,7 +904,6 @@ useEffect(() => {
                   section.scrollIntoView({ behavior: 'smooth'});
                 }
               setActiveSection('inicio')}},
-              {label: 'Inscribirse', action: () => navigate('/alumno/inscripcion')},
               {label: 'Convocatoria', action: () => {
                 const section = document.getElementById('convocatoria-section');
                 if (section) {
@@ -1103,7 +1113,7 @@ useEffect(() => {
 
           <div className="categories-grid">
             {categories.map((category, index) => (
-              <div key={index} className="category-card">
+              <div key={index} className={`category-card${category.title === 'Energías limpias y Sustentabilidad Ambiental' ? ' energia-margin' : ''}`}>
                 <div className="category-content">
                   <div className={`category-icon ${category.colorClass}`}>
                     <category.icon size={32} />
@@ -1165,12 +1175,11 @@ useEffect(() => {
                     padding: '0.5rem 0'
                   }}>
                     <a href="\src\downloads\Caracteristicas RESUMEN EJECUTIVO.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Características del Resumen Ejecutivo</a>
-                    <a href="/downloads/Criterio%20evaluacion%20Feria%20Emprende%202024.doc" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Criterio Evaluación Feria Emprende</a>
-                    <a href="/downloads/FICHA%20Tecnica%20Emprendimiento%20e%20Innovaci%C3%B3n%202024.docx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Ficha Técnica Emprendimiento e Innovación</a>
-                    <a href="/downloads/LINEAMIENTOS%20PARTICIPACION%20Y%20EVALUACION.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Lineamientos Participación y Evaluación</a>
-                    <a href="/downloads/MATERIAL%20APOYO%20MODELO%20CANVAS.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Material Apoyo Modelo Canvas</a>
-                    <a href="/downloads/plantilla-canvas-descargable.pptx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Plantilla Canvas Descargable</a>
-                    <a href="/downloads/convocatoria.jpg" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Convocatoria (Imagen)</a>
+                    <a href="\src\downloads\FICHA Tecnica Emprendimiento e Innovación 2025.docx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Ficha Técnica Emprendimiento e Innovación</a>
+                    <a href="\src\downloads\LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Lineamientos Participación y Evaluación</a>
+                    <a href="\src\downloads\MATERIAL APOYO MODELO CANVAS.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Material Apoyo Modelo Canvas</a>
+                    <a href="\src\downloads\plantilla-canvas-descargable.pptx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Plantilla Canvas Descargable</a>
+                    <a href="\src\downloads\CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Convocatoria</a>
                   </div>
                 )}
               </div>

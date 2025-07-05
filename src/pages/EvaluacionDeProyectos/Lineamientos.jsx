@@ -12,7 +12,7 @@ function Lineamientos() {
 
   // Determinar si es alumno o admin basado en la ruta
   const isAlumno = location.pathname.startsWith('/alumno');
-  const backPath = isAlumno ? '/alumno' : '/inicio/home';
+  const backPath = isAlumno ? '/alumno' : '/admin';
 
   const styles = `
     .lineamientos-container {
