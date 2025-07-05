@@ -18,6 +18,50 @@ const Alumno = () => {
   const [fade, setFade] = useState(true);
   const [downloadsMenuOpen, setDownloadsMenuOpen] = useState(false);
 
+  // Función de scroll suave personalizada que funciona en todos los navegadores
+  const smoothScrollTo = (elementId) => {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    // Detectar si es un dispositivo móvil para ajustar la velocidad
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const duration = isMobile ? 600 : 800; // Más rápido en móviles
+
+    // Fallback para navegadores que no soportan requestAnimationFrame
+    if (!window.requestAnimationFrame) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    const targetPosition = element.offsetTop - 80; // Ajuste para el header fijo
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    let start = null;
+
+    const animation = (currentTime) => {
+      if (start === null) start = currentTime;
+      const timeElapsed = currentTime - start;
+      const run = easeInOutCubic(timeElapsed, startPosition, distance, duration);
+      window.scrollTo(0, run);
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    };
+
+    // Función de easing para una animación más suave
+    const easeInOutCubic = (t, b, c, d) => {
+      t /= d / 2;
+      if (t < 1) return c / 2 * t * t * t + b;
+      t -= 2;
+      return c / 2 * (t * t * t + 2) + b;
+    };
+
+    requestAnimationFrame(animation);
+  };
+
+  // Función adicional para detectar si el navegador soporta scroll suave nativo
+  const isSmoothScrollSupported = () => {
+    return 'scrollBehavior' in document.documentElement.style;
+  };
+
   const images = [
     '/src/assets/images/5 FERIA EMPRENDIMIENTO.png',
     '/src/assets/images/5 FERIA EMPRENDIMIENTO B.png'
@@ -260,38 +304,43 @@ useEffect(() => {
     /* Navegación desktop */
     .desktop-nav {
       display: flex;
-      gap: 2rem;
+      gap: 1.5rem;
     }
 
     .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
       background: none;
       border: none;
-      color: var(--color-gray-600);
-      font-size: 0.875rem;
-      font-weight: 500;
       cursor: pointer;
-      transition: color 0.2s ease;
-      padding: 0.5rem 0;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--color-gray-600);
+      transition: background 0.2s, color 0.2s;
       position: relative;
     }
 
     .nav-item:hover {
+      background: var(--color-primary-light);
+      color: var(--color-white);
+    }
+
+    .nav-item.nav-active {
       color: var(--color-primary);
     }
 
-    .nav-active {
-      color: var(--color-primary) !important;
-    }
-
-    .nav-active::after {
+    .nav-item.nav-active::after {
       content: '';
       position: absolute;
-      bottom: -1rem;
-      left: 0;
-      right: 0;
-      height: 2px;
+      left: 1.5rem;
+      right: 1.5rem;
+      bottom: 0.3rem;
+      height: 3px;
       background: var(--color-primary);
-      border-radius: 1px;
+      border-radius: 2px;
     }
 
     /* Sección de usuario */
@@ -603,11 +652,35 @@ useEffect(() => {
 
     .category-card {
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(15, 118, 110, 0.05), rgba(20, 184, 166, 0.05));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .category-card:hover::before {
+      opacity: 1;
     }
 
     .category-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
+    }
+
+    .category-card:active {
+      transform: translateY(-2px);
     }
 
     .category-content {
@@ -618,11 +691,13 @@ useEffect(() => {
       height: 100%;
       transition: all 0.3s ease;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 2;
     }
 
-    .category-content:hover {
+    .category-card:hover .category-content {
       border-color: var(--color-primary-light);
-      box-shadow: 0 12px 24px rgba(15, 118, 110, 0.15);
+      box-shadow: 0 12px 32px rgba(15, 118, 110, 0.15);
     }
 
     .category-icon {
@@ -675,6 +750,7 @@ useEffect(() => {
       color: var(--color-primary);
       font-weight: 500;
       transition: all 0.2s ease;
+      position: relative;
     }
 
     .category-card:hover .category-link {
@@ -683,7 +759,16 @@ useEffect(() => {
 
     .category-link span {
       margin-right: 0.5rem;
-      color: #ec4899
+      color: #ec4899;
+      transition: transform 0.2s ease;
+    }
+
+    .category-card:hover .category-link span {
+      transform: translateX(4px);
+    }
+
+    .category-card:hover .category-link svg {
+      transform: translateX(4px);
     }
 
     /* CTA Section */
@@ -899,30 +984,19 @@ useEffect(() => {
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
             {[{label: 'Inicio', action: () => {
-                const section = document.getElementById('hero-section');
-                if(section){
-                  section.scrollIntoView({ behavior: 'smooth'});
-                }
-              setActiveSection('inicio')}},
+                smoothScrollTo('hero-section');
+                setActiveSection('inicio');
+              }},
               {label: 'Convocatoria', action: () => {
-                const section = document.getElementById('convocatoria-section');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' });
-                }
+                smoothScrollTo('convocatoria-section');
                 setActiveSection('convocatoria');
               }},
               {label: 'Proyectos', action: () => {
-                const section = document.getElementById('categorias-participacion');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' });
-                }
+                smoothScrollTo('categorias-participacion');
                 setActiveSection('proyectos');
               }},
               {label: 'Descargables', action: () => {
-                const section = document.getElementById('cta-section');
-                if(section) {
-                  section.scrollIntoView({ behavior: 'smooth'});
-                }
+                smoothScrollTo('cta-section');
                 setActiveSection('descargables');
               }},
             ].map((item) => (
@@ -1113,23 +1187,43 @@ useEffect(() => {
 
           <div className="categories-grid">
             {categories.map((category, index) => (
-              <div key={index} className={`category-card${category.title === 'Energías limpias y Sustentabilidad Ambiental' ? ' energia-margin' : ''}`}>
+              <div 
+                key={index} 
+                className={`category-card${category.title === 'Energías limpias y Sustentabilidad Ambiental' ? ' energia-margin' : ''}`}
+                style={{ 
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  transform: 'translateY(0)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(15, 118, 110, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '';
+                }}
+                onClick={(e) => {
+                  // Efecto de feedback visual
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(0.98)';
+                  setTimeout(() => {
+                    e.currentTarget.style.transform = '';
+                  }, 150);
+
+                  // Navegación
+                  if (category.title === 'Proyecto Social') navigate('/alumno/catalogo/proyectoSocial');
+                  else if (category.title === 'Emprendimiento Tecnológico') navigate('/alumno/catalogo/emprendimientoTecnologico');
+                  else if (category.title === 'Innovación en Productos y servicios') navigate('/alumno/catalogo/innovacionProductosServicios');
+                  else if (category.title === 'Energías limpias y Sustentabilidad Ambiental') navigate('/alumno/catalogo/energias');
+                }}
+              >
                 <div className="category-content">
                   <div className={`category-icon ${category.colorClass}`}>
                     <category.icon size={32} />
                   </div>
                   <h3>{category.title}</h3>
                   <p>{category.description}</p>
-                  <div
-                    className="category-link"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      if (category.title === 'Proyecto Social') navigate('/alumno/catalogo/proyectoSocial');
-                      else if (category.title === 'Emprendimiento Tecnológico') navigate('/alumno/catalogo/emprendimientoTecnologico');
-                      else if (category.title === 'Innovación en Productos y servicios') navigate('/alumno/catalogo/innovacionProductosServicios');
-                      else if (category.title === 'Energías limpias y Sustentabilidad Ambiental') navigate('/alumno/catalogo/energias');
-                    }}
-                  >
+                  <div className="category-link">
                     <span>Más información</span>
                     <ChevronRight size={16} />
                   </div>
@@ -1212,12 +1306,10 @@ useEffect(() => {
               <ul>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('/alumno/inscripcion'); }}>Inscribirse</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault();
-                  const section = document.getElementById('categorias-participacion');
-                  if (section) section.scrollIntoView({ behavior: 'smooth' });
+                  smoothScrollTo('categorias-participacion');
                 }}>Catálogo de Proyectos</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault();
-                  const section = document.getElementById('convocatoria-section');
-                  if (section) section.scrollIntoView({ behavior: 'smooth' });
+                  smoothScrollTo('convocatoria-section');
                 }}>Convocatoria</a></li>
                 <li><a href='#' onClick={(e) => { e.preventDefault(); navigate('/alumno/lineamientos', '_blank');}}>Lineamientos de participación</a></li>
               </ul>

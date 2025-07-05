@@ -99,7 +99,7 @@ const FormularioEntregaProyecto = () => {
 
     .form-container {
       max-width: 1100px;
-      margin: 2.5rem auto;
+      margin: 1.5rem auto;
       padding: 0 1.5rem;
     }
 
@@ -152,7 +152,7 @@ const FormularioEntregaProyecto = () => {
     .form-card {
       background: var(--color-white);
       border-radius: 1rem;
-      padding: 4rem 2.5rem 4rem 2.5rem;
+      padding: 2rem;
       box-shadow: 0 8px 24px rgba(15, 118, 110, 0.1);
       border: 1px solid var(--color-gray-200);
     }
