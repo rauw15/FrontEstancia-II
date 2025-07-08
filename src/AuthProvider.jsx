@@ -1,46 +1,100 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import * as apiService from './services/apiService';
+// Asegúrate de que la ruta a tu servicio API sea correcta
+import * as apiService from './services/apiService'; 
 
-const AuthContext = createContext();
+// 1. Crear el contexto
+const AuthContext = createContext(null);
 
+// 2. Exportar el componente Provider (el que envuelve tu App)
 export function AuthProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Al cargar la app, revisa si hay una sesión guardada en localStorage
   useEffect(() => {
-    // Checa si hay token y usuario al cargar
-    const token = localStorage.getItem('token');
-    const username = sessionStorage.getItem('nameUser');
-    setIsLoggedIn(!!token);
-    setUser(username || null);
-    setLoading(false);
+    try {
+      const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+
+      if (token && storedUser) {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error("Error al restaurar la sesión desde localStorage:", error);
+      localStorage.clear();
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Login usando el backend
-  const login = async (username, password) => {
-    const result = await apiService.login({ username, password });
-    if (result.accessToken) {
-      setIsLoggedIn(true);
-      setUser(result.username);
+  // Función de login: llama a la API y, si tiene éxito, guarda el estado
+  const login = async (credentials) => {
+    try {
+      const result = await apiService.login(credentials);
+      
+      if (result.accessToken && result.username) {
+        const userData = {
+          id: result.id,
+          username: result.username,
+          roles: result.roles || [],
+        };
+
+        localStorage.setItem('token', result.accessToken);
+        if (result.refreshToken) {
+          localStorage.setItem('refreshToken', result.refreshToken);
+        }
+        localStorage.setItem('user', JSON.stringify(userData));
+
+        setUser(userData);
+        setIsLoggedIn(true);
+        
+        return userData;
+      }
+    } catch (error) {
+      console.error("Fallo en el login:", error);
+      // Limpia cualquier estado residual si el login falla
+      logout();
+      throw error;
     }
-    return result;
   };
 
-  // Logout usando el backend
+  // Función de logout: limpia localStorage y el estado de React
   const logout = () => {
-    apiService.logout(); // Esto limpia tokens y redirige
-    setIsLoggedIn(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    
     setUser(null);
+    setIsLoggedIn(false);
+  };
+  
+  const value = {
+    isLoggedIn,
+    user,
+    roles: user ? user.roles : [],
+    isAdmin: user ? user.roles.includes('admin') : false,
+    loading,
+    login,
+    logout,
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, loading }}>
-      {children}
+    <AuthContext.Provider value={value}>
+      {/* No renderizar los hijos hasta que la comprobación inicial de auth termine */}
+      {!loading && children} 
     </AuthContext.Provider>
   );
 }
 
+// 3. Exportar el hook personalizado `useAuth`
+//    ¡ESTA ES LA LÍNEA QUE PROBABLEMENTE FALTABA O ERA INCORRECTA!
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
+  }
+  return context;
 }

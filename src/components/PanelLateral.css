@@ -115,3 +115,116 @@
     display: none;
   }
   
+  /* Estructura principal del Sidebar */
+.sidebar {
+  /* ... tus estilos existentes de .sidebar ... */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-header {
+  /* ... tus estilos existentes ... */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #444;
+}
+
+/* --- NUEVOS ESTILOS PARA LA SECCIÓN DEL PERFIL DE USUARIO --- */
+.user-profile-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #444;
+}
+
+.user-avatar-sidebar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #0f766e; /* Un color de fondo consistente */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.user-details-sidebar {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Evita que el texto largo se desborde */
+}
+
+.user-name-sidebar {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Pone "..." si el nombre es muy largo */
+}
+
+.user-role-sidebar {
+  font-size: 0.75rem;
+  color: #a0aec0; /* Un gris más claro para el rol */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* --- FIN DE ESTILOS DE PERFIL --- */
+
+.nav {
+  flex-grow: 1; /* Hace que la navegación ocupe todo el espacio disponible */
+  overflow-y: auto; /* Permite scroll si hay muchos elementos */
+}
+
+.nav-item {
+  /* ... tus estilos existentes de .nav-item ... */
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  text-align: left;
+  cursor: pointer;
+  gap: 12px;
+}
+.nav-item:hover, .nav-item.active {
+    background-color: #2d3748; /* Color de fondo al pasar el mouse o si está activo */
+}
+.nav-item .label {
+    flex-grow: 1;
+}
+
+/* --- NUEVOS ESTILOS PARA EL FOOTER Y BOTÓN DE ACCIÓN --- */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid #444;
+}
+
+.auth-action-btn {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  background-color: #0f766e;
+  color: white;
+}
+
+.auth-action-btn:hover {
+  background-color: #14b8a6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+/* --- FIN DE ESTILOS DE FOOTER --- */

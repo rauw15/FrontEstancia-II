@@ -2,10 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './AuthProvider';
 // import Inicio from './pages/EvaluacionDeProyectos/Inicio';
 import Login from './pages/Login/Login';
-// import Home from './pages/Home/Home';
-// import Evaluacion from './pages/EvaluacionDeProyectos/Evaluacion';
-// import CalProyectos from './pages/EvaluacionDeProyectos/CalProyectos';
-// import Convocatoria from './pages/EvaluacionDeProyectos/Convocatoria';
+
 import Lineamientos from './pages/EvaluacionDeProyectos/Lineamientos';
 import Catalogo from './pages/EvaluacionDeProyectos/Catalogo';
 import Formulario from './pages/InscripcionAlumnos/Formulario';
@@ -18,16 +15,20 @@ import AdminPanel from './pages/AdminPage/AdminPanel';
 import EvaluacionProyecto from './pages/EvaluacionDeProyectos/EvaluacionProyecto';
 import './App.css';
 
+import { useAuth } from './AuthProvider';
+
 // Ruta protegida para admin
 function ProtectedAdminRoute({ children }) {
-  const isAdmin = sessionStorage.getItem('role') === 'admin';
-  return isAdmin ? children : <Navigate to='/login' />;
+  const { isAdmin, isLoggedIn, loading } = useAuth();
+  if (loading) return null; // O un spinner si prefieres
+  return isLoggedIn && isAdmin ? children : <Navigate to='/login' />;
 }
 
-// Ruta protegida para usuario
+// Ruta protegida para usuario (cualquier usuario logueado)
 function ProtectedUserRoute({ children }) {
-  const isUser = sessionStorage.getItem('role') === 'user' || sessionStorage.getItem('role') === null;
-  return isUser ? children : <Navigate to='/login' />;
+  const { isLoggedIn, loading } = useAuth();
+  if (loading) return null;
+  return isLoggedIn ? children : <Navigate to='/login' />;
 }
 
 function App() {
@@ -38,29 +39,6 @@ function App() {
           {/* Ruta de login */}
           <Route path='/login' element={<Login />} />
 
-          {/* <Route path='/inicio' element={<Inicio />}>
-            <Route path='proyectosAdmin' element={<ProyectosAdmin />} />
-            <Route path='calificacionesAdmin' element={<CalificacionesAdmin />} />
-            <Route path='lineamientos' element={<Lineamientos />} />
-            <Route path='catalogo' element={<Catalogo />}>
-              <Route path='proyectoSocial' element={<Catalogo />} />
-              <Route path='emprendimientoTecnologico' element={<Catalogo />} />
-              <Route path='innovacionProductosServicios' element={<Catalogo />} />
-              <Route path='energias' element={<Catalogo />} />
-            </Route>
-            <Route path='convocatoria' element={<Convocatoria />}>
-              <Route path='lineamientos' element={<Convocatoria />} />
-            </Route>
-            <Route path='home' element={<Home />} />
-            
-            <Route path='evaluacion' element={<Evaluacion />}>
-              <Route path='proyectoSocial' element={<Evaluacion />} />
-              <Route path='emprendimientoTecnologico' element={<Evaluacion />} />
-              <Route path='innovacionProductosServicios' element={<Evaluacion />} />
-              <Route path='energias' element={<Evaluacion />} />
-              <Route path='calProyectos' element={<Evaluacion />} />
-            </Route>
-          </Route> */}
           {/* Ruta para admin */}
           <Route path='/admin/tablaAdmin' element={<TablaUsuarios />} />
           <Route path='/admin/lineamientos' element={<Lineamientos />} />
@@ -71,21 +49,12 @@ function App() {
           <Route path='/alumno/inscripcion' element={<Formulario />} />
           <Route path='/alumno/subirProyecto' element={<SubirProyectos />} />
           <Route path='/alumno/lineamientos' element={<Lineamientos />} />
-          <Route path='/alumno/catalogo/proyectoSocial' element={<Catalogo />} />
-          <Route path='/alumno/catalogo/emprendimientoTecnologico' element={<Catalogo />} />
-          <Route path='/alumno/catalogo/innovacionProductosServicios' element={<Catalogo />} />
-          <Route path='/alumno/catalogo/energias' element={<Catalogo />} />
+         <Route 
+            path="/alumno/catalogo/:categoryKey" 
+            element={<ProtectedUserRoute><Catalogo /></ProtectedUserRoute>} 
+          />
           <Route path='/alumno' element={<Alumno />}>
-            {/* <Route path='convocatoria' element={<Convocatoria />}>
-              <Route path='lineamientos' element={<Convocatoria />} />
-            </Route> */}
-            {/* <Route path='home' element={<Home />} />
-            <Route path='catalogo' element={<Catalogo />}>
-              <Route path='proyectoSocial' element={<Catalogo />} />
-              <Route path='emprendimientoTecnologico' element={<Catalogo />} />
-              <Route path='innovacionProductosServicios' element={<Catalogo />} />
-              <Route path='energias' element={<Catalogo />} />
-            </Route> */}
+  
           </Route>
 
           <Route path='/admin/*' element={
@@ -95,11 +64,7 @@ function App() {
             
           } />
 
-          <Route path='/*' element={
-            <ProtectedUserRoute>
-              <Alumno />
-            </ProtectedUserRoute>
-          } />
+          <Route path='/*' element={<Alumno />} />
         </Routes>
       </Router>
     </AuthProvider>

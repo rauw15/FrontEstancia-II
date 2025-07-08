@@ -14,36 +14,36 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [fade, setFade] = useState(true);
   
   // Hooks
   const navigate = useNavigate();
-  const [AlertaComponente, showAlerta] = useAlerta();
-  const auth = useAuth();
+  const [AlertaComponent, showAlerta] = useAlerta();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
     try {
-      // Usuario admin predefinido
-      if (username === 'admin' && password === 'admin123') {
-        sessionStorage.setItem('role', 'admin');
-        sessionStorage.setItem('nameUser', 'admin');
-        setError('');
-        navigate('/admin');
-      } else if (username && password) {
-        // Usuario normal
-        sessionStorage.setItem('role', 'user');
-        sessionStorage.setItem('nameUser', username);
-        setError('');
-        navigate('/');
+      const userData = await login({ username, password });
+
+      if (userData && userData.roles) {
+        if (userData.roles.includes('admin')) {
+          showAlerta('Inicio de sesión exitoso como Administrador', 'success');
+          navigate('/admin'); 
+        } else {
+          showAlerta(`Bienvenido, ${userData.username}`, 'success');
+          navigate('/alumno');
+        }
       } else {
-        setError('Usuario o contraseña incorrectos');
+        throw new Error('No se recibieron los datos del usuario tras el inicio de sesión.');
       }
-    } catch (error) {
-      console.error('%c❌ Falló el inicio de sesión:', 'color: red; font-weight: bold;', error);
-      showAlerta(error.message || 'Usuario o contraseña incorrectos', 'error');
+    } catch (err) {
+      console.error('%c❌ Falló el inicio de sesión:', 'color: red; font-weight: bold;', err);
+      const errorMessage = err.message || 'Usuario o contraseña incorrectos. Por favor, intente de nuevo.';
+      setError(errorMessage);
+      showAlerta(errorMessage, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -253,6 +253,7 @@ const Login = () => {
       font-size: 0.875rem;
       text-align: center;
       margin-top: -0.5rem;
+      min-height: 1.25rem; /* Evita que el layout salte cuando aparece el error */
     }
 
     /* Botón */
@@ -377,7 +378,12 @@ const Login = () => {
         {/* Main Content */}
         <main className="login-main">
           <div className="login-card">
-            {AlertaComponente}
+            {/* 
+              --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+              Se usa {AlertaComponent} en lugar de <AlertaComponent />
+              porque la variable ya contiene el JSX que se debe renderizar (o null).
+            */}
+            {AlertaComponent}
             
             <div className="login-title">
               <h1>Bienvenido</h1>
@@ -432,7 +438,7 @@ const Login = () => {
                 </div>
               </div>
 
-              {error && <div className="login-error">{error}</div>}
+              <div className="login-error">{error}</div>
 
               <button type="submit" className="login-button" disabled={isLoading}>
                 {isLoading ? (
@@ -462,7 +468,7 @@ const Login = () => {
         {/* Footer */}
         <footer className="login-page-footer">
           <p className="footer-text">
-            &copy; 2025 Universidad Politécnica de Chiapas. Todos los derechos reservados.
+            © 2025 Universidad Politécnica de Chiapas. Todos los derechos reservados.
           </p>
         </footer>
       </div>

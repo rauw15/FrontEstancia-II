@@ -1,133 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+// 1. IMPORTAMOS useParams
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAlerta } from '../../fragments/Alerta';
-import { ChevronLeft, BookOpen, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { ChevronLeft, BookOpen, CheckCircle, XCircle } from 'lucide-react';
+import * as apiService from '../../services/apiService';
+
+// Mantenemos el mapeo como nuestra "fuente de verdad"
+const CATEGORY_MAP = {
+  proyectoSocial: 'Proyecto Social',
+  emprendimientoTecnologico: 'Emprendimiento Tecnológico',
+  innovacionProductosServicios: 'Innovación en Productos y Servicios',
+  energias: 'Energías Limpias y Sustentabilidad Ambiental'
+};
 
 function Catalogo() {
-  const categoria = [
-    'Proyecto Social', 
-    'Emprendimiento Tecnológico', 
-    'Innovación en Productos y Servicios', 
-    'Energías Limpias y Sustentabilidad Ambiental'
-  ];
+  // 2. USAMOS useParams para obtener el parámetro de la ruta
+  const { categoryKey } = useParams(); // Esto nos dará 'proyectoSocial', 'energias', etc.
   
-  const location = useLocation();
   const navigate = useNavigate();
   const [AlertaComponente, showAlerta] = useAlerta();
-  const [activeCategory, setActiveCategory] = useState('');
-  const token = localStorage.getItem('token');
-  const [proyectos, setProyectos] = useState({
-    proyectoSocial: [],
-    emprendimientoTecnologico: [],
-    innovacionProductosServicios: [],
-    energias: []
-  });
+  const [allProjects, setAllProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // useEffect para obtener los datos (se ejecuta solo una vez al montar)
   useEffect(() => {
-    const determineActiveCategory = () => {
-      if (location.pathname.includes('proyectoSocial')) {
-        setActiveCategory('proyectoSocial');
-      } else if (location.pathname.includes('emprendimientoTecnologico')) {
-        setActiveCategory('emprendimientoTecnologico');
-      } else if (location.pathname.includes('innovacionProductosServicios')) {
-        setActiveCategory('innovacionProductosServicios');
-      } else if (location.pathname.includes('energias')) {
-        setActiveCategory('energias');
+    const fetchAllProjects = async () => {
+      setLoading(true);
+      try {
+        const projectsFromApi = await apiService.getAllProjects();
+        setAllProjects(projectsFromApi || []);
+      } catch (error) {
+        showAlerta(error.message || 'Error al conectar con el servidor', 'error');
+      } finally {
+        setLoading(false);
       }
     };
+    fetchAllProjects();
+  }, []); // El array vacío [] sigue siendo correcto, queremos los datos solo una vez
 
-    determineActiveCategory();
-    handleGetProyectos();
-  }, [location.pathname]);
-
-  const handleGetProyectos = async () => {
-    try {
-      const response = await fetch(import.meta.env.VITE_API_GETPRALL, {
-        method: 'GET',
-        headers: {
-          'x-access-token': token,
-        },
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        const categorizedProjects = {
-          proyectoSocial: [],
-          emprendimientoTecnologico: [],
-          innovacionProductosServicios: [],
-          energias: []
-        };
-
-        result.forEach(user => {
-          const projectData = {
-            nameUser: user.username,
-            proyectoName: user.proyectos.length > 0 ? user.proyectos[0].name : '----',
-            descripcion: user.proyectos.length > 0 ? 'Archivos Subidos' : 'Archivos No Subidos',
-            estado: user.proyectos.length > 0 ? 'subido' : 'noSubido'
-          };
-
-          switch(user.categoria) {
-            case 'Proyecto Social':
-              categorizedProjects.proyectoSocial.push(projectData);
-              break;
-            case 'Emprendimiento Tecnológico':
-              categorizedProjects.emprendimientoTecnologico.push(projectData);
-              break;
-            case 'Innovación en Productos y Servicios':
-              categorizedProjects.innovacionProductosServicios.push(projectData);
-              break;
-            case 'Energías Limpias y Sustentabilidad Ambiental':
-              categorizedProjects.energias.push(projectData);
-              break;
-            default:
-              break;
-          }
-        });
-
-        setProyectos(categorizedProjects);
-      } else {
-        showAlerta(result.message || 'Error al obtener proyectos', 'error');
-      }
-    } catch (error) {
-      showAlerta('Error en el servidor', 'error');
-    } finally {
-      setLoading(false);
+  // 3. Lógica de FILTRADO (ahora usa 'categoryKey' de useParams)
+  // useMemo se re-ejecutará automáticamente cuando 'categoryKey' cambie
+  const filteredProjects = useMemo(() => {
+    if (!categoryKey || !CATEGORY_MAP[categoryKey]) {
+      return [];
     }
-  };
+    const categoryName = CATEGORY_MAP[categoryKey];
+    return allProjects.filter(project => 
+      project.category?.trim().toLowerCase() === categoryName.trim().toLowerCase()
+    );
+  }, [allProjects, categoryKey]); // Depende de la lista completa y de la clave de la URL
 
-  const getCurrentProjects = () => {
-    switch(activeCategory) {
-      case 'proyectoSocial':
-        return proyectos.proyectoSocial;
-      case 'emprendimientoTecnologico':
-        return proyectos.emprendimientoTecnologico;
-      case 'innovacionProductosServicios':
-        return proyectos.innovacionProductosServicios;
-      case 'energias':
-        return proyectos.energias;
-      default:
-        return [];
-    }
-  };
-
+  // 4. Función para obtener el nombre legible (simplificada)
   const getCategoryName = () => {
-    switch(activeCategory) {
-      case 'proyectoSocial':
-        return categoria[0];
-      case 'emprendimientoTecnologico':
-        return categoria[1];
-      case 'innovacionProductosServicios':
-        return categoria[2];
-      case 'energias':
-        return categoria[3];
-      default:
-        return '';
-    }
+    return CATEGORY_MAP[categoryKey] || 'Categoría no válida';
   };
 
-  const styles = `
+ const styles = `
     :root {
       --color-primary: #0f766e;
       --color-primary-dark: #0d5b52;
@@ -301,7 +229,7 @@ function Catalogo() {
       <style>{styles}</style>
       <div className="catalog-container">
         <button className="back-button" onClick={() => navigate('/alumno')}>
-          <ChevronLeft size={18} /> Volver al menú principal
+          <ChevronLeft size={18} /> Volver a la página principal
         </button>
 
         {AlertaComponente}
@@ -314,25 +242,14 @@ function Catalogo() {
             Categoría: {getCategoryName()}
           </div>
         </div>
-
+        
         {loading ? (
           <div className="loading-overlay">
-            <div className="loading-spinner">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 18V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M4.93 4.93L7.76 7.76" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M16.24 16.24L19.07 19.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M18 12H22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M4.93 19.07L7.76 16.24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M16.24 7.76L19.07 4.93" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
+            {/* ... tu spinner ... */}
           </div>
-        ) : getCurrentProjects().length === 0 ? (
+        ) : filteredProjects.length === 0 ? (
           <div className="empty-state">
-            <p>No hay proyectos registrados en esta categoría</p>
+            <p>No hay proyectos registrados en esta categoría.</p>
           </div>
         ) : (
           <table className="projects-table">
@@ -345,19 +262,15 @@ function Catalogo() {
               </tr>
             </thead>
             <tbody>
-              {getCurrentProjects().map((proyecto, index) => (
-                <tr key={index}>
-                  <td>{proyecto.nameUser}</td>
-                  <td>{proyecto.proyectoName}</td>
-                  <td>{proyecto.descripcion}</td>
+              {filteredProjects.map((project, index) => (
+                <tr key={project.id || index}>
+                  <td>{project.owner_username || 'N/A'}</td>
+                  <td>{project.name || 'Sin Nombre'}</td>
+                  <td>Archivos Subidos</td>
                   <td>
-                    <span className={`status ${proyecto.estado}`}>
-                      {proyecto.estado === 'subido' ? (
-                        <CheckCircle size={16} />
-                      ) : (
-                        <XCircle size={16} />
-                      )}
-                      {proyecto.estado === 'subido' ? 'Subido' : 'No subido'}
+                    <span className="status subido">
+                      <CheckCircle size={16} />
+                      Subido
                     </span>
                   </td>
                 </tr>

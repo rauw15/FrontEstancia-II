@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Users, Lightbulb, Trophy, Calendar, Upload, FileText, ChevronRight, Star, Target, Heart, Zap } from 'lucide-react';
 import { useNavigate, Outlet, Routes, Route } from 'react-router-dom';
-import { logout as apiLogout } from '../../services/apiService';
 import Catalogo from '../EvaluacionDeProyectos/Catalogo';
 import Convocatoria from '../EvaluacionDeProyectos/Convocatoria';
 import Lineamientos from '../EvaluacionDeProyectos/Lineamientos';
@@ -14,14 +13,24 @@ import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
 import feriaEmprendimientoImg from '../../assets/images/5 FERIA EMPRENDIMIENTO.png';
 import feriaEmprendimientoBImg from '../../assets/images/5 FERIA EMPRENDIMIENTO B.png';
 
+import { useAuth } from '../../AuthProvider'; 
+
 const Alumno = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('inicio');
   const [scrollY, setScrollY] = useState(0);
   const navigate = useNavigate();
   const [fade, setFade] = useState(true);
   const [downloadsMenuOpen, setDownloadsMenuOpen] = useState(false);
+  const { isLoggedIn, user, logout: authLogout } = useAuth();
+
+  const displayName = isLoggedIn && user ? user.username : 'Invitado';
+  const avatarText = (displayName || 'IN').slice(0, 2).toUpperCase();
+  
+  const handleLogout = () => {
+    authLogout(); // Llama a la función del AuthProvider
+    navigate('/login'); // Redirige al login
+  };
 
   // Función de scroll suave personalizada que funciona en todos los navegadores
   const smoothScrollTo = (elementId) => {
@@ -959,26 +968,16 @@ useEffect(() => {
     }
   `;
 
-  // Sincroniza isLoggedIn con el token de localStorage
-  useEffect(() => {
-    const checkLogin = () => {
-      setIsLoggedIn(!!localStorage.getItem('token'));
-    };
-    checkLogin();
-    window.addEventListener('storage', checkLogin);
-    return () => window.removeEventListener('storage', checkLogin);
-  }, []);
-
-  return (
+   return (
     <>
-      <style>{styles}</style>
+      <style>{styles + countdownStyles}</style>
       <div className="main-container">
       {/* Header */}
       <header className={`header ${scrollY > 50 ? 'header-scrolled' : ''}`}>
         <div className="header-content">
           <div className="logo-section">
             <div className="logo-icon">
-                                <img src={logoUpImg} alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
+              <img src={logoUpImg} alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
             </div>
             <div className="logo-text">
               <h1>UP Chiapas</h1>
@@ -988,22 +987,10 @@ useEffect(() => {
 
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
-            {[{label: 'Inicio', action: () => {
-                smoothScrollTo('hero-section');
-                setActiveSection('inicio');
-              }},
-              {label: 'Convocatoria', action: () => {
-                smoothScrollTo('convocatoria-section');
-                setActiveSection('convocatoria');
-              }},
-              {label: 'Proyectos', action: () => {
-                smoothScrollTo('categorias-participacion');
-                setActiveSection('proyectos');
-              }},
-              {label: 'Descargables', action: () => {
-                smoothScrollTo('cta-section');
-                setActiveSection('descargables');
-              }},
+            {[{label: 'Inicio', action: () => { smoothScrollTo('hero-section'); setActiveSection('inicio'); }},
+              {label: 'Convocatoria', action: () => { smoothScrollTo('convocatoria-section'); setActiveSection('convocatoria'); }},
+              {label: 'Proyectos', action: () => { smoothScrollTo('categorias-participacion'); setActiveSection('proyectos'); }},
+              {label: 'Descargables', action: () => { smoothScrollTo('cta-section'); setActiveSection('descargables'); }},
             ].map((item) => (
               <button
                 key={item.label}
@@ -1013,37 +1000,26 @@ useEffect(() => {
                 {item.label}
               </button>
             ))}
-            {isLoggedIn && (
-              <button
-                className="nav-item logout-btn"
-                onClick={() => {
-                  apiLogout();
-                  setIsLoggedIn(false);
-                  navigate('/login');
-                }}
-                style={{ marginLeft: '1rem' }}
-              >
-                Salir
-              </button>
-            )}
           </nav>
 
-          {/* User Section */}
+          {/* User Section - MODIFICADO */}
           <div className="user-section">
             {isLoggedIn ? (
+              // 4. SI ESTÁ LOGUEADO, mostramos el perfil del usuario del contexto
               <div className="user-logged">
                 <div className="user-avatar">
-                  <span>IN</span>
+                  <span>{avatarText}</span>
                 </div>
-                <span className="username">Invitado Usuario</span>
+                <span className="username">{displayName}</span>
                 <button
-                  onClick={() => setIsLoggedIn(false)}
+                  onClick={handleLogout}
                   className="logout-btn"
                 >
                   Salir
                 </button>
               </div>
             ) : (
+              // 5. SI NO ESTÁ LOGUEADO, mostramos el botón de Iniciar Sesión
               <button
                 onClick={() => navigate('/login')}
                 className="login-btn"
@@ -1062,14 +1038,15 @@ useEffect(() => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu (también necesita usar el contexto) */}
         {isMenuOpen && (
           <div className="mobile-menu">
             <div className="mobile-menu-content">
-              {['Inicio', 'Inscribirse', 'Proyectos', 'Premios'].map((item) => (
+              {['Inicio', 'Convocatoria', 'Proyectos', 'Descargables'].map((item) => (
                 <button
                   key={item}
                   onClick={() => {
+                    smoothScrollTo(`${item.toLowerCase()}-section`);
                     setActiveSection(item.toLowerCase());
                     setIsMenuOpen(false);
                   }}
@@ -1079,11 +1056,10 @@ useEffect(() => {
                 </button>
               ))}
               <div className="mobile-login-section">
-                {!isLoggedIn && (
-                  <button
-                    onClick={() => setIsLoggedIn(true)}
-                    className="mobile-login-btn"
-                  >
+                {isLoggedIn ? (
+                   <button onClick={handleLogout} className="mobile-login-btn">Cerrar Sesión</button>
+                ) : (
+                  <button onClick={() => { navigate('/login'); setIsMenuOpen(false); }} className="mobile-login-btn">
                     Iniciar Sesión
                   </button>
                 )}

@@ -6,18 +6,21 @@ const getToken = () => localStorage.getItem('token');
 
 // Una función genérica para realizar las peticiones fetch
 // Maneja la configuración común como la URL base y los headers de autenticación
+// Línea 8
 const apiFetch = async (endpoint, options = {}) => {
   const url = `${BASE_URL}${endpoint}`;
   let token = getToken();
   let refreshToken = localStorage.getItem('refreshToken');
 
   const defaultHeaders = {
-    ...(token && { 'x-access-token': token }),
+    // Coherencia: usa el mismo header en toda la app.
+    ...(token && { 'x-access-token': token }), 
   };
-  // Si es FormData, no agregues Content-Type, pero sí x-access-token
+  
   if (!(options.body instanceof FormData)) {
     defaultHeaders['Content-Type'] = 'application/json';
   }
+
   const config = {
     ...options,
     headers: {
@@ -38,14 +41,13 @@ const apiFetch = async (endpoint, options = {}) => {
       if (refreshResponse.ok) {
         const refreshData = await refreshResponse.json();
         localStorage.setItem('token', refreshData.accessToken);
-        // Si tu backend rota el refreshToken, actualízalo aquí también
-        // localStorage.setItem('refreshToken', refreshData.refreshToken);
+        // Actualiza el token en la configuración de la petición que falló
+        config.headers['x-access-token'] = refreshData.accessToken;
         // Reintenta la petición original con el nuevo token
-        config.headers['Authorization'] = `Bearer ${refreshData.accessToken}`;
         response = await fetch(url, config);
       } else {
-        logout();
-        throw new Error('Sesión expirada. Por favor inicia sesión de nuevo.');
+        logout(); // Si el refresh token falla, es una sesión inválida.
+        throw new Error('Sesión expirada. Por favor, inicia sesión de nuevo.');
       }
     }
     if (!response.ok) {
@@ -61,6 +63,10 @@ const apiFetch = async (endpoint, options = {}) => {
     return await response.json();
   } catch (error) {
     console.error(`API Fetch Error (${endpoint}):`, error);
+    // No redirigir aquí, solo propagar el error para que el componente decida qué hacer.
+    if (error.message.includes("Sesión expirada")) {
+      logout();
+    }
     throw error;
   }
 };
@@ -73,18 +79,13 @@ export const logout = () => {
 };
 
 // --- AUTH ENDPOINTS ---
+
 export const login = (credentials) => {
+  // MODIFICADO: Ahora solo hace la petición y devuelve el resultado.
+  // No guarda nada en localStorage. Esa es responsabilidad del AuthProvider.
   return apiFetch('/auth/signin', {
     method: 'POST',
     body: JSON.stringify(credentials),
-  }).then(result => {
-    if (result.accessToken) {
-      localStorage.setItem('token', result.accessToken);
-    }
-    if (result.refreshToken) {
-      localStorage.setItem('refreshToken', result.refreshToken);
-    }
-    return result;
   });
 };
 
