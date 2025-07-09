@@ -35,7 +35,16 @@ const Alumno = () => {
   // Función de scroll suave personalizada que funciona en todos los navegadores
   const smoothScrollTo = (elementId) => {
     const element = document.getElementById(elementId);
-    if (!element) return;
+    if (!element) {
+      console.warn(`Element with id '${elementId}' not found`);
+      return;
+    }
+
+    // Verificar que el elemento tiene las propiedades necesarias
+    if (typeof element.offsetTop === 'undefined') {
+      console.warn(`Element '${elementId}' does not have offsetTop property`);
+      return;
+    }
 
     // Detectar si es un dispositivo móvil para ajustar la velocidad
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -1187,15 +1196,12 @@ useEffect(() => {
                 onClick={(e) => {
                   // Efecto de feedback visual
                   e.currentTarget.style.transform = 'translateY(-2px) scale(0.98)';
-                  setTimeout(() => {
-                    e.currentTarget.style.transform = '';
-                  }, 150);
-
-                  // Navegación
-                  if (category.title === 'Proyecto Social') navigate('/alumno/catalogo/proyectoSocial');
-                  else if (category.title === 'Emprendimiento Tecnológico') navigate('/alumno/catalogo/emprendimientoTecnologico');
-                  else if (category.title === 'Innovación en Productos y servicios') navigate('/alumno/catalogo/innovacionProductosServicios');
-                  else if (category.title === 'Energías limpias y Sustentabilidad Ambiental') navigate('/alumno/catalogo/energias');
+                  
+                  // Navegación inmediata sin setTimeout
+                  if (category.title === 'Proyecto Social') navigate('/catalogo/proyectoSocial');
+                  else if (category.title === 'Emprendimiento Tecnológico') navigate('/catalogo/emprendimientoTecnologico');
+                  else if (category.title === 'Innovación en Productos y servicios') navigate('/catalogo/innovacionProductosServicios');
+                  else if (category.title === 'Energías limpias y Sustentabilidad Ambiental') navigate('/catalogo/energias');
                 }}
               >
                 <div className="category-content">
@@ -1292,7 +1298,7 @@ useEffect(() => {
                 <li><a href="#" onClick={(e) => { e.preventDefault();
                   smoothScrollTo('convocatoria-section');
                 }}>Convocatoria</a></li>
-                <li><a href='#' onClick={(e) => { e.preventDefault(); navigate('/alumno/lineamientos', '_blank');}}>Lineamientos de participación</a></li>
+                <li><a href='#' onClick={(e) => { e.preventDefault(); navigate('/lineamientos');}}>Lineamientos de participación</a></li>
               </ul>
             </div>
             

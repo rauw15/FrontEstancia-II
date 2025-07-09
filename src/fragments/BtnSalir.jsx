@@ -1,15 +1,14 @@
 import React from 'react';
 import { LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthProvider';
 
 
 function BtnSalir() {
-  const navigate = useNavigate();
+  const { logout } = useAuth();
   
   const handleCargar = () => {
-    localStorage.setItem('token', ' ');
-    sessionStorage.clear();
-    navigate('/login');
+    // Usamos la función logout del AuthProvider que maneja correctamente el estado
+    logout();
   };
 
   const styles = `

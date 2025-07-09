@@ -1,36 +1,145 @@
-// TablaUsuarios.jsx
-
 import React, { useState, useEffect } from 'react';
-import './tablaUsuarios.css'; // <-- Importamos el archivo CSS aquí
+import './tablaUsuarios.css';
 import { useAlerta } from '../../fragments/Alerta';
-import { RefreshCw, Plus, Trash2, User, Users, ChevronDown, Trophy, FileText, X, Menu, ClipboardCheck, Download, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { RefreshCw, Plus, Trash2, User, Users, X, Menu, ClipboardCheck, Download, ChevronRight, ChevronDown, Trophy, FileText } from 'lucide-react';
+import { useNavigate, Navigate, NavLink } from 'react-router-dom';
 import BtnSalir from '../../fragments/BtnSalir';
-import '../../assets/css/seccioncss.css'; // Este import se mantiene
+import '../../assets/css/seccioncss.css';
 import BtnExportarExcel from '../../fragments/BtnExportarExcel';
 import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
+import { useAuth } from '../../AuthProvider';
+import * as apiService from '../../services/apiService';
 
 const TablaUsuarios = () => {
+  const { isAdmin, isLoggedIn, loading: authLoading } = useAuth();
+  
+  // Estados para la UI
   const [mostrarUsuarios, setMostrarUsuarios] = useState(true);
   const [mostrarFormularioAgregar, setMostrarFormularioAgregar] = useState(false);
   const [mostrarFormularioEliminar, setMostrarFormularioEliminar] = useState(false);
-  const [nombre, setNombre] = useState('');
-  const [nombreUsuario, setNombreUsuario] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [categoria, setCategoria] = useState('Proyecto Social');
-  const [nombreUsuarioEliminar, setNombreUsuarioEliminar] = useState('');
-  const [usuarios, setUsuarios] = useState([]);
-  const [evaluadores, setEvaluadores] = useState([]);
-  const [AlertaComponente, showAlerta] = useAlerta();
-  const token = localStorage.getItem('token');
-  const [adminUser, setAdminUser] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showRecursos, setShowRecursos] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+
+  // Estados para los formularios
+  const [nombre, setNombre] = useState('');
+  const [nombreUsuario, setNombreUsuario] = useState('');
+  const [contraseña, setContraseña] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [categoria, setCategoria] = useState('Proyecto Social');
+  const [usuarioAEliminar, setUsuarioAEliminar] = useState(null);
+
+  // Estados para los datos
+  const [todosLosUsuarios, setTodosLosUsuarios] = useState([]);
+  
   const navigate = useNavigate();
+  const [AlertaComponente, showAlerta] = useAlerta();
+
+  // --- LÓGICA DE DATOS REFACTORIZADA ---
+  const usuariosGenerales = todosLosUsuarios.filter(u => 
+    !u.roles.includes('admin') && !u.roles.includes('evaluador') && !u.roles.includes('moderator')
+  );
+
+  const evaluadores = todosLosUsuarios.filter(u => u.roles.includes('evaluador'));
+
+  const cargarTodosLosDatos = async () => {
+    setIsLoading(true);
+    try {
+      const usuariosResponse = await apiService.getAllUsers();
+      const usuariosConRoles = await Promise.all(
+        usuariosResponse.map(async (usuario) => {
+          const rolesResponse = await apiService.getUserRoles(usuario.id);
+          const roleNames = rolesResponse.map(role => role.name);
+          return { ...usuario, roles: roleNames };
+        })
+      );
+      setTodosLosUsuarios(usuariosConRoles);
+    } catch (error) {
+      showAlerta('Error al cargar datos: ' + error.message, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarTodosLosDatos();
+  }, []);
+
+  // --- LÓGICA DE FORMULARIOS ---
+  const handleBorrarFormulario = () => {
+    setNombre('');
+    setNombreUsuario('');
+    setContraseña('');
+    setCorreo('');
+  };
+
+  const handleCerrarFormularioAgregar = () => {
+    setMostrarFormularioAgregar(false);
+    handleBorrarFormulario();
+  };
+  
+  const handleCerrarFormularioEliminar = () => {
+    setMostrarFormularioEliminar(false);
+    setUsuarioAEliminar(null);
+  };
+
+  // --- LÓGICA DE ACCIONES (CREAR/ELIMINAR) ---
+  const handleAgregarEvaluador = async () => {
+    if (!nombre || !nombreUsuario || !contraseña || !correo) {
+      showAlerta('Por favor llena todos los campos.', 'error');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const userData = {
+        username: nombreUsuario,
+        email: correo,
+        password: contraseña,
+        nombre: nombre,
+        carrera: categoria,
+      };
+      const nuevoUsuario = await apiService.register(userData);
+      if (!nuevoUsuario || !nuevoUsuario.id) {
+        throw new Error("El registro no devolvió un usuario con ID.");
+      }
+      // ID del rol 'evaluador' es 4
+      await apiService.assignRoleToUser({ userId: nuevoUsuario.id, roleId: 4 });
+      showAlerta('Evaluador agregado y rol asignado correctamente', 'success');
+      cargarTodosLosDatos();
+      handleCerrarFormularioAgregar();
+    } catch (error) {
+      showAlerta('Error al agregar evaluador: ' + error.message, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const iniciarEliminacion = (usuario) => {
+    setUsuarioAEliminar(usuario);
+    setMostrarFormularioEliminar(true);
+  };
+
+  const handleEliminarUsuario = async () => {
+    if (!usuarioAEliminar) return;
+    const userInput = window.prompt(`Para confirmar la eliminación de "${usuarioAEliminar.username}", escribe "ELIMINAR":`);
+    if (userInput !== 'ELIMINAR') {
+      showAlerta('Operación cancelada.', 'info');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await apiService.deleteUser(usuarioAEliminar.id);
+      showAlerta('Usuario eliminado correctamente', 'success');
+      cargarTodosLosDatos();
+      handleCerrarFormularioEliminar();
+    } catch (error) {
+      showAlerta('Error al eliminar usuario: ' + error.message, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -38,117 +147,15 @@ const TablaUsuarios = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleBorrarFormulario = () => {
-    setCorreo('');
-    setNombre('');
-    setNombreUsuario('');
-    setContraseña('');
-  };
-
-  const handleGetUsuarios = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(import.meta.env.VITE_API_USU, {
-        method: 'GET',
-        headers: { 'x-access-token': token },
-      });
-      const result = await response.json();
-      if (response.ok) {
-        setUsuarios(result.usuarios || []);
-        setEvaluadores(result.evaluadores || []);
-        setAdminUser(true);
-      } else {
-        setAdminUser(false);
-        showAlerta(`${result.message} ¿Usuario admin?` || 'Error en la solicitud', 'error');
-      }
-    } catch (error) {
-      showAlerta('Error en el servidor', 'error');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    handleGetUsuarios();
-  }, []);
-
-  const handleAgregarUsuario = async () => {
-    if (!nombre || !nombreUsuario || !contraseña || !correo) {
-      showAlerta(<p>Por favor llena todos los campos.</p>);
-      return;
-    }
-
-    if (adminUser) {
-      try {
-        const response = await fetch(import.meta.env.VITE_API_SUP, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: nombreUsuario,
-            email: correo,
-            password: contraseña,
-            nombre: nombre,
-            carrera: categoria,
-            categoria: 'Evaluador',
-            roles: ["moderator"]
-          })
-        });
-
-        if (response.ok) {
-          showAlerta(<p>Evaluador agregado correctamente</p>, 'success');
-          handleGetUsuarios();
-          handleBorrarFormulario();
-          setMostrarFormularioAgregar(false);
-        } else {
-          showAlerta(
-            <>
-              <p>Error al guardar los datos. Por favor, intente nuevamente.</p>
-              <span>Posible causa: nombre de usuario ya registrado</span>
-            </>, 'error'
-          );
-        }
-      } catch (error) {
-        showAlerta(<p>Error de conexión. Por favor, intente nuevamente.</p>, 'error');
-      }
-    } else {
-      showAlerta(<p>No tienes permisos de administrador</p>, 'error');
-    }
-  };
-
-  const handleEliminarUsuario = () => {
-    const userInput = window.prompt("Ingrese 'DELETE' para confirmar la eliminación:");
-    if (userInput === 'DELETE') {
-      const fetchDat = async () => {
-        try {
-          const encodedUsername = encodeURIComponent(nombreUsuarioEliminar.trim());
-          const response = await fetch(`${import.meta.env.VITE_API_DEL}/${encodedUsername}`, {
-            method: 'DELETE',
-            headers: { 'x-access-token': token },
-          });
-
-          const result = await response.json();
-          if (response.ok) {
-            showAlerta(<p>Usuario eliminado correctamente</p>, 'success');
-            handleGetUsuarios();
-            setNombreUsuarioEliminar('');
-            setMostrarFormularioEliminar(false);
-          } else {
-            showAlerta(result.message || 'Error en la solicitud', 'error');
-          }
-        } catch (error) {
-          showAlerta('Error en el servidor', 'error');
-        }
-      };
-      fetchDat();
-    } else {
-      showAlerta(<p>Operación cancelada. El usuario no se eliminó.</p>, 'info');
-    }
-  };
+  if (authLoading) return <div className="loading-overlay">Cargando autenticación...</div>;
+  if (!isLoggedIn || !isAdmin) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <>
       <div className="main-container">
-        {/* Header */}
+        {/* Header Completo */}
         <header className={`header ${scrollY > 50 ? 'header-scrolled' : ''}`}>
           <div className="header-content">
             <div className="logo-section">
@@ -177,7 +184,7 @@ const TablaUsuarios = () => {
                     <button className="dropdown-item" onClick={() => { navigate('/admin/tablaAdmin'); setShowAdmin(false); }}>
                       <Users size={16} className="icon" /> Usuarios Registrados
                     </button>
-                    <button className="dropdown-item" onClick={() => { navigate('/admin/calificacionesAdmin'); setShowAdmin(false); }}>
+                    <button className="dropdown-item" onClick={() => { navigate('/evaluador/calificaciones'); setShowAdmin(false); }}>
                       <Trophy size={16} className="icon" /> Calificaciones
                     </button>
                   </div>
@@ -233,6 +240,7 @@ const TablaUsuarios = () => {
           )}
         </header>
 
+        {/* Contenido Principal */}
         <div className="admin-container">
           <div className="admin-content">
             {AlertaComponente}
@@ -240,7 +248,7 @@ const TablaUsuarios = () => {
               <div className="loading-overlay">
                 <div className="loading-content">
                   <RefreshCw className="loading-spinner" size={32} />
-                  <span className="loading-text">Cargando usuarios...</span>
+                  <span className="loading-text">Cargando...</span>
                 </div>
               </div>
             )}
@@ -250,10 +258,10 @@ const TablaUsuarios = () => {
                 <h2>
                   <Users size={24} />
                   {mostrarUsuarios ? 'Usuarios Registrados' : 'Evaluadores'}
-                  <span>{mostrarUsuarios ? usuarios.length : evaluadores.length}</span>
+                  <span>{mostrarUsuarios ? usuariosGenerales.length : evaluadores.length}</span>
                 </h2>
               </div>
-              <button className="refresh-btn" onClick={handleGetUsuarios} disabled={isLoading}>
+              <button className="refresh-btn" onClick={cargarTodosLosDatos} disabled={isLoading}>
                 <RefreshCw size={18} />
               </button>
             </div>
@@ -266,7 +274,7 @@ const TablaUsuarios = () => {
                 <User size={16} /> Evaluadores
               </button>
               <BtnExportarExcel
-                datos={mostrarUsuarios ? usuarios : evaluadores}
+                datos={mostrarUsuarios ? usuariosGenerales : evaluadores}
                 nombreArchivo={mostrarUsuarios ? 'Usuarios' : 'Evaluadores'}
                 className="action-btn"
               />
@@ -276,9 +284,6 @@ const TablaUsuarios = () => {
               <div className="actions-container">
                 <button className="action-btn add" onClick={() => setMostrarFormularioAgregar(true)}>
                   <Plus size={16} /> Agregar Evaluador
-                </button>
-                <button className="action-btn delete" onClick={() => setMostrarFormularioEliminar(true)}>
-                  <Trash2 size={16} /> Eliminar Evaluador
                 </button>
               </div>
             )}
@@ -292,27 +297,22 @@ const TablaUsuarios = () => {
                       <th>Email</th>
                       <th>Nombre</th>
                       <th>Carrera</th>
-                      <th>Cuatrimestre</th>
-                      <th>Categoría</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {usuarios.length > 0 ? (
-                      usuarios.map((usuario, index) => (
-                        <tr key={index}>
+                    {usuariosGenerales.length > 0 ? (
+                      usuariosGenerales.map((usuario) => (
+                        <tr key={usuario.id}>
                           <td>{usuario.username}</td>
                           <td>{usuario.email}</td>
                           <td>{usuario.nombre}</td>
                           <td>{usuario.carrera}</td>
-                          <td>{usuario.cuatrimestre}</td>
-                          <td>{usuario.categoria}</td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="6" className="empty-state">
-                          <h3>No hay usuarios registrados</h3>
-                          <p>No se encontraron usuarios en la base de datos</p>
+                        <td colSpan="4" className="empty-state">
+                          <h3>No hay usuarios generales registrados</h3>
                         </td>
                       </tr>
                     )}
@@ -326,25 +326,29 @@ const TablaUsuarios = () => {
                       <th>Email</th>
                       <th>Nombre</th>
                       <th>Categoría a Evaluar</th>
-                      <th>Nivel</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
                     {evaluadores.length > 0 ? (
-                      evaluadores.map((evaluador, index) => (
-                        <tr key={index}>
+                      evaluadores.map((evaluador) => (
+                        <tr key={evaluador.id}>
                           <td>{evaluador.username}</td>
                           <td>{evaluador.email}</td>
                           <td>{evaluador.nombre}</td>
                           <td>{evaluador.carrera}</td>
-                          <td>{evaluador.categoria}</td>
+                          <td>
+                            <button className="action-btn-cell delete" onClick={() => iniciarEliminacion(evaluador)}>
+                              <Trash2 size={16} />
+                            </button>
+                          </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
                         <td colSpan="5" className="empty-state">
                           <h3>No hay evaluadores registrados</h3>
-                          <p>Agrega nuevos evaluadores usando el botón superior</p>
+                          <p>Agrega nuevos evaluadores usando el botón superior.</p>
                         </td>
                       </tr>
                     )}
@@ -361,53 +365,27 @@ const TablaUsuarios = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h3>Agregar Evaluador</h3>
-                <button className="modal-close" onClick={handleCerrarFormularioAgregar}>
-                  <X size={20} />
-                </button>
+                <button className="modal-close" onClick={handleCerrarFormularioAgregar}><X size={20} /></button>
               </div>
               <div className="form-group">
                 <label>Nombre:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                />
+                <input type="text" className="form-control" value={nombre} onChange={(e) => setNombre(e.target.value)} />
               </div>
               <div className="form-group">
                 <label>Nombre de usuario:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={nombreUsuario}
-                  onChange={(e) => setNombreUsuario(e.target.value)}
-                />
+                <input type="text" className="form-control" value={nombreUsuario} onChange={(e) => setNombreUsuario(e.target.value)} />
               </div>
               <div className="form-group">
                 <label>Contraseña:</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  value={contraseña}
-                  onChange={(e) => setContraseña(e.target.value)}
-                />
+                <input type="password" className="form-control" value={contraseña} onChange={(e) => setContraseña(e.target.value)} />
               </div>
               <div className="form-group">
                 <label>Correo:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={correo}
-                  onChange={(e) => setCorreo(e.target.value)}
-                />
+                <input type="email" className="form-control" value={correo} onChange={(e) => setCorreo(e.target.value)} />
               </div>
               <div className="form-group">
                 <label>Categoría a Evaluar:</label>
-                <select
-                  className="select-control"
-                  value={categoria}
-                  onChange={(e) => setCategoria(e.target.value)}
-                >
+                <select className="select-control" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
                   <option value="Proyecto Social">Proyecto Social</option>
                   <option value="Emprendimiento Tecnológico">Emprendimiento Tecnológico</option>
                   <option value="Innovación en Productos y Servicios">Innovación en Productos y Servicios</option>
@@ -415,11 +393,9 @@ const TablaUsuarios = () => {
                 </select>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={handleCerrarFormularioAgregar}>
-                  Cancelar
-                </button>
-                <button className="btn btn-primary" onClick={handleAgregarUsuario}>
-                  Agregar
+                <button className="btn btn-secondary" onClick={handleCerrarFormularioAgregar}>Cancelar</button>
+                <button className="btn btn-primary" onClick={handleAgregarEvaluador} disabled={isLoading}>
+                  {isLoading ? 'Agregando...' : 'Agregar'}
                 </button>
               </div>
             </div>
@@ -431,26 +407,16 @@ const TablaUsuarios = () => {
           <div className="modal-overlay">
             <div className="modal-content">
               <div className="modal-header">
-                <h3>Eliminar Evaluador</h3>
-                <button className="modal-close" onClick={handleCerrarFormularioEliminar}>
-                  <X size={20} />
-                </button>
+                <h3>Confirmar Eliminación</h3>
+                <button className="modal-close" onClick={handleCerrarFormularioEliminar}><X size={20} /></button>
               </div>
-              <div className="form-group">
-                <label>Nombre de usuario a eliminar:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={nombreUsuarioEliminar}
-                  onChange={(e) => setNombreUsuarioEliminar(e.target.value)}
-                />
+              <div className="modal-body">
+                <p>¿Estás seguro de que quieres eliminar al usuario <strong>{usuarioAEliminar?.username}</strong>? Esta acción no se puede deshacer.</p>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={handleCerrarFormularioEliminar}>
-                  Cancelar
-                </button>
-                <button className="btn btn-primary" onClick={handleEliminarUsuario}>
-                  Eliminar
+                <button className="btn btn-secondary" onClick={handleCerrarFormularioEliminar}>Cancelar</button>
+                <button className="btn btn-danger" onClick={handleEliminarUsuario} disabled={isLoading}>
+                  {isLoading ? 'Eliminando...' : 'Sí, eliminar'}
                 </button>
               </div>
             </div>

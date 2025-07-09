@@ -4,16 +4,17 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 // Una función de utilidad para obtener el token del localStorage
 const getToken = () => localStorage.getItem('token');
 
-// Una función genérica para realizar las peticiones fetch
-// Maneja la configuración común como la URL base y los headers de autenticación
-// Línea 8
-const apiFetch = async (endpoint, options = {}) => {
+
+// --- MODIFICACIÓN 1: apiFetch ahora acepta un token opcional inmediato ---
+const apiFetch = async (endpoint, options = {}, immediateToken = null) => {
   const url = `${BASE_URL}${endpoint}`;
-  let token = getToken();
+  
+  // Si nos pasan un token, lo usamos. Si no, lo buscamos en localStorage.
+  const token = immediateToken || getToken(); 
+  
   let refreshToken = localStorage.getItem('refreshToken');
 
   const defaultHeaders = {
-    // Coherencia: usa el mismo header en toda la app.
     ...(token && { 'x-access-token': token }), 
   };
   
@@ -73,16 +74,16 @@ const apiFetch = async (endpoint, options = {}) => {
 
 // Una función para cerrar sesión y limpiar tokens
 export const logout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('refreshToken');
+  localStorage.clear();
+  sessionStorage.clear();
   window.location.href = '/login';
 };
+
 
 // --- AUTH ENDPOINTS ---
 
 export const login = (credentials) => {
   // MODIFICADO: Ahora solo hace la petición y devuelve el resultado.
-  // No guarda nada en localStorage. Esa es responsabilidad del AuthProvider.
   return apiFetch('/auth/signin', {
     method: 'POST',
     body: JSON.stringify(credentials),
@@ -133,41 +134,41 @@ export const getAdminBoard = () => {
 
 // --- ROLE ENDPOINTS ---
 export const createRole = (roleData) => {
-    return apiFetch('/roles', {
-        method: 'POST',
-        body: JSON.stringify(roleData)
-    });
+  return apiFetch('/roles', {
+      method: 'POST',
+      body: JSON.stringify(roleData)
+  });
 };
 export const getAllRoles = () => {
-    return apiFetch('/roles');
+  return apiFetch('/roles');
 };
 export const getRoleById = (id) => {
-    return apiFetch(`/roles/${id}`);
+  return apiFetch(`/roles/${id}`);
 };
 export const updateRole = (id, roleData) => {
-    return apiFetch(`/roles/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(roleData)
-    });
+  return apiFetch(`/roles/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(roleData)
+  });
 };
 export const deleteRole = (id) => {
-    return apiFetch(`/roles/${id}`, {
-        method: 'DELETE'
-    });
+  return apiFetch(`/roles/${id}`, {
+      method: 'DELETE'
+  });
 };
 export const assignRoleToUser = (data) => {
-    return apiFetch('/users/assign-role', {
-        method: 'POST',
-        body: JSON.stringify(data)
-    });
+  return apiFetch('/users/assign-role', {
+      method: 'POST',
+      body: JSON.stringify(data)
+  });
 };
 export const removeRoleFromUser = (userId, roleId) => {
-    return apiFetch(`/users/${userId}/roles/${roleId}`, {
-        method: 'DELETE'
-    });
+  return apiFetch(`/users/${userId}/roles/${roleId}`, {
+      method: 'DELETE'
+  });
 };
-export const getUserRoles = (userId) => {
-    return apiFetch(`/users/${userId}/roles`);
+export const getUserRoles = (userId, token) => {
+  return apiFetch(`/users/${userId}/roles`, {}, token); 
 };
 
 // --- PROJECT ENDPOINTS ---
@@ -199,6 +200,35 @@ export const deleteProject = (id) => {
 };
 export const downloadProjectFile = (projectId, fileType) => {
     return apiFetch(`/projects/${projectId}/download/${fileType}`);
+};
+
+// Función específica para descargar archivos de proyectos
+export const downloadFile = async (url, fileName) => {
+  try {
+    const token = getToken();
+    const response = await fetch(url, {
+      headers: {
+        'x-access-token': token,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al descargar el archivo');
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    throw error;
+  }
 };
 
 // --- CALIFICACIONES ENDPOINTS ---

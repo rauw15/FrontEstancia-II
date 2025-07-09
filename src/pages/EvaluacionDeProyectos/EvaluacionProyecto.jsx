@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronRight, ClipboardCheck, Star, MessageSquare, Send, ChevronDown, Menu, X, Users, FileText, Trophy, Calendar, Download } from 'lucide-react';
 import BtnSalir from '../../fragments/BtnSalir';
+import { useAuth } from '../../AuthProvider';
+
+// Importar los archivos CSS
 import '../../assets/css/seccioncss.css';
 import './catalogo.css';
-// Importar imágenes
-import rombosImg from '../../assets/images/rombos.png';
+import './EvaluacionProyecto.css'; // <<-- NUEVO IMPORT
+import * as apiService from '../../services/apiService';
+
+// Importar imagen usada en el JSX
 import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
 
 const tiposProyectos = [
@@ -14,6 +19,14 @@ const tiposProyectos = [
   { value: 'innovacionProductosServicios', label: 'Innovación en Productos y Servicios' },
   { value: 'energias', label: 'Energías Limpias y Sustentabilidad Ambiental' }
 ];
+
+// Mapeo de categorías de la base de datos a valores del frontend
+const categoriaMapping = {
+  'Proyecto Social': 'proyectoSocial',
+  'Emprendimiento Tecnológico': 'emprendimientoTecnologico',
+  'Innovación en Productos y Servicios': 'innovacionProductosServicios',
+  'Energías Limpias y Sustentabilidad Ambiental': 'energias'
+};
 
 const EvaluacionProyecto = () => {
   const { tipo } = useParams();
@@ -29,24 +42,139 @@ const EvaluacionProyecto = () => {
     financiera: { inversion: 0, recuperacion: 0, financiamiento: 0 },
     pitch: { presentacion: 0, claridad: 0, prototipo: 0 }
   });
-  const [tipoProyecto, setTipoProyecto] = useState('proyectoSocial');
+  const [tipoProyecto, setTipoProyecto] = useState('todos'); // Cambiar a 'todos' por defecto
   const [showModal, setShowModal] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showRecursos, setShowRecursos] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [proyectosConEstado, setProyectosConEstado] = useState([]); // [{id, nombre, calificado, calificacionData}]
+  const [selectedProjectId, setSelectedProjectId] = useState('');
+  const [calificacionId, setCalificacionId] = useState(null); // Para actualizar si ya existe
   const navigate = useNavigate();
+  const { user, isAdmin } = useAuth();
 
+  // Obtener todos los proyectos y su estado de calificación
   useEffect(() => {
-    // Simulación de fetch de proyectos filtrados por tipo
-    setTimeout(() => {
-      setProyectos([
-        { id: 1, nombre: 'Proyecto 1', tipo: tipo },
-        { id: 2, nombre: 'Proyecto 2', tipo: tipo }
-      ]);
-      setIsLoading(false);
-    }, 500);
-  }, [tipo]);
+    const fetchProyectos = async () => {
+      setIsLoading(true);
+      try {
+        const proyectosApi = await apiService.getAllProjects();
+        
+        // Para cada proyecto, consultar si tiene calificación
+        const proyectosEstado = await Promise.all(proyectosApi.map(async (proy) => {
+          let calificacion = null;
+          try {
+            const calif = await apiService.getCalificacionesByProyectoId(proy.id);
+            if (calif && calif.length > 0) {
+              calificacion = calif[0];
+            }
+          } catch (e) { /* Puede no tener calificación */ }
+          
+          // Mapear la categoría de la base de datos al valor esperado por el frontend
+          const categoriaDB = proy.category || proy.categoria || 'Proyecto Social';
+          const tipoMapeado = categoriaMapping[categoriaDB] || 'proyectoSocial';
+          
+          return {
+            id: proy.id,
+            nombre: proy.name,
+            tipo: tipoMapeado,
+            calificado: !!calificacion,
+            calificacionData: calificacion
+          };
+        }));
+        setProyectosConEstado(proyectosEstado);
+        setIsLoading(false);
+      } catch (err) {
+        setProyectosConEstado([]);
+        setIsLoading(false);
+      }
+    };
+    fetchProyectos();
+  }, []);
+
+  // Filtrar proyectos según el tipo seleccionado
+  const proyectosFiltrados = useMemo(() => {
+    if (!tipoProyecto || tipoProyecto === 'todos') return proyectosConEstado;
+    return proyectosConEstado.filter(proy => proy.tipo === tipoProyecto);
+  }, [proyectosConEstado, tipoProyecto]);
+
+  // Limpiar selección de proyecto cuando cambie el tipo
+  useEffect(() => {
+    setSelectedProjectId('');
+    setCalificacionId(null);
+    setEvaluador(user?.username || '');
+    setComentarios('');
+    setCalificaciones({
+      innovacion: { mejora: 0, utilidad: 0, oportunidad: 0, ventaja: 0 },
+      mercado: { rentabilidad: 0, logo: 0, competencia: 0, necesidades: 0 },
+      tecnica: { tecnologia: 0, recursos: 0, respuesta: 0 },
+      financiera: { inversion: 0, recuperacion: 0, financiamiento: 0 },
+      pitch: { presentacion: 0, claridad: 0, prototipo: 0 }
+    });
+  }, [tipoProyecto, user]);
+
+  // Cuando seleccionas un proyecto, carga su calificación si existe
+  useEffect(() => {
+    if (!selectedProjectId) return;
+    const proyecto = proyectosFiltrados.find(p => p.id === parseInt(selectedProjectId));
+    if (proyecto && proyecto.calificado && proyecto.calificacionData) {
+      // Cargar datos de calificación
+      setCalificacionId(proyecto.calificacionData.id);
+      setEvaluador(proyecto.calificacionData.evaluador_username || proyecto.calificacionData.evaluador || (user?.username || ''));
+      setComentarios(proyecto.calificacionData.observaciones || '');
+      
+      // Los datos vienen como números individuales del backend, no como objetos
+      // Necesitamos crear objetos con valores por defecto para cada subcampo
+      const innovacionValue = parseFloat(proyecto.calificacionData.innovacion) || 0;
+      const mercadoValue = parseFloat(proyecto.calificacionData.mercado) || 0;
+      const tecnicaValue = parseFloat(proyecto.calificacionData.tecnica) || 0;
+      const financieraValue = parseFloat(proyecto.calificacionData.financiera) || 0;
+      const pitchValue = parseFloat(proyecto.calificacionData.pitch) || 0;
+      
+      setCalificaciones({
+        innovacion: { 
+          mejora: innovacionValue, 
+          utilidad: innovacionValue, 
+          oportunidad: innovacionValue, 
+          ventaja: innovacionValue 
+        },
+        mercado: { 
+          rentabilidad: mercadoValue, 
+          logo: mercadoValue, 
+          competencia: mercadoValue, 
+          necesidades: mercadoValue 
+        },
+        tecnica: { 
+          tecnologia: tecnicaValue, 
+          recursos: tecnicaValue, 
+          respuesta: tecnicaValue 
+        },
+        financiera: { 
+          inversion: financieraValue, 
+          recuperacion: financieraValue, 
+          financiamiento: financieraValue 
+        },
+        pitch: { 
+          presentacion: pitchValue, 
+          claridad: pitchValue, 
+          prototipo: pitchValue 
+        }
+      });
+    } else {
+      // Limpiar formulario
+      setCalificacionId(null);
+      setEvaluador(user?.username || '');
+      setComentarios('');
+      setCalificaciones({
+        innovacion: { mejora: 0, utilidad: 0, oportunidad: 0, ventaja: 0 },
+        mercado: { rentabilidad: 0, logo: 0, competencia: 0, necesidades: 0 },
+        tecnica: { tecnologia: 0, recursos: 0, respuesta: 0 },
+        financiera: { inversion: 0, recuperacion: 0, financiamiento: 0 },
+        pitch: { presentacion: 0, claridad: 0, prototipo: 0 }
+      });
+    }
+  }, [selectedProjectId, proyectosFiltrados, user]);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -70,614 +198,79 @@ const EvaluacionProyecto = () => {
     return (sum / values.length).toFixed(1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setShowModal(true);
     setTimeout(() => setShowModal(false), 3000);
-    // Lógica para enviar la evaluación
-    console.log({
-      evaluador,
-      nombreProyecto,
-      calificaciones,
-      comentarios,
-      promedios: {
-        innovacion: calcularPromedio('innovacion'),
-        mercado: calcularPromedio('mercado'),
-        tecnica: calcularPromedio('tecnica'),
-        financiera: calcularPromedio('financiera'),
-        pitch: calcularPromedio('pitch')
+    
+    const proyectoSeleccionado = proyectosFiltrados.find(p => p.id === parseInt(selectedProjectId));
+    if (!proyectoSeleccionado) {
+      alert('Por favor selecciona un proyecto válido.');
+      return;
+    }
+
+    // Preparar los datos para enviar al backend
+    const datos = {
+      proyectoId: proyectoSeleccionado.id, // Campo requerido por el backend
+      evaluador: user?.username || '',
+      nombreProyecto: proyectoSeleccionado.nombre,
+      // Enviar los promedios como números (no objetos JSON)
+      innovacion: parseFloat(calcularPromedio('innovacion')),
+      mercado: parseFloat(calcularPromedio('mercado')),
+      tecnica: parseFloat(calcularPromedio('tecnica')),
+      financiera: parseFloat(calcularPromedio('financiera')),
+      pitch: parseFloat(calcularPromedio('pitch')),
+      observaciones: comentarios,
+      // Calcular el total como promedio de los 5 criterios (0-5)
+      total: (
+        parseFloat(calcularPromedio('innovacion')) + 
+        parseFloat(calcularPromedio('mercado')) + 
+        parseFloat(calcularPromedio('tecnica')) + 
+        parseFloat(calcularPromedio('financiera')) + 
+        parseFloat(calcularPromedio('pitch'))
+      ) / 5
+    };
+
+    try {
+      if (calificacionId) {
+        // Actualizar calificación existente
+        await apiService.updateCalificacion(calificacionId, datos);
+        alert('Calificación actualizada correctamente!');
+      } else {
+        // Crear nueva calificación
+        await apiService.createCalificacion(datos);
+        alert('Calificación enviada correctamente!');
       }
-    });
+      
+      // Limpiar formulario después de enviar
+      setSelectedProjectId('');
+      setCalificacionId(null);
+      setEvaluador('');
+      setComentarios('');
+      setTipoProyecto('todos'); // Resetear a 'todos'
+      setCalificaciones({
+        innovacion: { mejora: 0, utilidad: 0, oportunidad: 0, ventaja: 0 },
+        mercado: { rentabilidad: 0, logo: 0, competencia: 0, necesidades: 0 },
+        tecnica: { tecnologia: 0, recursos: 0, respuesta: 0 },
+        financiera: { inversion: 0, recuperacion: 0, financiamiento: 0 },
+        pitch: { presentacion: 0, claridad: 0, prototipo: 0 }
+      });
+    } catch (error) {
+      console.error('Error al enviar calificación:', error);
+      if (error.message.includes('403') || error.message.includes('Forbidden')) {
+        alert('No tienes permisos para actualizar esta calificación. Solo el evaluador original o un administrador puede modificarla.');
+      } else if (error.message.includes('Evaluator ID and Project ID are required')) {
+        alert('Error: Faltan datos requeridos. Por favor, asegúrate de seleccionar un proyecto.');
+      } else {
+        alert(`Error al enviar la calificación: ${error.message}`);
+      }
+    }
   };
-
-  const styles = `
-    :root {
-      --color-primary: #0f766e;
-      --color-primary-dark: #0d5b52;
-      --color-primary-light: #14b8a6;
-      --color-secondary: #ec4899;
-      --color-white: #ffffff;
-      --color-gray-50: #f8fafc;
-      --color-gray-100: #f1f5f9;
-      --color-gray-200: #e2e8f0;
-      --color-gray-300: #cbd5e1;
-      --color-gray-400: #94a3b8;
-      --color-gray-500: #64748b;
-      --color-gray-600: #475569;
-      --color-gray-700: #334155;
-      --color-gray-800: #1e293b;
-      --color-gray-900: #0f172a;
-    }
-
-    /* Fondo de rombos decorativos */
-    .main-container::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url(${rombosImg});
-      background-repeat: repeat;
-      background-size: 300px;
-      opacity: 0.15;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .main-container {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Header */
-    .header {
- 
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      transition: all 0.3s ease;
-      background: var(--color-white);
-      border-bottom: 1px solid var(--color-gray-200);
-    }
-
-    .header-scrolled {
-      box-shadow: 0 4px 20px rgba(15, 118, 110, 0.1);
-      border-bottom-color: var(--color-primary-light);
-    }
-
-    .header-content {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .logo-icon {
-      width: 2.5rem;
-      height: 2.5rem;
-      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-      border-radius: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
-    }
-
-    .logo-icon img {
-      width: 2.2rem;
-      height: 2.2rem;
-      object-fit: contain;
-      border-radius: 0.4rem;
-    }
-
-    .logo-text h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--color-gray-800);
-      line-height: 1.2;
-    }
-
-    .logo-text p {
-      font-size: 0.75rem;
-      color: var(--color-gray-500);
-    }
-
-    /* Navegación desktop - MEJORADO */
-    .desktop-nav {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .dropdown-parent {
-      position: relative;
-    }
-
-    .nav-item {
-      background: none;
-      border: none;
-      color: var(--color-gray-600);
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      padding: 0.5rem 1rem;
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-radius: 0.5rem;
-    }
-
-    .nav-item:hover {
-      background: var(--color-gray-50);
-      color: var(--color-primary);
-    }
-
-    .nav-active {
-      background: var(--color-primary-light);
-      color: var(--color-white) !important;
-    }
-
-    .nav-active:hover {
-      background: var(--color-primary);
-    }
-
-    .dropdown {
-      position: absolute;
-      top: 3rem;
-      left: 0;
-      background: var(--color-white);
-      border-radius: 0.75rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      z-index: 10;
-      min-width: 240px;
-      padding: 0.5rem;
-      border: 1px solid var(--color-gray-200);
-      opacity: 0;
-      transform: translateY(-10px);
-      visibility: hidden;
-      transition: all 0.2s ease;
-    }
-
-    .dropdown-parent:hover .dropdown,
-    .dropdown-parent:focus-within .dropdown {
-      opacity: 1;
-      transform: translateY(0);
-      visibility: visible;
-    }
-
-    .dropdown-item {
-      padding: 0.75rem 1.5rem;
-      color: var(--color-gray-700);
-      background: none;
-      border: none;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-      font-size: 0.875rem;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      border-radius: 0.5rem;
-    }
-
-    .dropdown-item:hover {
-      background: var(--color-primary-light);
-      color: var(--color-white);
-    }
-
-    .dropdown-item::before {
-      content: '';
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      background: var(--color-primary);
-      border-radius: 50%;
-      margin-right: 0.5rem;
-      transition: all 0.2s ease;
-    }
-
-    .dropdown-item:hover::before {
-      background: var(--color-white);
-    }
-
-    .dropdown-item .icon {
-      width: 18px;
-      height: 18px;
-      color: var(--color-gray-500);
-    }
-
-    .dropdown-item:hover .icon {
-      color: var(--color-white);
-    }
-
-    .transition-transform {
-      transition: transform 0.2s ease;
-    }
-
-    /* Sección de usuario */
-    .user-section {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    /* Menú móvil */
-    .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--color-gray-700);
-      cursor: pointer;
-    }
-
-    .mobile-menu {
-      background: var(--color-white);
-      border-top: 1px solid var(--color-gray-200);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .mobile-menu-content {
-      padding: 1.5rem 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .mobile-nav-item {
-      background: none;
-      border: none;
-      color: var(--color-gray-600);
-      text-align: left;
-      padding: 0.5rem 0;
-      cursor: pointer;
-      transition: color 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .mobile-nav-item:hover {
-      color: var(--color-primary);
-    }
-
-    .mobile-dropdown {
-      padding-left: 1rem;
-      margin-top: 0.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .mobile-dropdown-item {
-      padding: 0.5rem 0;
-      color: var(--color-gray-600);
-      cursor: pointer;
-      transition: color 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .mobile-dropdown-item:hover {
-      color: var(--color-primary);
-    }
-
-    /* Contenido principal */
-    .contenido-evaluacion { 
-      padding-top: 8rem;
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .evaluation-container {
-      background: var(--color-white);
-      border-radius: 1.5rem;
-      box-shadow: 0 8px 32px rgba(15, 118, 110, 0.1);
-      border: 1px solid var(--color-gray-200);
-      padding: 2rem;
-    }
-
-    .evaluation-header {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid var(--color-gray-100);
-    }
-
-    .evaluation-header h1 {
-      font-size: 1.75rem;
-      color: var(--color-gray-800);
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .evaluation-header p {
-      color: var(--color-gray-600);
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--color-gray-700);
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--color-gray-200);
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--color-primary-light);
-      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
-    }
-
-    .section-title {
-      font-size: 1.25rem;
-      color: var(--color-primary);
-      margin: 1.5rem 0 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--color-gray-200);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .criteria-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--color-gray-100);
-    }
-
-    .criteria-text {
-      flex: 1;
-      color: var(--color-gray-700);
-    }
-
-    .rating-options {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .rating-option {
-      position: relative;
-    }
-
-    .rating-option input {
-      position: absolute;
-      opacity: 0;
-    }
-
-    .rating-option label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background: var(--color-gray-100);
-      color: var(--color-gray-600);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .rating-option input:checked + label {
-      background: var(--color-primary);
-      color: var(--color-white);
-    }
-
-    .rating-option input:focus + label {
-      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
-    }
-
-    .section-summary {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--color-gray-50);
-      border-radius: 0.5rem;
-    }
-
-    .section-summary span {
-      font-weight: 500;
-      color: var(--color-gray-700);
-    }
-
-    .section-score {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--color-primary);
-    }
-
-    .comments-section {
-      margin-top: 2rem;
-    }
-
-    .comments-section label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    textarea.form-control {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .submit-btn {
-      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-      color: var(--color-white);
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 16px rgba(15, 118, 110, 0.2);
-      margin-top: 2rem;
-      width: 100%;
-    }
-
-    .submit-btn:hover {
-      background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(15, 118, 110, 0.3);
-    }
-
-    .rating-scale {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-      background: var(--color-gray-50);
-      border-radius: 0.5rem;
-    }
-
-    .scale-item {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--color-gray-600);
-    }
-
-    .scale-value {
-      font-weight: 600;
-      color: var(--color-primary);
-    }
-
-    /* Modal de confirmación */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    .modal-content {
-      background: var(--color-white);
-      padding: 2rem 2.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 8px 32px rgba(20,184,166,0.15);
-      text-align: center;
-      min-width: 300px;
-    }
-
-    .modal-title {
-      color: var(--color-primary);
-      margin-bottom: 1rem;
-    }
-
-    .modal-btn {
-      background: var(--color-primary);
-      color: var(--color-white);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .modal-btn:hover {
-      background: var(--color-primary-dark);
-    }
-
-    @media (max-width: 1024px) {
-      .desktop-nav {
-        display: none;
-      }
-
-      .mobile-menu-btn {
-        display: block;
-      }
-
-      .user-section {
-        margin-left: auto;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .header-content {
-        padding: 1rem;
-      }
-
-      .contenido-evaluacion {
-        padding: 1rem;
-        padding-top: 9rem;
-      }
-
-      .evaluation-container {
-        padding: 1.5rem;
-      }
-
-      .criteria-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-
-      .rating-options {
-        width: 100%;
-        justify-content: space-between;
-      }
-    }
-
-    .dropdown-parent .dropdown-item {
-      color: #111 !important;
-    }
-
-    .dropdown-parent .dropdown-item:hover {
-      color: #111 !important;
-      background: var(--color-primary-light);
-    }
-  `;
 
   if (isLoading) return <div>Cargando proyectos...</div>;
 
   return (
     <>
-      <style>{styles}</style>
       <div className="main-container">
         {/* Header */}
         <header className={`header ${scrollY > 50 ? 'header-scrolled' : ''}`}>
@@ -712,42 +305,44 @@ const EvaluacionProyecto = () => {
               </button> */}
 
               {/* Administrador - MEJORADO */}
-              <div className="dropdown-parent">
-                <button
-                  className={`nav-item ${showAdmin ? 'nav-active' : ''}`}
-                  onClick={() => setShowAdmin(!showAdmin)}
-                  aria-expanded={showAdmin}
-                  aria-haspopup="true"
-                >
-                  <Users size={18} />
-                  Administrador
-                  <ChevronDown size={16} className={`transition-transform ${showAdmin ? 'rotate-180' : ''}`} />
-                </button>
-                {showAdmin && (
-                  <div className="dropdown">
-                    <button 
-                      className="dropdown-item" 
-                      onClick={() => {
-                        navigate('/admin/tablaAdmin');
-                        setShowAdmin(false);
-                      }}
-                    >
-                      <Users size={16} className="icon" />
-                      Usuarios Registrados
-                    </button>
-                    <button 
-                      className="dropdown-item" 
-                      onClick={() => {
-                        navigate('/admin/calificacionesAdmin');
-                        setShowAdmin(false);
-                      }}
-                    >
-                      <ClipboardCheck size={16} className="icon" />
-                      Calificaciones Registradas
-                    </button>
-                  </div>
-                )}
-              </div>
+              {isAdmin && (
+                <div className="dropdown-parent">
+                  <button
+                    className={`nav-item ${showAdmin ? 'nav-active' : ''}`}
+                    onClick={() => setShowAdmin(!showAdmin)}
+                    aria-expanded={showAdmin}
+                    aria-haspopup="true"
+                  >
+                    <Users size={18} />
+                    Administrador
+                    <ChevronDown size={16} className={`transition-transform ${showAdmin ? 'rotate-180' : ''}`} />
+                  </button>
+                  {showAdmin && (
+                    <div className="dropdown">
+                      <button 
+                        className="dropdown-item" 
+                        onClick={() => {
+                          navigate('/admin/tablaAdmin');
+                          setShowAdmin(false);
+                        }}
+                      >
+                        <Users size={16} className="icon" />
+                        Usuarios Registrados
+                      </button>
+                      <button 
+                        className="dropdown-item" 
+                        onClick={() => {
+                          navigate('/evaluador/calificaciones');
+                          setShowAdmin(false);
+                        }}
+                      >
+                        <ClipboardCheck size={16} className="icon" />
+                        Calificaciones Registradas
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Recursos - MEJORADO */}
               <div className="dropdown-parent">
@@ -853,14 +448,16 @@ const EvaluacionProyecto = () => {
                 </button>
 
                 {/* Administrador */}
-                <button
-                  className="mobile-nav-item"
-                  onClick={() => setShowAdmin(!showAdmin)}
-                >
-                  <span>Administrador</span>
-                  <ChevronRight size={16} />
-                </button>
-                {showAdmin && (
+                {isAdmin && (
+                  <button
+                    className="mobile-nav-item"
+                    onClick={() => setShowAdmin(!showAdmin)}
+                  >
+                    <span>Administrador</span>
+                    <ChevronRight size={16} />
+                  </button>
+                )}
+                {showAdmin && isAdmin && (
                   <div className="mobile-dropdown">
                     <button 
                       className="mobile-dropdown-item" 
@@ -874,7 +471,7 @@ const EvaluacionProyecto = () => {
                     <button 
                       className="mobile-dropdown-item" 
                       onClick={() => {
-                        navigate('/admin/calificacionesAdmin');
+                        navigate('/evaluador/calificaciones');
                         setIsMenuOpen(false);
                       }}
                     >
@@ -967,6 +564,7 @@ const EvaluacionProyecto = () => {
                   value={tipoProyecto}
                   onChange={e => setTipoProyecto(e.target.value)}
                 >
+                  <option value="todos">Todos los proyectos</option>
                   {tiposProyectos.map(tp => (
                     <option key={tp.value} value={tp.value}>{tp.label}</option>
                   ))}
@@ -981,21 +579,27 @@ const EvaluacionProyecto = () => {
                   id="evaluador"
                   className="form-control"
                   value={evaluador}
-                  onChange={(e) => setEvaluador(e.target.value)}
-                  required
+                  readOnly
+                  disabled
                 />
               </div>
 
               <div className="form-group">
                 <label htmlFor="nombreProyecto">Nombre del Proyecto:</label>
-                <input
-                  type="text"
+                <select
                   id="nombreProyecto"
                   className="form-control"
-                  value={nombreProyecto}
-                  onChange={(e) => setNombreProyecto(e.target.value)}
+                  value={selectedProjectId}
+                  onChange={e => setSelectedProjectId(e.target.value)}
                   required
-                />
+                >
+                  <option value="">Selecciona un proyecto...</option>
+                  {proyectosFiltrados.map(proy => (
+                    <option key={proy.id} value={proy.id}>
+                      {proy.nombre} {proy.calificado ? '(Calificado)' : '(Sin calificar)'}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="rating-scale">
@@ -1376,7 +980,7 @@ const EvaluacionProyecto = () => {
               </div>
 
               <button type="submit" className="submit-btn">
-                <Send size={18} /> Enviar Evaluación
+                <Send size={18} /> {calificacionId ? 'Actualizar evaluación' : 'Enviar evaluación'}
               </button>
             </form>
           </div>

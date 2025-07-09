@@ -1,209 +1,161 @@
-// AdminPanel.jsx
-import React, { useEffect, useState } from 'react';
-import './AdminPanel.css'; // <-- Importamos el archivo CSS aquí
+// src/pages/AdminPage/AdminPanel.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Navigate, Routes, Route } from 'react-router-dom';
+import { 
+  Award, 
+  Users, 
+  ChevronDown, 
+  FileText, 
+  Download, 
+  Trophy, 
+  X, 
+  Menu, 
+  ChevronRight,
+  Loader2 
+} from 'lucide-react';
+import { useAuth } from '../../AuthProvider';
 import { useAlerta } from '../../fragments/Alerta';
-import { RefreshCw, FileText, Video, Download, Loader2, Search, ChevronRight, Menu, X, Users, Trophy, Calendar, ChevronDown, Award, Lightbulb, Upload, Star, Target, Heart, Zap, BarChart3, Settings, Shield, UserCheck, TrendingUp, Activity } from 'lucide-react';
 import BtnSalir from '../../fragments/BtnSalir';
-import descargaSVG from '../../assets/images/descarga.svg';
-import { useNavigate, Routes, Route } from 'react-router-dom';
-import Catalogo from '../EvaluacionDeProyectos/Catalogo';
-import Convocatoria from '../EvaluacionDeProyectos/Convocatoria';
-import Lineamientos from '../EvaluacionDeProyectos/Lineamientos';
+import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
 import ProyectosAdmin from './ProyectosAdmin';
 import TablaUsuarios from './TablaUsuarios';
 import CalificacionesAdmin from './CalificacionesAdmin';
-import BtnExportarExcel from '../../fragments/BtnExportarExcel';
-import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
-import { useAuth } from '../../AuthProvider';
-import { Navigate } from 'react-router-dom';
+import Catalogo from '../EvaluacionDeProyectos/Catalogo';
+import Convocatoria from '../EvaluacionDeProyectos/Convocatoria';
+import Lineamientos from '../EvaluacionDeProyectos/Lineamientos';
 
 const AdminPanel = () => {
-  const { isAdmin, isLoggedIn, loading } = useAuth();
-  const token = localStorage.getItem('token');
-  const [AlertaComponente, showAlerta] = useAlerta();
-  const [archivo, setArchivo] = useState('');
-  const [proyectos, setProyectos] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showCalificar, setShowCalificar] = useState(false);
+  const { user, isAdmin, isEvaluador, isLoggedIn, loading: authLoading } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showRecursos, setShowRecursos] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
+  const [scrollY, setScrollY] = useState(0); // Variable scrollY declarada
   const navigate = useNavigate();
 
-  if (loading) return null;
-  if (!isLoggedIn || !isAdmin) return <Navigate to="/login" />;
+  // 3. USAR el hook useAlerta para obtener el componente y la función
+  const [AlertaComponent, showAlerta] = useAlerta();
 
+  // Protección de la ruta
+  useEffect(() => {
+    if (!authLoading && !isLoggedIn) {
+      navigate('/login');
+    }
+  }, [authLoading, isLoggedIn, navigate]);
+
+  // Log para verificar información del usuario
+  useEffect(() => {
+    if (user && !authLoading) {
+      console.log('[AdminPanel] Usuario cargado:', {
+        username: user.username,
+        roles: user.roles,
+        isAdmin,
+        isEvaluador
+      });
+    }
+  }, [user, authLoading, isAdmin, isEvaluador]);
+
+  // Manejador de scroll para el header
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const filteredProyectos = proyectos.filter(proyecto => {
-    const matchesSearch = proyecto.nameUser.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      proyecto.proyectoName.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
+  // Doble chequeo de seguridad
+  if (authLoading) {
+    return <div className="loading-overlay-full-page">Verificando acceso...</div>;
+  }
+  
+  // Verificación de roles mejorada
+  console.log('[AdminPanel] Verificando roles:', { 
+    isAdmin, 
+    isEvaluador, 
+    userRoles: user?.roles,
+    isLoggedIn 
   });
+  
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  if (!isAdmin && !isEvaluador) {
+    console.log('[AdminPanel] Usuario no tiene permisos de admin o evaluador');
+    return <Navigate to="/" replace />;
+  }
 
-  useEffect(() => {
-    handleGetProyectos();
-    // eslint-disable-next-line
-  }, []);
-
-  const handleGetProyectos = async () => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(import.meta.env.VITE_API_GETPR, {
-          method: 'GET',
-          headers: {
-            'x-access-token': token,
-          },
-        });
-        const result = await response.json();
-        if (response.ok) {
-          return result;
-        } else {
-          showAlerta(`${result.message} usuario admin?` || 'Error en la solicitud', 'error');
-        }
-      } catch (error) {
-        showAlerta('Error en el servidor', 'error');
-      }
-    };
-    const depuracion = async () => {
-      let objetoProyecto = [];
-      try {
-        setIsLoading(true);
-        const datos = await fetchData();
-        let canva = '';
-        let ficha = '';
-        let resumen = '';
-        for (let i = 0; i < datos.length; i++) {
-          if (datos[i].proyectos.length > 0) {
-            if (datos[i].proyectos[0].canvaModel == undefined || datos[i].proyectos[0].technicalSheet == undefined || datos[i].proyectos[0].projectPdf == undefined) {
-              console.log("archivos no subidos");
-            }
-            canva = datos[i].proyectos[0].canvaModel.split("\\");
-            ficha = datos[i].proyectos[0].technicalSheet.split("\\");
-            resumen = datos[i].proyectos[0].projectPdf.split("\\");
-            objetoProyecto.push({
-              nameUser: datos[i].username,
-              proyectoName: datos[i].proyectos[0].name,
-              descripcion: datos[i].proyectos[0].description,
-              link: datos[i].proyectos[0].videoLink,
-              ficha: ficha[ficha.length - 1],
-              canva: canva[canva.length - 1],
-              resumen: resumen[resumen.length - 1],
-            });
-          }
-        }
-        setProyectos(objetoProyecto);
-      } catch (error) {
-        console.error("Error en depuracion:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    depuracion();
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsMenuOpen(false);
   };
-
-  const handleGetArchivos = async (fileName) => {
-    try {
-      const encodedUsername = encodeURIComponent(fileName.trim());
-      const response = await fetch(`${import.meta.env.VITE_API_DESAR}/${encodedUsername}`, {
-        method: 'GET',
-        headers: {
-          'x-access-token': token,
-        },
-      });
-      if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(errorData || 'Error en la solicitud');
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `${fileName}`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      showAlerta('Error en la solicitud', 'error');
-    }
-  };
-
-  const handleFichaClick = (fileName) => {
-    setArchivo(fileName);
-    handleGetArchivos(fileName);
-  };
-
+  
   return (
     <>
       <div className="main-container">
+        {AlertaComponent} {/* 4. Renderizar el componente de alerta */}
+        
         {/* Header */}
         <header className={`header ${scrollY > 50 ? 'header-scrolled' : ''}`}>
           <div className="header-content">
             <div className="logo-section">
               <div className="logo-icon">
-                <img src={logoUpImg} alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
+                <img src={logoUpImg} alt="Logo UP Chiapas" />
               </div>
               <div className="logo-text">
                 <h1>UP Chiapas</h1>
                 <p>Panel de Administración</p>
               </div>
             </div>
-
+            
             {/* Desktop Navigation - MEJORADO */}
             <nav className="desktop-nav">
               {/* Calificar */}
               <button
                 className="nav-item"
-                onClick={() => navigate('/admin/EvaluacionProyecto')}
+                onClick={() => navigate('/evaluador/evaluacion')}
               >
                 <Award size={18} />
                 Calificar
               </button>
 
               {/* Administrador - MEJORADO */}
-              <div className="dropdown-parent">
-                <button
-                  className={`nav-item ${showAdmin ? 'nav-active' : ''}`}
-                  onClick={() => setShowAdmin(!showAdmin)}
-                  aria-expanded={showAdmin}
-                  aria-haspopup="true"
-                >
-                  <Users size={18} />
-                  Administrador
-                  <ChevronDown size={16} className={`transition-transform ${showAdmin ? 'rotate-180' : ''}`} />
-                </button>
-                {showAdmin && (
-                  <div className="dropdown">
-                    <button 
-                      className="dropdown-item" 
-                      onClick={() => {
-                        navigate('/admin/tablaAdmin');
-                        setShowAdmin(false);
-                      }}
-                    >
-                      <Users size={16} className="icon" />
-                      Usuarios Registrados
-                    </button>
-                    <button 
-                      className="dropdown-item" 
-                      onClick={() => {
-                        navigate('/admin/calificacionesAdmin');
-                        setShowAdmin(false);
-                      }}
-                    >
-                      <Trophy size={16} className="icon" />
-                      Calificaciones Registradas
-                    </button>
-                  </div>
-                )}
-              </div>
+              {isAdmin && (
+                <div className="dropdown-parent">
+                  <button
+                    className={`nav-item ${showAdmin ? 'nav-active' : ''}`}
+                    onClick={() => setShowAdmin(!showAdmin)}
+                    aria-expanded={showAdmin}
+                    aria-haspopup="true"
+                  >
+                    <Users size={18} />
+                    Administrador
+                    <ChevronDown size={16} className={`transition-transform ${showAdmin ? 'rotate-180' : ''}`} />
+                  </button>
+                  {showAdmin && (
+                    <div className="dropdown">
+                      <button 
+                        className="dropdown-item" 
+                        onClick={() => {
+                          navigate('/admin/tablaAdmin');
+                          setShowAdmin(false);
+                        }}
+                      >
+                        <Users size={16} className="icon" />
+                        Usuarios Registrados
+                      </button>
+                      <button 
+                        className="dropdown-item" 
+                        onClick={() => {
+                          navigate('/evaluador/calificaciones');
+                          setShowAdmin(false);
+                        }}
+                      >
+                        <Trophy size={16} className="icon" />
+                        Calificaciones Registradas
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Recursos - MEJORADO */}
               <div className="dropdown-parent">
@@ -301,7 +253,7 @@ const AdminPanel = () => {
                 <button
                   className="mobile-nav-item"
                   onClick={() => {
-                    navigate('/admin/EvaluacionProyecto');
+                    navigate('/evaluador/evaluacion');
                     setIsMenuOpen(false);
                   }}
                 >
@@ -309,14 +261,16 @@ const AdminPanel = () => {
                 </button>
 
                 {/* Administrador */}
-                <button
-                  className="mobile-nav-item"
-                  onClick={() => setShowAdmin(!showAdmin)}
-                >
-                  <span>Administrador</span>
-                  <ChevronRight size={16} />
-                </button>
-                {showAdmin && (
+                {isAdmin && (
+                  <button
+                    className="mobile-nav-item"
+                    onClick={() => setShowAdmin(!showAdmin)}
+                  >
+                    <span>Administrador</span>
+                    <ChevronRight size={16} />
+                  </button>
+                )}
+                {showAdmin && isAdmin && (
                   <div className="mobile-dropdown">
                     <button 
                       className="mobile-dropdown-item" 
@@ -330,7 +284,7 @@ const AdminPanel = () => {
                     <button 
                       className="mobile-dropdown-item" 
                       onClick={() => {
-                        navigate('/admin/calificacionesAdmin');
+                        navigate('/evaluador/calificaciones');
                         setIsMenuOpen(false);
                       }}
                     >
@@ -406,8 +360,8 @@ const AdminPanel = () => {
           )}
         </header>
 
-        {AlertaComponente}
-        {isLoading && (
+        {AlertaComponent}
+        {authLoading && (
           <div className="loading-overlay">
             <div className="loading-content">
               <Loader2 className="loading-spinner" size={32} />
