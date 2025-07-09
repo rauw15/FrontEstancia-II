@@ -1121,7 +1121,7 @@ useEffect(() => {
               </button>
               <button
                 className="btn-secondary"
-                onClick={() => navigate('/alumno/lineamientos', '_blank')}
+                onClick={() => navigate('/lineamientos', '_blank')}
               >
                 Lineamientos de participación
               </button>

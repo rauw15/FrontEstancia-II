@@ -70,7 +70,7 @@ function App() {
           
           {/* 3. ESTAS ACCIONES DE ALUMNO SÍ REQUIEREN LOGIN */}
           <Route path='/alumno/inscripcion' element={<ProtectedUserActionRoute><Formulario /></ProtectedUserActionRoute>} />
-          <Route path='/alumno/su birProyecto' element={<ProtectedUserActionRoute><SubirProyectos /></ProtectedUserActionRoute>} />
+          <Route path='/alumno/subirProyecto' element={<ProtectedUserActionRoute><SubirProyectos /></ProtectedUserActionRoute>} />
 
           {/* --- RUTAS DE ADMINISTRADOR (protegidas) --- */}
           <Route path='/admin' element={<ProtectedEvaluatorRoute><AdminPanel /></ProtectedEvaluatorRoute>} />
