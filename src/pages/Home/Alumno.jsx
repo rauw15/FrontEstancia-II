@@ -1121,7 +1121,7 @@ useEffect(() => {
               </button>
               <button
                 className="btn-secondary"
-                onClick={() => navigate('/lineamientos', '_blank')}
+                onClick={() => navigate('/lineamientos')}
               >
                 Lineamientos de participación
               </button>
@@ -1291,14 +1291,17 @@ useEffect(() => {
             <div className="footer-links">
               <h3>Enlaces Rápidos</h3>
               <ul>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('/alumno/inscripcion'); }}>Inscribirse</a></li>
+                <li><a href="#" onClick={(e) => { 
+                  e.preventDefault(); 
+                  navigate('/alumno/inscripcion');
+                }}>Inscribirse</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault();
                   smoothScrollTo('categorias-participacion');
                 }}>Catálogo de Proyectos</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault();
                   smoothScrollTo('convocatoria-section');
                 }}>Convocatoria</a></li>
-                <li><a href='#' onClick={(e) => { e.preventDefault(); navigate('/lineamientos');}}>Lineamientos de participación</a></li>
+                <li><a href='#' onClick={(e) => { e.preventDefault(); navigate('/lineamientos'); }}>Lineamientos de participación</a></li>
               </ul>
             </div>
             

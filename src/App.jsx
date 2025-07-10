@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './AuthProvider';
 import Login from './pages/Login/Login';
 import Lineamientos from './pages/EvaluacionDeProyectos/Lineamientos';
 import Catalogo from './pages/EvaluacionDeProyectos/Catalogo';
+import Convocatoria from './pages/EvaluacionDeProyectos/Convocatoria';
 import Formulario from './pages/InscripcionAlumnos/Formulario';
 import Alumno from './pages/Home/Alumno';
 import SubirProyectos from './pages/InscripcionAlumnos/SubirProyectos';
@@ -50,6 +51,20 @@ function ProtectedUserActionRoute({ children }) {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
 
+// Componente para manejar redirección inteligente a acciones que requieren login
+function SmartActionRoute({ children }) {
+  const { isLoggedIn, loading } = useAuth();
+  
+  if (loading) return <div>Cargando...</div>;
+  
+  if (!isLoggedIn) {
+    // Si no está logueado, redirigir al login con un mensaje
+    return <Navigate to="/login?message=Para realizar esta acción, necesitas iniciar sesión" replace />;
+  }
+  
+  return children;
+}
+
 // --- COMPONENTE PRINCIPAL DE LA APP ---
 function App() {
   return (
@@ -67,10 +82,16 @@ function App() {
           {/* 2. Estas rutas también son PÚBLICAS */}
           <Route path="/lineamientos" element={<Lineamientos />} />
           <Route path="/catalogo/:categoryKey" element={<Catalogo />} />
+          <Route path="/alumno/convocatoria" element={<Convocatoria />} />
+          <Route path="/alumno/convocatoria/lineamientos" element={<Lineamientos />} />
           
           {/* 3. ESTAS ACCIONES DE ALUMNO SÍ REQUIEREN LOGIN */}
-          <Route path='/alumno/inscripcion' element={<ProtectedUserActionRoute><Formulario /></ProtectedUserActionRoute>} />
-          <Route path='/alumno/subirProyecto' element={<ProtectedUserActionRoute><SubirProyectos /></ProtectedUserActionRoute>} />
+          <Route path='/alumno/inscripcion' element={<Formulario />} />
+          <Route path='/alumno/subirProyecto' element={<SmartActionRoute><SubirProyectos /></SmartActionRoute>} />
+
+          {/* 4. RUTAS ADICIONALES PARA MEJOR ACCESIBILIDAD */}
+          <Route path='/inscripcion' element={<Formulario />} />
+          <Route path='/subir-proyecto' element={<SmartActionRoute><SubirProyectos /></SmartActionRoute>} />
 
           {/* --- RUTAS DE ADMINISTRADOR (protegidas) --- */}
           <Route path='/admin' element={<ProtectedEvaluatorRoute><AdminPanel /></ProtectedEvaluatorRoute>} />

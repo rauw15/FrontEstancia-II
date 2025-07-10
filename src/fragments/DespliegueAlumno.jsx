@@ -59,7 +59,7 @@ function DespliegueAlumno() {
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/inscripcion')}>
                 <img src={url} alt="doc" style={img} />Inscribirse
             </div>
-            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/subirProyectos')}>
+            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/subirProyecto')}>
                 <img src={url} alt="doc" style={img} />Subir Documentos
             </div>
             <div className="bordeW opciones-barraLateral sidebar" style={despliegue} onClick={handleConvocatoriaClick}>

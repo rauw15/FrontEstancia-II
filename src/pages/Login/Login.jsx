@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAlerta } from '../../fragments/Alerta';
 import { useAuth } from '../../AuthProvider';
 import { Lock, User, Eye, EyeOff, ArrowRight, Shield } from 'lucide-react';
@@ -14,8 +14,18 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   
   const navigate = useNavigate();
+  const location = useLocation();
   const [AlertaComponent, showAlerta] = useAlerta();
   const { login, isLoggedIn, user, loading } = useAuth();
+
+  // Verificar si hay un mensaje de redirección en la URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const message = urlParams.get('message');
+    if (message) {
+      showAlerta(message, 'info');
+    }
+  }, [location.search, showAlerta]);
 
   // useEffect para redirigir si el usuario YA ESTÁ logueado al cargar la página
   useEffect(() => {
