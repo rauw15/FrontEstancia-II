@@ -13,6 +13,10 @@ import TablaUsuarios from './pages/AdminPage/TablaUsuarios';
 import CalificacionesAdmin from './pages/AdminPage/CalificacionesAdmin';
 import AdminPanel from './pages/AdminPage/AdminPanel';
 import EvaluacionProyecto from './pages/EvaluacionDeProyectos/EvaluacionProyecto';
+import ProyectoSocial from './pages/Home/Categorias/ProyectoSocial';
+import EmprendimientoTec from './pages/Home/Categorias/EmprendimientoTec';
+import InnovacionProductosLanding from './pages/Home/Categorias/Innovación';
+import SustentabilidadLanding from './pages/Home/Categorias/EnergiasLimpias';
 import './App.css';
 
 // --- COMPONENTES DE RUTAS PROTEGIDAS (Sin cambios) ---
@@ -59,7 +63,7 @@ function SmartActionRoute({ children }) {
   
   if (!isLoggedIn) {
     // Si no está logueado, redirigir al login con un mensaje
-    return <Navigate to="/login?message=Para realizar esta acción, necesitas iniciar sesión" replace />;
+    return <Navigate to="/login?message=Para realizar esta acción, necesitas inscribirte&action=inscription" replace />;
   }
   
   return children;
@@ -82,8 +86,12 @@ function App() {
           {/* 2. Estas rutas también son PÚBLICAS */}
           <Route path="/lineamientos" element={<Lineamientos />} />
           <Route path="/catalogo/:categoryKey" element={<Catalogo />} />
+          <Route path="/catalogo/proyectoSocial" element={<ProyectoSocial />} />
           <Route path="/alumno/convocatoria" element={<Convocatoria />} />
           <Route path="/alumno/convocatoria/lineamientos" element={<Lineamientos />} />
+          <Route path='/catalogo/emprendimientotec' element={<EmprendimientoTec />} />
+          <Route path='/catalogo/innovacion' element={<InnovacionProductosLanding />} />
+          <Route path='/catalogo/energiaslimpias' element={<SustentabilidadLanding />} />
           
           {/* 3. ESTAS ACCIONES DE ALUMNO SÍ REQUIEREN LOGIN */}
           <Route path='/alumno/inscripcion' element={<Formulario />} />

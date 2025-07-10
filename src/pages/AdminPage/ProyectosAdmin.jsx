@@ -1,7 +1,7 @@
 // ProyectosAdmin.jsx
 
 import React, { useEffect, useState, useMemo } from 'react';
-import './ProyectosAdmin.css';
+import './proyectosAdmin.css';
 import { useAlerta } from '../../fragments/Alerta';
 import { RefreshCw, FileText, Video, Download, Loader2, Search } from 'lucide-react';
 import { Navigate } from 'react-router-dom';

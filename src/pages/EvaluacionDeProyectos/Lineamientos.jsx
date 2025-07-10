@@ -10,9 +10,51 @@ function Lineamientos() {
   const pdfUrl = `/downloads/${pdfFileName}`;
   const encodedUrl = encodeURI(pdfUrl);
 
-  // Determinar si es alumno o admin basado en la ruta
-  const isAlumno = location.pathname.startsWith('/alumno');
-  const backPath = isAlumno ? '/alumno' : '/admin';
+  // Función para determinar la ruta de regreso basada en el contexto
+  const getBackPath = () => {
+    // Verificar si hay un estado de navegación con información de origen
+    if (location.state?.from) {
+      return location.state.from;
+    }
+    
+    // Si viene de una ruta específica de alumno
+    if (location.pathname.startsWith('/alumno')) {
+      return '/alumno';
+    }
+    
+    // Si viene de una ruta de admin
+    if (location.pathname.startsWith('/admin')) {
+      return '/admin';
+    }
+    
+    // Si viene de una ruta de evaluador
+    if (location.pathname.startsWith('/evaluador')) {
+      return '/evaluador/evaluacion';
+    }
+    
+    // Si viene de la página principal o lineamientos directo
+    if (location.pathname === '/lineamientos') {
+      return '/';
+    }
+    
+    // Por defecto, ir a la página principal
+    return '/';
+  };
+
+  // Función para obtener el texto del botón según el contexto
+  const getButtonText = () => {
+    const backPath = getBackPath();
+    
+    if (backPath === '/alumno') {
+      return 'Volver al menú principal';
+    } else if (backPath === '/admin') {
+      return 'Volver al panel de administración';
+    } else if (backPath === '/evaluador/evaluacion') {
+      return 'Volver a evaluación';
+    } else {
+      return 'Volver al inicio';
+    }
+  };
 
   const styles = `
     .lineamientos-container {
@@ -107,10 +149,10 @@ function Lineamientos() {
           <div className="lineamientos-header" style={{ position: 'relative' }}>
             <button 
               className="back-button"
-              onClick={() => navigate(backPath)}
+              onClick={() => navigate(getBackPath())}
             >
               <ArrowLeft size={20} />
-              Volver al menú
+              {getButtonText()}
             </button>
             <h1>Lineamientos de Participación</h1>
             <p>Feria de Emprendimiento e Innovación Social 2025</p>

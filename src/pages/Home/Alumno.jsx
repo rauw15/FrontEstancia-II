@@ -12,6 +12,10 @@ import rombosImg from '../../assets/images/rombos.png';
 import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
 import feriaEmprendimientoImg from '../../assets/images/5 FERIA EMPRENDIMIENTO.png';
 import feriaEmprendimientoBImg from '../../assets/images/5 FERIA EMPRENDIMIENTO B.png';
+import decorativePattern from '../../assets/images/patron_chiapaspuede_isotipocolores.png';
+import educImg from '../../assets/images/Educ.png';
+import secretariaEduImg from '../../assets/images/SecretariaEdu.png';
+import upChiapasHeaderImg from '../../assets/images/UpChiapasHeader.png';
 
 import { useAuth } from '../../AuthProvider'; 
 
@@ -156,27 +160,132 @@ useEffect(() => {
       icon: Heart,
       title: "Proyecto Social",
       description: "Proyectos que generen un cambio positivo en la comunidad",
-      colorClass: "category-social"
+      colorClass: "category-social",
+      onClick: () => navigate('/catalogo/proyectoSocial')
     },
     {
       icon: Target,
       title: "Emprendimiento Tecnológico",
       description: "Soluciones tecnológicas para problemas sociales",
-      colorClass: "category-tech"
+      colorClass: "category-tech",
+      onClick: () => navigate('/catalogo/emprendimientotec')
     },
     {
       icon: Zap,
       title: "Innovación en Productos y servicios",
       description: "Emprendimientos enfocados en el desarrollo sostenible",
-      colorClass: "category-sustain"
+      colorClass: "category-sustain",
+      onClick: () => navigate('/catalogo/innovacion')
     },
     {
       icon: Lightbulb,
       title: "Energías limpias y Sustentabilidad Ambiental",
       description: "Proyectos enfocados en el uso de energías renovables, eficiencia energética y soluciones para la protección y conservación del medio ambiente.",
-      colorClass: "category-sustain"
+      colorClass: "category-sustain",
+      onClick: () => navigate('/catalogo/energiaslimpias')
     }
   ];
+
+ 
+
+  // 2. SEGUNDO: Agrega estos estilos CSS dentro de tu variable `styles`
+const newStyles = `
+/* Estilos para el patrón decorativo */
+.hero-decorative-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background-image: url(${decorativePattern});
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  background-position: center;
+  opacity: 0.8;
+  z-index: 1;
+  pointer-events: none;
+  animation: slidePattern 20s linear infinite;
+}
+
+.hero-decorative-pattern-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background-image: url(${decorativePattern});
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  background-position: center;
+  opacity: 0.6;
+  z-index: 1;
+  pointer-events: none;
+  transform: rotate(180deg);
+  animation: slidePattern 25s linear infinite reverse;
+}
+
+@keyframes slidePattern {
+  0% {
+    background-position: 0 center;
+  }
+  100% {
+    background-position: 200px center;
+  }
+}
+
+/* Ajustar el hero para que el contenido esté por encima */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Alternativa: Como divisor entre secciones */
+.section-divider {
+  height: 60px;
+  background-image: url(${decorativePattern});
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  background-position: center;
+  opacity: 0.7;
+  margin: 2rem 0;
+  animation: slidePattern 15s linear infinite;
+}
+
+.section-divider-reverse {
+  transform: rotate(180deg);
+  animation: slidePattern 18s linear infinite reverse;
+}
+
+/* Para móviles - ajustar tamaño */
+@media (max-width: 768px) {
+  .hero-decorative-pattern {
+    height: 80px;
+  }
+  
+  .hero-decorative-pattern-bottom {
+    height: 60px;
+  }
+  
+  .section-divider {
+    height: 40px;
+  }
+}
+
+.nav-item {
+  color: #222 !important;
+}
+.nav-item:hover,
+.nav-item.nav-active {
+  color: #222 !important;
+  /* Puedes mantener el background si quieres el efecto visual */
+}
+`;
+
 
   const countdownStyles = `
   .countdown-container {
@@ -346,15 +455,12 @@ useEffect(() => {
       position: relative;
     }
 
-    .nav-item:hover {
-      background: var(--color-primary-light);
-      color: var(--color-white);
-    }
 
-    .nav-item.nav-active {
-      color: var(--color-primary);
-    }
-
+    .nav-item,
+.nav-item:hover,
+.nav-item.nav-active {
+  color: #222 !important;
+}
     .nav-item.nav-active::after {
       content: '';
       position: absolute;
@@ -971,12 +1077,34 @@ useEffect(() => {
       }
     }
 
+      .footer-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 2rem 0 1rem 0;
+  }
+  .footer-logo-img {
+    height: 48px !important;
+    max-width: 180px !important;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(0.2);
+
+    border-radius: 8px;
+    padding: 4px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  
+
+
+
     /* Margen especial para la tarjeta de Energías limpias */
     .energia-margin {
       margin-top: 3.5rem;
     }
   `;
-
    return (
     <>
       <style>{styles + countdownStyles}</style>
@@ -985,13 +1113,7 @@ useEffect(() => {
       <header className={`header ${scrollY > 50 ? 'header-scrolled' : ''}`}>
         <div className="header-content">
           <div className="logo-section">
-            <div className="logo-icon">
-              <img src={logoUpImg} alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
-            </div>
-            <div className="logo-text">
-              <h1>UP Chiapas</h1>
-              <p>Emprendimiento e Innovación</p>
-            </div>
+            <img src={upChiapasHeaderImg} alt="UP Chiapas Header" style={{ height: '100px', width: 'auto', objectFit: 'contain' }} />
           </div>
 
           {/* Desktop Navigation */}
@@ -1081,6 +1203,7 @@ useEffect(() => {
       {/* Hero Section */}
       <section className="hero-section" id='hero-section'>
         
+      <div className="hero-decorative-pattern"></div>
         <div className="hero-content">
           <div className="hero-text">
             <div className="edition-badge">
@@ -1113,6 +1236,7 @@ useEffect(() => {
       <div className="countdown-label">Segundos</div>
     </div>
   </div>
+  <div className="hero-decorative-pattern-bottom"></div>
 </div>
             <div className="hero-buttons">
               <button className="btn-primary" onClick={() => navigate('/alumno/inscripcion')}>
@@ -1193,16 +1317,7 @@ useEffect(() => {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '';
                 }}
-                onClick={(e) => {
-                  // Efecto de feedback visual
-                  e.currentTarget.style.transform = 'translateY(-2px) scale(0.98)';
-                  
-                  // Navegación inmediata sin setTimeout
-                  if (category.title === 'Proyecto Social') navigate('/catalogo/proyectoSocial');
-                  else if (category.title === 'Emprendimiento Tecnológico') navigate('/catalogo/emprendimientoTecnologico');
-                  else if (category.title === 'Innovación en Productos y servicios') navigate('/catalogo/innovacionProductosServicios');
-                  else if (category.title === 'Energías limpias y Sustentabilidad Ambiental') navigate('/catalogo/energias');
-                }}
+                onClick={category.onClick}
               >
                 <div className="category-content">
                   <div className={`category-icon ${category.colorClass}`}>
@@ -1275,13 +1390,7 @@ useEffect(() => {
           <div className="footer-grid">
             <div className="footer-brand">
               <div className="footer-logo">
-                <div className="logo-icon">
-                  <img src={logoUpImg} alt="Logo UP Chiapas" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain', borderRadius: '0.4rem' }} />
-                </div>
-                <div className="logo-text">
-                  <h1>UP Chiapas</h1>
-                  <p>Universidad Politécnica de Chiapas</p>
-                </div>
+                <img src={upChiapasHeaderImg} alt="UP Chiapas Footer" style={{ height: '80px', width: 'auto', objectFit: 'contain' }} />
               </div>
               <p className="footer-description">
                 Formando emprendedores e innovadores que transforman su comunidad a través de proyectos de impacto social.
@@ -1319,7 +1428,10 @@ useEffect(() => {
               </ul>
             </div>
           </div>
-          
+          <div className="footer-logos">
+            <img src={educImg} alt="Educación" className="footer-logo-img" />
+            <img src={secretariaEduImg} alt="Secretaría de Educación" className="footer-logo-img" />
+          </div>
           <div className="footer-bottom">
             <p>&copy; 2025 Universidad Politécnica de Chiapas. Todos los derechos reservados.</p>
           </div>

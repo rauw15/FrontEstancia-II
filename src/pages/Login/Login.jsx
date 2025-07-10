@@ -19,11 +19,20 @@ const Login = () => {
   const { login, isLoggedIn, user, loading } = useAuth();
 
   // Verificar si hay un mensaje de redirección en la URL
+  const [showInscriptionButton, setShowInscriptionButton] = useState(false);
+  
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const message = urlParams.get('message');
+    const action = urlParams.get('action');
+    
     if (message) {
       showAlerta(message, 'info');
+      
+      // Si hay una acción específica de inscripción, mostrar el botón
+      if (action === 'inscription') {
+        setShowInscriptionButton(true);
+      }
     }
   }, [location.search, showAlerta]);
 

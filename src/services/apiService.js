@@ -84,14 +84,14 @@ export const logout = () => {
 
 export const login = (credentials) => {
   // MODIFICADO: Ahora solo hace la petición y devuelve el resultado.
-  return apiFetch('/auth/signin', {
+  return apiFetch('/api/auth/signin', {
     method: 'POST',
     body: JSON.stringify(credentials),
   });
 };
 
 export const register = (userData) => {
-  return apiFetch('/auth/signup', {
+  return apiFetch('/api/auth/signup', {
     method: 'POST',
     body: JSON.stringify(userData),
   });
