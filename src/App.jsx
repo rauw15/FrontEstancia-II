@@ -62,8 +62,8 @@ function SmartActionRoute({ children }) {
   if (loading) return <div>Cargando...</div>;
   
   if (!isLoggedIn) {
-    // Si no está logueado, redirigir al login con un mensaje
-    return <Navigate to="/login?message=Para realizar esta acción, necesitas inscribirte&action=inscription" replace />;
+    // Si no está logueado, redirigir directamente al formulario de inscripción
+    return <Navigate to="/alumno/inscripcion" replace />;
   }
   
   return children;

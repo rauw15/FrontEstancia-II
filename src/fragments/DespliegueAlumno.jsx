@@ -4,6 +4,7 @@ import url from '../assets/images/document.svg';
 import urlDes from '../assets/images/despliegue.svg';
 import descargaSVG from '../assets/images/descarga.svg'
 import { useAlerta } from './Alerta';
+import { useAuth } from '../AuthProvider';
 
 const despliegue = {
   height: '2.6rem',
@@ -38,6 +39,8 @@ function DespliegueAlumno() {
   const [AlertaComponente, showAlerta] = useAlerta();
   const [showLineamientos, setShowLineamientos] = useState(false);
   const [rotated, setRotated] = useState(false);
+  const { isLoggedIn } = useAuth();
+  
   const handleNavigate = (path) => {
         navigate(path);
     };
@@ -59,7 +62,16 @@ function DespliegueAlumno() {
             <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/inscripcion')}>
                 <img src={url} alt="doc" style={img} />Inscribirse
             </div>
-            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => handleNavigate('/alumno/subirProyecto')}>
+            <div className="bordeW opciones-barraLateral" style={despliegue} onClick={() => {
+                if (isLoggedIn) {
+                    handleNavigate('/alumno/subirProyecto');
+                } else {
+                    showAlerta('Primero necesitas inscribirte para poder subir tus documentos. Te estamos redirigiendo al formulario de inscripción en 5 segundos...', 'info');
+                    setTimeout(() => {
+                        handleNavigate('/alumno/inscripcion');
+                    }, 5000);
+                }
+            }}>
                 <img src={url} alt="doc" style={img} />Subir Documentos
             </div>
             <div className="bordeW opciones-barraLateral sidebar" style={despliegue} onClick={handleConvocatoriaClick}>

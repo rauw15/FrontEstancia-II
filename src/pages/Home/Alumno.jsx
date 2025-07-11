@@ -18,7 +18,8 @@ import secretariaEduImg from '../../assets/images/SecretariaEdu.png';
 import upChiapasHeaderImg from '../../assets/images/UpChiapasHeader.png';
 import secretariaEduEditadaImg from '../../assets/images/SecretariaEduEditada.png';
 
-import { useAuth } from '../../AuthProvider'; 
+import { useAuth } from '../../AuthProvider';
+import { useAlerta } from '../../fragments/Alerta'; 
 
 const Alumno = () => {
  const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +29,7 @@ const Alumno = () => {
   const [fade, setFade] = useState(true);
   const [downloadsMenuOpen, setDownloadsMenuOpen] = useState(false);
   const { isLoggedIn, user, logout: authLogout } = useAuth();
+  const [AlertaComponent, showAlerta] = useAlerta();
 
   const displayName = isLoggedIn && user ? user.username : 'Invitado';
   const avatarText = (displayName || 'IN').slice(0, 2).toUpperCase();
@@ -1108,6 +1110,7 @@ const newStyles = `
   `;
    return (
     <>
+      {AlertaComponent}
       <style>{styles + countdownStyles}</style>
       <div className="main-container">
       {/* Header */}
@@ -1347,7 +1350,16 @@ const newStyles = `
               Únete a la comunidad de emprendedores más innovadora de Chiapas y haz realidad tu proyecto de impacto social.
             </p>
             <div className="cta-buttons">
-              <button className="btn-primary" onClick={() => navigate('/alumno/subirProyecto')}>
+              <button className="btn-primary" onClick={() => {
+                if (isLoggedIn) {
+                  navigate('/alumno/subirProyecto');
+                } else {
+                  showAlerta('Primero necesitas inscribirte para poder subir tus documentos. Te estamos redirigiendo al formulario de inscripción en 5 segundos...', 'info');
+                  setTimeout(() => {
+                    navigate('/alumno/inscripcion');
+                  }, 5000);
+                }
+              }}>
                 <Upload size={20} />
                 Subir Documentos
               </button>
