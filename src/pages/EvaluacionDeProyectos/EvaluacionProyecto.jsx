@@ -367,16 +367,15 @@ const EvaluacionProyecto = () => {
                       <Download size={16} className="icon" />
                       Convocatoria
                     </a>
-                    <button 
+                    <a 
                       className="dropdown-item" 
-                      onClick={() => {
-                        navigate('/admin/lineamientos');
-                        setShowRecursos(false);
-                      }}
+                      href={'/downloads/LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf'} 
+                      download
+                      onClick={() => setShowRecursos(false)}
                     >
-                      <FileText size={16} className="icon" />
-                      Lineamientos de participación
-                    </button>
+                      <Download size={16} className="icon" />
+                      Lineamientos de Participación
+                    </a>
                     <a 
                       className="dropdown-item" 
                       href={'/downloads/FICHA Tecnica Emprendimiento e Innovación 2025.docx'} 

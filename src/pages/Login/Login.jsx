@@ -5,6 +5,10 @@ import { useAuth } from '../../AuthProvider';
 import { Lock, User, Eye, EyeOff, ArrowRight, Shield } from 'lucide-react';
 import './Login.css'; 
 import logoUpImg from '../../assets/images/Logo Upchiapas png.png';
+import upChiapasHeaderImg from '../../assets/images/UpChiapasHeader.png';
+import secretariaEduEditadaImg from '../../assets/images/SecretariaEduEditada.png';
+import educImg from '../../assets/images/Educ.png';
+import secretariaEduImg from '../../assets/images/SecretariaEdu.png';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -92,16 +96,16 @@ const Login = () => {
       <header className="login-header">
         <div className="header-content">
           <div className="logo-section">
-            <div className="logo-icon">
-              <img src={logoUpImg} alt="Logo UP Chiapas" />
-            </div>
-            <div className="logo-text">
-              <h1>UP Chiapas</h1>
-              <p>Emprendimiento e Innovación</p>
-            </div>
+            <img src={upChiapasHeaderImg} alt="UP Chiapas Header" style={{ height: '100px', width: 'auto', objectFit: 'contain' }} />
           </div>
+          <h2>5ta FERIA DE
+EMPRENDIMIENTO
+E INNOVACIÓN SOCIAL
+2025</h2>
+          <img src={secretariaEduEditadaImg} alt="Secretaría de Educación" style={{ maxWidth: '150px', width: '100%', margin: '0.5rem 1rem 1.5rem', display: 'block', opacity: 0.85 }} />
         </div>
       </header>
+      
 
       {/* Main Content */}
       <main className="login-main">
@@ -190,6 +194,10 @@ const Login = () => {
 
       {/* Footer */}
       <footer className="login-page-footer">
+        <div className="footer-logos">
+          <img src={educImg} alt="Educación" className="footer-logo-img" />
+          <img src={secretariaEduImg} alt="Secretaría de Educación" className="footer-logo-img" />
+        </div>
         <p className="footer-text">
           © 2025 Universidad Politécnica de Chiapas. Todos los derechos reservados.
         </p>

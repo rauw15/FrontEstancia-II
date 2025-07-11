@@ -29,24 +29,24 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials, onSuccessCallback) => {
     try {
-   
-      
       const authResult = await apiService.login(credentials);
       console.log('[AUTH LOGIN] Resultado de autenticación:', authResult);
       
       if (!authResult.accessToken || !authResult.id) throw new Error("Autenticación falló.");
       
-      console.log('[AUTH LOGIN] Obteniendo roles para usuario ID:', authResult.id);
-      const rolesData = await apiService.getUserRoles(authResult.id, authResult.accessToken);
-      console.log('[AUTH LOGIN] Datos de roles obtenidos:', rolesData);
+      // Limpiar roles si tienen prefijos ROLE_
+      const cleanRoles = authResult.roles ? apiService.cleanRoleNames(authResult.roles) : [];
       
-      const roleNames = rolesData.map(role => role.name);
-
-   
+      // Usar directamente los roles que devuelve el backend (ya limpios)
       const completeUserData = {
         id: authResult.id,
         username: authResult.username,
-        roles: roleNames,
+        email: authResult.email,
+        nombre: authResult.nombre,
+        carrera: authResult.carrera,
+        cuatrimestre: authResult.cuatrimestre,
+        categoria: authResult.categoria,
+        roles: cleanRoles, // Usar los roles limpios
       };
 
       localStorage.setItem('token', authResult.accessToken);
@@ -84,17 +84,51 @@ export function AuthProvider({ children }) {
     // Redirigir al login
     window.location.href = '/login';
   };
-  
+
+  // Función para actualizar el usuario (útil cuando se cambian roles)
+  const updateUser = (updatedUserData) => {
+    setUser(updatedUserData);
+    localStorage.setItem('user', JSON.stringify(updatedUserData));
+  };
+
+  // Función para verificar permisos usando las nuevas funciones de utilidad
+  const hasPermission = (permission) => {
+    if (!user || !user.roles) return false;
+    
+    switch (permission) {
+      case 'admin':
+        return apiService.isUserAdmin(user);
+      case 'evaluador':
+        return apiService.isUserEvaluador(user);
+      case 'moderator':
+        return apiService.isUserModerator(user);
+      case 'user':
+        return true; // Todos los usuarios autenticados tienen permisos básicos
+      default:
+        return user.roles.some(role => 
+          role.toLowerCase() === permission.toLowerCase()
+        );
+    }
+  };
+
+  // Función para obtener el rol más alto del usuario
+  const getHighestRole = () => {
+    return apiService.getUserHighestRole(user);
+  };
 
   const value = {
     isLoggedIn,
     user,
     roles: user ? user.roles : [],
-    isAdmin: user ? user.roles.includes('admin') : false,
-    isEvaluador: user ? user.roles.includes('evaluador') : false,
+    isAdmin: user ? apiService.isUserAdmin(user) : false,
+    isEvaluador: user ? apiService.isUserEvaluador(user) : false,
+    isModerator: user ? apiService.isUserModerator(user) : false,
     loading,
     login,
     logout,
+    updateUser,
+    hasPermission,
+    getHighestRole,
   };
 
   return (

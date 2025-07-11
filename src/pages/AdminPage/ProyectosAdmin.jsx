@@ -28,12 +28,12 @@ const ProyectosAdmin = () => {
         .map(item => {
           return {
             id: item.id,
-            nameUser: item.owner_username || item.owner_name || 'Usuario',
+            nameUser: item.user?.username || item.user?.nombre || 'Usuario',
             proyectoName: item.name,
             descripcion: item.description,
-            link: item.video_link,
-            categoria: item.category,
-            fechaCreacion: item.created_at
+            link: item.videoLink, // Corregido: usar videoLink en lugar de video_link
+            categoria: item.user?.categoria || 'Sin categoría',
+            fechaCreacion: item.createdAt
           };
         })
         .filter(p => p !== null); // Eliminamos cualquier nulo de la lista
@@ -162,9 +162,30 @@ const ProyectosAdmin = () => {
                   <button className="action-btn" onClick={() => handleDescargarArchivo(proyecto.id, 'projectPdf', `Resumen_${proyecto.proyectoName}.pdf`)}>
                     <Download size={16} /> Resumen Ejecutivo
                   </button>
-                  <a href={proyecto.link} target="_blank" rel="noopener noreferrer" className="action-btn video">
-                    <Video size={16} /> Ver Video
-                  </a>
+                  {proyecto.link ? (
+                    <a 
+                      href={proyecto.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="action-btn video"
+                      onClick={(e) => {
+                        if (!proyecto.link || proyecto.link.trim() === '') {
+                          e.preventDefault();
+                          showAlerta('No hay enlace de video disponible para este proyecto', 'warning');
+                        }
+                      }}
+                    >
+                      <Video size={16} /> Ver Video
+                    </a>
+                  ) : (
+                    <button 
+                      className="action-btn video disabled" 
+                      disabled
+                      title="No hay enlace de video disponible"
+                    >
+                      <Video size={16} /> Sin Video
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

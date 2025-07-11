@@ -16,6 +16,7 @@ import decorativePattern from '../../assets/images/patron_chiapaspuede_isotipoco
 import educImg from '../../assets/images/Educ.png';
 import secretariaEduImg from '../../assets/images/SecretariaEdu.png';
 import upChiapasHeaderImg from '../../assets/images/UpChiapasHeader.png';
+import secretariaEduEditadaImg from '../../assets/images/SecretariaEduEditada.png';
 
 import { useAuth } from '../../AuthProvider'; 
 
@@ -458,9 +459,9 @@ const newStyles = `
 
     .nav-item,
 .nav-item:hover,
-.nav-item.nav-active {
+    .nav-item.nav-active {
   color: #222 !important;
-}
+    }
     .nav-item.nav-active::after {
       content: '';
       position: absolute;
@@ -1209,6 +1210,7 @@ const newStyles = `
             <div className="edition-badge">
               <span>5TA EDICIÓN</span>
             </div>
+            <img src={secretariaEduEditadaImg} alt="Secretaría de Educación" style={{ maxWidth: '180px', width: '100%', margin: '0.5rem auto 1.5rem', display: 'block', opacity: 0.85 }} />
             <h1 className="hero-title">
               FERIA DE
               <span className="hero-highlight">EMPRENDIMIENTO</span>

@@ -13,6 +13,7 @@ const FormularioEntregaProyecto = () => {
     modeloCanva: null,
     pdfProyecto: null,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false); // <-- NUEVO ESTADO
   const navigate = useNavigate();
   const { isLoggedIn, user } = useAuth();
 
@@ -33,9 +34,12 @@ const FormularioEntregaProyecto = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return; // Previene doble click rápido
+    setIsSubmitting(true);
     if (!isLoggedIn) {
       alert("Debes iniciar sesión para enviar un proyecto.");
       navigate('/login');
+      setIsSubmitting(false);
       return;
     }
     const {
@@ -75,6 +79,8 @@ const FormularioEntregaProyecto = () => {
       navigate('/alumno');
     } catch (error) {
       alert("Error al enviar el proyecto: " + (error.message || 'Error desconocido'));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -322,7 +328,13 @@ const FormularioEntregaProyecto = () => {
               />
             </div>
 
-            <button type="submit" className="submit-btn">Enviar Proyecto</button>
+            <button
+              type="submit"
+              className="submit-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Enviando...' : 'Enviar Proyecto'}
+            </button>
           </form>
         </div>
       </div>

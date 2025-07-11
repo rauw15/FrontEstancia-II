@@ -4,7 +4,6 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 // Una función de utilidad para obtener el token del localStorage
 const getToken = () => localStorage.getItem('token');
 
-
 // --- MODIFICACIÓN 1: apiFetch ahora acepta un token opcional inmediato ---
 const apiFetch = async (endpoint, options = {}, immediateToken = null) => {
   const url = `${BASE_URL}${endpoint}`;
@@ -79,19 +78,18 @@ export const logout = () => {
   window.location.href = '/login';
 };
 
-
 // --- AUTH ENDPOINTS ---
 
 export const login = (credentials) => {
   // MODIFICADO: Ahora solo hace la petición y devuelve el resultado.
-  return apiFetch('/api/auth/signin', {
+  return apiFetch('/auth/signin', {
     method: 'POST',
     body: JSON.stringify(credentials),
   });
 };
 
 export const register = (userData) => {
-  return apiFetch('/api/auth/signup', {
+  return apiFetch('/auth/signup', {
     method: 'POST',
     body: JSON.stringify(userData),
   });
@@ -271,4 +269,101 @@ export const importDatabaseFromExcel = (formData) => {
         method: 'POST',
         body: formData
     });
+};
+
+// --- NUEVAS FUNCIONES PARA MANEJO DE ROLES ACTUALIZADAS ---
+
+// Función para obtener roles de un usuario específico
+export const getUserRolesById = (userId) => {
+  return apiFetch(`/users/${userId}/roles`);
+};
+
+// Función para asignar múltiples roles a un usuario
+export const assignRolesToUser = (userId, roles) => {
+  return apiFetch(`/users/${userId}/roles`, {
+    method: 'POST',
+    body: JSON.stringify({ roles })
+  });
+};
+
+// Función para obtener todos los usuarios con sus roles
+export const getAllUsersWithRoles = () => {
+  return apiFetch('/users');
+};
+
+// Función para verificar si un usuario tiene un rol específico
+export const checkUserRole = (userId, roleName) => {
+  return apiFetch(`/users/${userId}/has-role/${roleName}`);
+};
+
+// Función para obtener usuarios por rol
+export const getUsersByRole = (roleName) => {
+  return apiFetch(`/users/by-role/${roleName}`);
+};
+
+// --- FUNCIONES DE UTILIDAD PARA ROLES ---
+
+// Función para limpiar roles (remover prefijos ROLE_ si existen)
+export const cleanRoleNames = (roles) => {
+  if (!Array.isArray(roles)) return [];
+  return roles.map(role => {
+    // Remover prefijo ROLE_ si existe y convertir a minúsculas
+    return role.replace(/^role_/i, '').toLowerCase();
+  });
+};
+
+// Función para verificar si un usuario tiene permisos de administrador
+export const isUserAdmin = (user) => {
+  if (!user || !user.roles) return false;
+  return user.roles.some(role => 
+    role.toLowerCase() === 'admin' || 
+    role.toLowerCase() === 'administrator'
+  );
+};
+
+// Función para verificar si un usuario tiene permisos de evaluador
+export const isUserEvaluador = (user) => {
+  if (!user || !user.roles) return false;
+  return user.roles.some(role => 
+    role.toLowerCase() === 'evaluador' || 
+    role.toLowerCase() === 'evaluator'
+  );
+};
+
+// Función para verificar si un usuario tiene permisos de moderador
+export const isUserModerator = (user) => {
+  if (!user || !user.roles) return false;
+  return user.roles.some(role => 
+    role.toLowerCase() === 'moderator' || 
+    role.toLowerCase() === 'moderador'
+  );
+};
+
+// Función para obtener el rol más alto de un usuario
+export const getUserHighestRole = (user) => {
+  if (!user || !user.roles || user.roles.length === 0) return 'user';
+  
+  const roleHierarchy = {
+    'admin': 4,
+    'administrator': 4,
+    'moderator': 3,
+    'moderador': 3,
+    'evaluador': 2,
+    'evaluator': 2,
+    'user': 1
+  };
+  
+  let highestRole = 'user';
+  let highestLevel = 1;
+  
+  user.roles.forEach(role => {
+    const roleName = role.toLowerCase();
+    const level = roleHierarchy[roleName] || 1;
+    if (level > highestLevel) {
+      highestLevel = level;
+      highestRole = roleName;
+    }
+  });
+  
+  return highestRole;
 };
