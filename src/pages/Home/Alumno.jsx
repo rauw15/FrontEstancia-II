@@ -1099,6 +1099,33 @@ const newStyles = `
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
 
+  .descargables-dropdown a {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: #334155;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    border-radius: 0.4rem;
+    margin: 0 0.5rem;
+  }
+  .descargables-dropdown a:hover {
+    background: #f1f5f9;
+    color: #0f766e;
+  }
+  .descargables-dropdown {
+    scrollbar-width: thin;
+    scrollbar-color: #0f766e #e2e8f0;
+  }
+  .descargables-dropdown::-webkit-scrollbar {
+    width: 6px;
+    background: #e2e8f0;
+    border-radius: 8px;
+  }
+  .descargables-dropdown::-webkit-scrollbar-thumb {
+    background: #0f766e;
+    border-radius: 8px;
+  }
+
   
 
 
@@ -1372,24 +1399,29 @@ const newStyles = `
                   Descargables
                 </button>
                 {downloadsMenuOpen && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '110%',
-                    left: 0,
-                    background: '#fff',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '0.5rem',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-                    zIndex: 10,
-                    minWidth: 220,
-                    padding: '0.5rem 0'
-                  }}>
-                    <a href="\downloads\Caracteristicas RESUMEN EJECUTIVO.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Características del Resumen Ejecutivo</a>
-                    <a href="\downloads\FICHA Tecnica Emprendimiento e Innovación 2025.docx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Ficha Técnica Emprendimiento e Innovación</a>
-                    <a href="\downloads\LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Lineamientos Participación y Evaluación</a>
-                    <a href="\downloads\MATERIAL APOYO MODELO CANVAS.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Material Apoyo Modelo Canvas</a>
-                    <a href="\downloads\plantilla-canvas-descargable.pptx" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Plantilla Canvas Descargable</a>
-                    <a href="\downloads\CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf" download style={{ display: 'block', padding: '0.5rem 1.5rem', color: '#334155', textDecoration: 'none' }}>Convocatoria</a>
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      top: '110%',
+                      left: 0,
+                      background: '#fff',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '0.5rem',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+                      zIndex: 10,
+                      minWidth: 240,
+                      padding: '0.5rem 0',
+                      maxHeight: 220,
+                      overflowY: 'auto',
+                    }}
+                    className="descargables-dropdown"
+                  >
+                    <a href="/downloads/Caracteristicas RESUMEN EJECUTIVO.pdf" download>Características del Resumen Ejecutivo</a>
+                    <a href="/downloads/FICHA Tecnica Emprendimiento e Innovación 2025.docx" download>Ficha Técnica Emprendimiento e Innovación</a>
+                    <a href="/downloads/LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf" download>Lineamientos Participación y Evaluación</a>
+                    <a href="/downloads/MATERIAL APOYO MODELO CANVAS.pdf" download>Material Apoyo Modelo Canvas</a>
+                    <a href="/downloads/plantilla-canvas-descargable.pptx" download>Plantilla Canvas Descargable</a>
+                    <a href="/downloads/CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf" download>Convocatoria</a>
                   </div>
                 )}
               </div>
