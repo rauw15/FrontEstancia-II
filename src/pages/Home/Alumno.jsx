@@ -19,10 +19,10 @@ import upChiapasHeaderImg from '../../assets/images/UpChiapasHeader.png';
 import secretariaEduEditadaImg from '../../assets/images/SecretariaEduEditada.png';
 
 import { useAuth } from '../../AuthProvider';
-import { useAlerta } from '../../fragments/Alerta'; 
+import { useAlerta } from '../../fragments/Alerta';
 
 const Alumno = () => {
- const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('inicio');
   const [scrollY, setScrollY] = useState(0);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const Alumno = () => {
 
   const displayName = isLoggedIn && user ? user.username : 'Invitado';
   const avatarText = (displayName || 'IN').slice(0, 2).toUpperCase();
-  
+
   const handleLogout = () => {
     authLogout(); // Llama a la función del AuthProvider
     navigate('/login'); // Redirige al login
@@ -126,36 +126,39 @@ const Alumno = () => {
   ];
 
   // Agrega este estado al inicio del componente
-const [timeLeft, setTimeLeft] = useState({
-  days: 0,
-  hours: 0,
-  minutes: 0,
-  seconds: 0
-});
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+  // Nuevo estado para saber si la convocatoria terminó
+  const [convocatoriaTerminada, setConvocatoriaTerminada] = useState(false);
+  // Fecha objetivo (ajusta según necesites)
+  const targetDate = new Date('2025-07-19T23:59:00');
 
-// Fecha objetivo (ajusta según necesites)
-const targetDate = new Date('2025-07-18T00:00:00');
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      const difference = targetDate - now;
 
-useEffect(() => {
-  const timer = setInterval(() => {
-    const now = new Date();
-    const difference = targetDate - now;
-    
-    if (difference > 0) {
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((difference / 1000 / 60) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
-      
-      setTimeLeft({ days, hours, minutes, seconds });
-    } else {
-      clearInterval(timer);
-      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-    }
-  }, 1000);
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / 1000 / 60) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
 
-  return () => clearInterval(timer);
-}, []);
+        setTimeLeft({ days, hours, minutes, seconds });
+        setConvocatoriaTerminada(false);
+      } else {
+        clearInterval(timer);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        setConvocatoriaTerminada(true);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
 
   const categories = [
@@ -189,10 +192,10 @@ useEffect(() => {
     }
   ];
 
- 
+
 
   // 2. SEGUNDO: Agrega estos estilos CSS dentro de tu variable `styles`
-const newStyles = `
+  const newStyles = `
 /* Estilos para el patrón decorativo */
 .hero-decorative-pattern {
   position: absolute;
@@ -1135,356 +1138,376 @@ const newStyles = `
       margin-top: 3.5rem;
     }
   `;
-   return (
+  return (
     <>
       {AlertaComponent}
       <style>{styles + countdownStyles}</style>
       <div className="main-container">
-      {/* Header */}
-      <header className={`header ${scrollY > 50 ? 'header-scrolled' : ''}`}>
-        <div className="header-content">
-          <div className="logo-section">
-            <img src={upChiapasHeaderImg} alt="UP Chiapas Header" style={{ height: '100px', width: 'auto', objectFit: 'contain' }} />
-          </div>
+        {/* Header */}
+        <header className={`header ${scrollY > 50 ? 'header-scrolled' : ''}`}>
+          <div className="header-content">
+            <div className="logo-section">
+              <img src={upChiapasHeaderImg} alt="UP Chiapas Header" style={{ height: '100px', width: 'auto', objectFit: 'contain' }} />
+            </div>
 
-          {/* Desktop Navigation */}
-          <nav className="desktop-nav">
-            {[{label: 'Inicio', action: () => { smoothScrollTo('hero-section'); setActiveSection('inicio'); }},
-              {label: 'Convocatoria', action: () => { smoothScrollTo('convocatoria-section'); setActiveSection('convocatoria'); }},
-              {label: 'Proyectos', action: () => { smoothScrollTo('categorias-participacion'); setActiveSection('proyectos'); }},
-              {label: 'Descargables', action: () => { smoothScrollTo('cta-section'); setActiveSection('descargables'); }},
-            ].map((item) => (
-              <button
-                key={item.label}
-                onClick={item.action}
-                className={`nav-item ${activeSection === item.label.toLowerCase() ? 'nav-active' : ''}`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          {/* User Section - MODIFICADO */}
-          <div className="user-section">
-            {isLoggedIn ? (
-              // 4. SI ESTÁ LOGUEADO, mostramos el perfil del usuario del contexto
-              <div className="user-logged">
-                <div className="user-avatar">
-                  <span>{avatarText}</span>
-                </div>
-                <span className="username">{displayName}</span>
+            {/* Desktop Navigation */}
+            <nav className="desktop-nav">
+              {[{ label: 'Inicio', action: () => { smoothScrollTo('hero-section'); setActiveSection('inicio'); } },
+              { label: 'Convocatoria', action: () => { smoothScrollTo('convocatoria-section'); setActiveSection('convocatoria'); } },
+              { label: 'Proyectos', action: () => { smoothScrollTo('categorias-participacion'); setActiveSection('proyectos'); } },
+              { label: 'Descargables', action: () => { smoothScrollTo('cta-section'); setActiveSection('descargables'); } },
+              ].map((item) => (
                 <button
-                  onClick={handleLogout}
-                  className="logout-btn"
+                  key={item.label}
+                  onClick={item.action}
+                  className={`nav-item ${activeSection === item.label.toLowerCase() ? 'nav-active' : ''}`}
                 >
-                  Salir
-                </button>
-              </div>
-            ) : (
-              // 5. SI NO ESTÁ LOGUEADO, mostramos el botón de Iniciar Sesión
-              <button
-                onClick={() => navigate('/login')}
-                className="login-btn"
-              >
-                Iniciar Sesión
-              </button>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="mobile-menu-btn"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* Mobile Menu (también necesita usar el contexto) */}
-        {isMenuOpen && (
-          <div className="mobile-menu">
-            <div className="mobile-menu-content">
-              {['Inicio', 'Convocatoria', 'Proyectos', 'Descargables'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => {
-                    smoothScrollTo(`${item.toLowerCase()}-section`);
-                    setActiveSection(item.toLowerCase());
-                    setIsMenuOpen(false);
-                  }}
-                  className="mobile-nav-item"
-                >
-                  {item}
+                  {item.label}
                 </button>
               ))}
-              <div className="mobile-login-section">
-                {isLoggedIn ? (
-                   <button onClick={handleLogout} className="mobile-login-btn">Cerrar Sesión</button>
+            </nav>
+
+            {/* User Section - MODIFICADO */}
+            <div className="user-section">
+              {isLoggedIn ? (
+                // 4. SI ESTÁ LOGUEADO, mostramos el perfil del usuario del contexto
+                <div className="user-logged">
+                  <div className="user-avatar">
+                    <span>{avatarText}</span>
+                  </div>
+                  <span className="username">{displayName}</span>
+                  <button
+                    onClick={handleLogout}
+                    className="logout-btn"
+                  >
+                    Salir
+                  </button>
+                </div>
+              ) : (
+                // 5. SI NO ESTÁ LOGUEADO, mostramos el botón de Iniciar Sesión
+                <button
+                  onClick={() => navigate('/login')}
+                  className="login-btn"
+                >
+                  Iniciar Sesión
+                </button>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="mobile-menu-btn"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Mobile Menu (también necesita usar el contexto) */}
+          {isMenuOpen && (
+            <div className="mobile-menu">
+              <div className="mobile-menu-content">
+                {['Inicio', 'Convocatoria', 'Proyectos', 'Descargables'].map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => {
+                      smoothScrollTo(`${item.toLowerCase()}-section`);
+                      setActiveSection(item.toLowerCase());
+                      setIsMenuOpen(false);
+                    }}
+                    className="mobile-nav-item"
+                  >
+                    {item}
+                  </button>
+                ))}
+                <div className="mobile-login-section">
+                  {isLoggedIn ? (
+                    <button onClick={handleLogout} className="mobile-login-btn">Cerrar Sesión</button>
+                  ) : (
+                    <button onClick={() => { navigate('/login'); setIsMenuOpen(false); }} className="mobile-login-btn">
+                      Iniciar Sesión
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </header>
+
+        {/* Hero Section */}
+        <section className="hero-section" id='hero-section'>
+
+          <div className="hero-decorative-pattern"></div>
+          <div className="hero-content">
+            <div className="hero-text">
+              <div className="edition-badge">
+                <span>5TA EDICIÓN</span>
+              </div>
+              <img src={secretariaEduEditadaImg} alt="Secretaría de Educación" style={{ maxWidth: '180px', width: '100%', margin: '0.5rem auto 1.5rem', display: 'block', opacity: 0.85 }} />
+              <h1 className="hero-title">
+                FERIA DE
+                <span className="hero-highlight">EMPRENDIMIENTO</span>
+                <span className="hero-subtitle">E INNOVACIÓN SOCIAL</span>
+                <span className='hero-subtitle'>2025</span>
+              </h1>
+              <div className="countdown-container">
+                <style>{countdownStyles}</style>
+                <p className="countdown-title">¡La convocatoria cierra en!</p>
+                <div className="countdown-grid">
+                  <div className="countdown-item">
+                    <div className="countdown-value">{timeLeft.days}</div>
+                    <div className="countdown-label">Días</div>
+                  </div>
+                  <div className="countdown-item">
+                    <div className="countdown-value">{timeLeft.hours}</div>
+                    <div className="countdown-label">Horas</div>
+                  </div>
+                  <div className="countdown-item">
+                    <div className="countdown-value">{timeLeft.minutes}</div>
+                    <div className="countdown-label">Minutos</div>
+                  </div>
+                  <div className="countdown-item">
+                    <div className="countdown-value">{timeLeft.seconds}</div>
+                    <div className="countdown-label">Segundos</div>
+                  </div>
+                </div>
+                <div className="hero-decorative-pattern-bottom"></div>
+              </div>
+              <div className="hero-buttons">
+                {convocatoriaTerminada ? (
+                  <div style={{
+                    background: 'rgba(236,72,153,0.08)',
+                    color: '#ec4899',
+                    border: '1px solid #ec4899',
+                    borderRadius: '0.75rem',
+                    padding: '1rem 2rem',
+                    fontWeight: 600,
+                    fontSize: '1.1rem',
+                    marginBottom: '1rem',
+                    textAlign: 'center',
+                    maxWidth: 400,
+                    marginTop: '1rem'
+                  }}>
+                    La convocatoria ha terminado
+                  </div>
                 ) : (
-                  <button onClick={() => { navigate('/login'); setIsMenuOpen(false); }} className="mobile-login-btn">
-                    Iniciar Sesión
+                  <button className="btn-primary" onClick={() => navigate('/alumno/inscripcion')}>
+                    Inscribirse ahora
+                    <ChevronRight size={20} />
                   </button>
                 )}
+                <button
+                  className="btn-secondary"
+                  onClick={() => navigate('/lineamientos')}
+                >
+                  Lineamientos de participación
+                </button>
               </div>
-            </div>
-          </div>
-        )}
-      </header>
+              <p className="hero-description">
+                Conecta, innova y transforma tu comunidad. Únete a la plataforma de emprendimiento
+                más importante de Chiapas y haz realidad tus ideas de impacto social.
+              </p>
 
-      {/* Hero Section */}
-      <section className="hero-section" id='hero-section'>
-        
-      <div className="hero-decorative-pattern"></div>
-        <div className="hero-content">
-          <div className="hero-text">
-            <div className="edition-badge">
-              <span>5TA EDICIÓN</span>
-            </div>
-            <img src={secretariaEduEditadaImg} alt="Secretaría de Educación" style={{ maxWidth: '180px', width: '100%', margin: '0.5rem auto 1.5rem', display: 'block', opacity: 0.85 }} />
-            <h1 className="hero-title">
-              FERIA DE
-              <span className="hero-highlight">EMPRENDIMIENTO</span>
-              <span className="hero-subtitle">E INNOVACIÓN SOCIAL</span>
-              <span className='hero-subtitle'>2025</span>
-            </h1>
-            <div className="countdown-container">
-  <style>{countdownStyles}</style>
-  <p className="countdown-title">¡La convocatoria cierra en!</p>
-  <div className="countdown-grid">
-    <div className="countdown-item">
-      <div className="countdown-value">{timeLeft.days}</div>
-      <div className="countdown-label">Días</div>
-    </div>
-    <div className="countdown-item">
-      <div className="countdown-value">{timeLeft.hours}</div>
-      <div className="countdown-label">Horas</div>
-    </div>
-    <div className="countdown-item">
-      <div className="countdown-value">{timeLeft.minutes}</div>
-      <div className="countdown-label">Minutos</div>
-    </div>
-    <div className="countdown-item">
-      <div className="countdown-value">{timeLeft.seconds}</div>
-      <div className="countdown-label">Segundos</div>
-    </div>
-  </div>
-  <div className="hero-decorative-pattern-bottom"></div>
-</div>
-            <div className="hero-buttons">
-              <button className="btn-primary" onClick={() => navigate('/alumno/inscripcion')}>
-                Inscribirse ahora
-                <ChevronRight size={20} />
-              </button>
-              <button
-                className="btn-secondary"
-                onClick={() => navigate('/lineamientos')}
-              >
-                Lineamientos de participación
-              </button>
-            </div>
-            <p className="hero-description">
-              Conecta, innova y transforma tu comunidad. Únete a la plataforma de emprendimiento 
-              más importante de Chiapas y haz realidad tus ideas de impacto social.
-            </p>
-
-            {/* Stats */}
-            <div className="stats-grid">
-              {stats.map((stat, index) => (
-                <div key={index} className="stat-card">
-                  <stat.icon className="stat-icon" />
-                  <div className="stat-number">{stat.number}</div>
-                  <div className="stat-label">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-      <section id='convocatoria-section'>
-                    {/* Carrusel de imágenes debajo de los botones */}
-                    <div className="section-header">
-                    <h2>Convocatoria</h2>
-                    </div>
-                    <div style={{ maxWidth: '500px', margin: '2rem auto' }}>
-              <div style={{ position: 'relative', width: '100%', overflow: 'hidden', borderRadius: '1rem', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
-                <img
-                  src={images[currentImage]}
-                  alt={`Feria Emprendimiento 2025 ${currentImage + 1}`}
-                  style={{ width: '100%', height: 'auto', display: 'block', opacity: fade ? 1 : 0, transition: 'opacity 0.5s' }}
-                />
-                <button onClick={prevImage} style={{ position: 'absolute', top: '50%', left: 10, transform: 'translateY(-50%)', background: 'transparent', color: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, cursor: 'pointer', fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>&lt;</button>
-                <button onClick={nextImage} style={{ position: 'absolute', top: '50%', right: 10, transform: 'translateY(-50%)', background: 'transparent', color: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, cursor: 'pointer', fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>&gt;</button>
-              </div>
-              <div style={{ textAlign: 'center', marginTop: 8 }}>
-                {images.map((_, idx) => (
-                  <span key={idx} style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: idx === currentImage ? '#0f766e' : '#cbd5e1', margin: '0 4px' }} />
+              {/* Stats */}
+              <div className="stats-grid">
+                {stats.map((stat, index) => (
+                  <div key={index} className="stat-card">
+                    <stat.icon className="stat-icon" />
+                    <div className="stat-number">{stat.number}</div>
+                    <div className="stat-label">{stat.label}</div>
+                  </div>
                 ))}
               </div>
             </div>
-      </section>
-
-      {/* Categories Section */}
-      <section className="categories-section" id="categorias-participacion">
-        <div className="section-content">
-          <div className="section-header">
-            <h2>Categorías de Participación</h2>
-            <p>Encuentra la categoría perfecta para tu proyecto y compite con los mejores emprendedores</p>
           </div>
+        </section>
+        <section id='convocatoria-section'>
+          {/* Carrusel de imágenes debajo de los botones */}
+          <div className="section-header">
+            <h2>Convocatoria</h2>
+          </div>
+          <div style={{ maxWidth: '500px', margin: '2rem auto' }}>
+            <div style={{ position: 'relative', width: '100%', overflow: 'hidden', borderRadius: '1rem', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+              <img
+                src={images[currentImage]}
+                alt={`Feria Emprendimiento 2025 ${currentImage + 1}`}
+                style={{ width: '100%', height: 'auto', display: 'block', opacity: fade ? 1 : 0, transition: 'opacity 0.5s' }}
+              />
+              <button onClick={prevImage} style={{ position: 'absolute', top: '50%', left: 10, transform: 'translateY(-50%)', background: 'transparent', color: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, cursor: 'pointer', fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>&lt;</button>
+              <button onClick={nextImage} style={{ position: 'absolute', top: '50%', right: 10, transform: 'translateY(-50%)', background: 'transparent', color: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, cursor: 'pointer', fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>&gt;</button>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: 8 }}>
+              {images.map((_, idx) => (
+                <span key={idx} style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: idx === currentImage ? '#0f766e' : '#cbd5e1', margin: '0 4px' }} />
+              ))}
+            </div>
+          </div>
+        </section>
 
-          <div className="categories-grid">
-            {categories.map((category, index) => (
-              <div 
-                key={index} 
-                className={`category-card${category.title === 'Energías limpias y Sustentabilidad Ambiental' ? ' energia-margin' : ''}`}
-                style={{ 
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  transform: 'translateY(0)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(15, 118, 110, 0.15)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '';
-                }}
-                onClick={category.onClick}
-              >
-                <div className="category-content">
-                  <div className={`category-icon ${category.colorClass}`}>
-                    <category.icon size={32} />
-                  </div>
-                  <h3>{category.title}</h3>
-                  <p>{category.description}</p>
-                  <div className="category-link">
-                    <span>Más información</span>
-                    <ChevronRight size={16} />
+        {/* Categories Section */}
+        <section className="categories-section" id="categorias-participacion">
+          <div className="section-content">
+            <div className="section-header">
+              <h2>Categorías de Participación</h2>
+              <p>Encuentra la categoría perfecta para tu proyecto y compite con los mejores emprendedores</p>
+            </div>
+
+            <div className="categories-grid">
+              {categories.map((category, index) => (
+                <div
+                  key={index}
+                  className={`category-card${category.title === 'Energías limpias y Sustentabilidad Ambiental' ? ' energia-margin' : ''}`}
+                  style={{
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    transform: 'translateY(0)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(15, 118, 110, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '';
+                  }}
+                  onClick={category.onClick}
+                >
+                  <div className="category-content">
+                    <div className={`category-icon ${category.colorClass}`}>
+                      <category.icon size={32} />
+                    </div>
+                    <h3>{category.title}</h3>
+                    <p>{category.description}</p>
+                    <div className="category-link">
+                      <span>Más información</span>
+                      <ChevronRight size={16} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="cta-section" id='cta-section'>
-        <div className="cta-content">
-          <div className="cta-card">
-            <h2>¿Listo para cambiar el mundo?</h2>
-            <p>
-              Únete a la comunidad de emprendedores más innovadora de Chiapas y haz realidad tu proyecto de impacto social.
-            </p>
-            <div className="cta-buttons">
-              <button className="btn-primary" onClick={() => {
-                if (isLoggedIn) {
-                  navigate('/alumno/subirProyecto');
-                } else {
-                  showAlerta('Primero necesitas inscribirte para poder subir tus documentos. Te estamos redirigiendo al formulario de inscripción en 5 segundos...', 'info');
-                  setTimeout(() => {
-                    navigate('/alumno/inscripcion');
-                  }, 5000);
-                }
-              }}>
-                <Upload size={20} />
-                Subir Documentos
-              </button>
-              <div style={{ position: 'relative' }}>
-                <button
-                  className="btn-secondary"
-                  onClick={() => setDownloadsMenuOpen((open) => !open)}
-                >
-                  <FileText size={20} />
-                  Descargables
-                </button>
-                {downloadsMenuOpen && (
-                  <div 
-                    style={{
-                      position: 'absolute',
-                      top: '110%',
-                      left: 0,
-                      background: '#fff',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '0.5rem',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-                      zIndex: 10,
-                      minWidth: 240,
-                      padding: '0.5rem 0',
-                      maxHeight: 220,
-                      overflowY: 'auto',
-                    }}
-                    className="descargables-dropdown"
-                  >
-                    <a href="/downloads/Caracteristicas RESUMEN EJECUTIVO.pdf" download>Características del Resumen Ejecutivo</a>
-                    <a href="/downloads/FICHA Tecnica Emprendimiento e Innovación 2025.docx" download>Ficha Técnica Emprendimiento e Innovación</a>
-                    <a href="/downloads/LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf" download>Lineamientos Participación y Evaluación</a>
-                    <a href="/downloads/MATERIAL APOYO MODELO CANVAS.pdf" download>Material Apoyo Modelo Canvas</a>
-                    <a href="/downloads/plantilla-canvas-descargable.pptx" download>Plantilla Canvas Descargable</a>
-                    <a href="/downloads/CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf" download>Convocatoria</a>
-                  </div>
-                )}
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-grid">
-            <div className="footer-brand">
-              <div className="footer-logo">
-                <img src={upChiapasHeaderImg} alt="UP Chiapas Footer" style={{ height: '80px', width: 'auto', objectFit: 'contain' }} />
-              </div>
-              <p className="footer-description">
-                Formando emprendedores e innovadores que transforman su comunidad a través de proyectos de impacto social.
+        {/* CTA Section */}
+        <section className="cta-section" id='cta-section'>
+          <div className="cta-content">
+            <div className="cta-card">
+              <h2>¿Listo para cambiar el mundo?</h2>
+              <p>
+                Únete a la comunidad de emprendedores más innovadora de Chiapas y haz realidad tu proyecto de impacto social.
               </p>
-            </div>
-            
-            <div className="footer-links">
-              <h3>Enlaces Rápidos</h3>
-              <ul>
-                <li><a href="#" onClick={(e) => { 
-                  e.preventDefault(); 
-                  navigate('/alumno/inscripcion');
-                }}>Inscribirse</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault();
-                  smoothScrollTo('categorias-participacion');
-                }}>Catálogo de Proyectos</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault();
-                  smoothScrollTo('convocatoria-section');
-                }}>Convocatoria</a></li>
-                <li><a href='#' onClick={(e) => { e.preventDefault(); navigate('/lineamientos'); }}>Lineamientos de participación</a></li>
-              </ul>
-            </div>
-            
-            <div className="footer-dates">
-              <h3>Fechas Importantes</h3>
-              <ul>
-                <li>
-                  <Calendar size={16} />
-                  Registro: 18 Junio - 18 Julio 2025
-                </li>
-                <li>
-                  <Calendar size={16} />
-                  Feria: 21 Julio 2025
-                </li>
-              </ul>
+              <div className="cta-buttons">
+                <button className="btn-primary" onClick={() => {
+                  if (isLoggedIn) {
+                    navigate('/alumno/subirProyecto');
+                  } else {
+                    showAlerta('Primero necesitas inscribirte para poder subir tus documentos. Te estamos redirigiendo al formulario de inscripción en 5 segundos...', 'info');
+                    setTimeout(() => {
+                      navigate('/alumno/inscripcion');
+                    }, 5000);
+                  }
+                }}>
+                  <Upload size={20} />
+                  Subir Documentos
+                </button>
+                <div style={{ position: 'relative' }}>
+                  <button
+                    className="btn-secondary"
+                    onClick={() => setDownloadsMenuOpen((open) => !open)}
+                  >
+                    <FileText size={20} />
+                    Descargables
+                  </button>
+                  {downloadsMenuOpen && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '110%',
+                        left: 0,
+                        background: '#fff',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '0.5rem',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+                        zIndex: 10,
+                        minWidth: 240,
+                        padding: '0.5rem 0',
+                        maxHeight: 220,
+                        overflowY: 'auto',
+                      }}
+                      className="descargables-dropdown"
+                    >
+                      <a href="/downloads/Caracteristicas RESUMEN EJECUTIVO.pdf" download>Características del Resumen Ejecutivo</a>
+                      <a href="/downloads/FICHA Tecnica Emprendimiento e Innovación 2025.docx" download>Ficha Técnica Emprendimiento e Innovación</a>
+                      <a href="/downloads/LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf" download>Lineamientos Participación y Evaluación</a>
+                      <a href="/downloads/MATERIAL APOYO MODELO CANVAS.pdf" download>Material Apoyo Modelo Canvas</a>
+                      <a href="/downloads/plantilla-canvas-descargable.pptx" download>Plantilla Canvas Descargable</a>
+                      <a href="/downloads/CONVOCATORIA 5 FERIA EMPRENDIMIENTO.pdf" download>Convocatoria</a>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-          <div className="footer-logos">
-            <img src={educImg} alt="Educación" className="footer-logo-img" />
-            <img src={secretariaEduImg} alt="Secretaría de Educación" className="footer-logo-img" />
+        </section>
+
+        {/* Footer */}
+        <footer className="footer">
+          <div className="footer-content">
+            <div className="footer-grid">
+              <div className="footer-brand">
+                <div className="footer-logo">
+                  <img src={upChiapasHeaderImg} alt="UP Chiapas Footer" style={{ height: '80px', width: 'auto', objectFit: 'contain' }} />
+                </div>
+                <p className="footer-description">
+                  Formando emprendedores e innovadores que transforman su comunidad a través de proyectos de impacto social.
+                </p>
+              </div>
+
+              <div className="footer-links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                  <li><a href="#" onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/alumno/inscripcion');
+                  }}>Inscribirse</a></li>
+                  <li><a href="#" onClick={(e) => {
+                    e.preventDefault();
+                    smoothScrollTo('categorias-participacion');
+                  }}>Catálogo de Proyectos</a></li>
+                  <li><a href="#" onClick={(e) => {
+                    e.preventDefault();
+                    smoothScrollTo('convocatoria-section');
+                  }}>Convocatoria</a></li>
+                  <li><a href='#' onClick={(e) => { e.preventDefault(); navigate('/lineamientos'); }}>Lineamientos de participación</a></li>
+                </ul>
+              </div>
+
+              <div className="footer-dates">
+                <h3>Fechas Importantes</h3>
+                <ul>
+                  <li>
+                    <Calendar size={16} />
+                    Registro: 18 Junio - 18 Julio 2025
+                  </li>
+                  <li>
+                    <Calendar size={16} />
+                    Feria: 21 Julio 2025
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="footer-logos">
+              <img src={educImg} alt="Educación" className="footer-logo-img" />
+              <img src={secretariaEduImg} alt="Secretaría de Educación" className="footer-logo-img" />
+            </div>
+            <div className="footer-bottom">
+              <p>&copy; 2025 Universidad Politécnica de Chiapas. Todos los derechos reservados.</p>
+            </div>
           </div>
-          <div className="footer-bottom">
-            <p>&copy; 2025 Universidad Politécnica de Chiapas. Todos los derechos reservados.</p>
-          </div>
-        </div>
-      </footer>
-      <Outlet />
-    </div>
+        </footer>
+        <Outlet />
+      </div>
     </>
   );
 };
