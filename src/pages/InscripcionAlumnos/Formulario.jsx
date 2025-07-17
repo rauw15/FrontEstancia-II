@@ -253,8 +253,7 @@ const Formulario = () => {
               >
                 <option value="">-- Selecciona --</option>
                 <option>Ing. Mecatrónica</option>
-                <option>Ing. Software</option>
-                <option>Ingeniería en Tecnologías de la Información e Innovación Digital</option>
+                <option>Ingeniería en Tecnologías de la Información e Innovación Digital "Software"</option>
                 <option>Ing. Biomédica</option>
                 <option>Ing. en Alimentos</option>
                 <option>Ing en Energía y Desarrollo Sostenible</option>
