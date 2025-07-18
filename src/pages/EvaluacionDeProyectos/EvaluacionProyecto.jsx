@@ -71,8 +71,8 @@ const EvaluacionProyecto = () => {
             }
           } catch (e) { /* Puede no tener calificación */ }
           
-          // Mapear la categoría de la base de datos al valor esperado por el frontend
-          const categoriaDB = proy.category || proy.categoria || 'Proyecto Social';
+          // Mapear la categoría desde el usuario ligado al proyecto
+          const categoriaDB = proy.user?.categoria || 'Proyecto Social';
           const tipoMapeado = categoriaMapping[categoriaDB] || 'proyectoSocial';
           
           return {
@@ -367,15 +367,16 @@ const EvaluacionProyecto = () => {
                       <Download size={16} className="icon" />
                       Convocatoria
                     </a>
-                    <a 
+                    <button 
                       className="dropdown-item" 
-                      href={'/downloads/LINEAMIENTOS PARTICIPACION Y EVALUACION.pdf'} 
-                      download
-                      onClick={() => setShowRecursos(false)}
+                      onClick={() => {
+                        navigate('/admin/lineamientos');
+                        setShowRecursos(false);
+                      }}
                     >
-                      <Download size={16} className="icon" />
-                      Lineamientos de Participación
-                    </a>
+                      <FileText size={16} className="icon" />
+                      Lineamientos de participación
+                    </button>
                     <a 
                       className="dropdown-item" 
                       href={'/downloads/FICHA Tecnica Emprendimiento e Innovación 2025.docx'} 
