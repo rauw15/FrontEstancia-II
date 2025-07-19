@@ -48,6 +48,9 @@ function CalificacionesAdmin() {
       
       // El apiService ya parsea el JSON, así que el resultado está listo para usarse.
       setCalificaciones(result || []);
+      if (result && result.length > 0) {
+        console.log('Ejemplo de calificación:', result[0]);
+      }
 
     } catch (error) {
       // El apiService ya maneja los errores, aquí solo mostramos la alerta.
@@ -193,20 +196,22 @@ function CalificacionesAdmin() {
                 </thead>
                 <tbody>
                   {calificacionesOrdenadas.length > 0 ? (
-                    calificacionesOrdenadas.map((calificacion) => (
-                      <tr key={calificacion.id}>
-                        {/* 3. Asegúrate que los nombres de las propiedades coincidan con tu API */}
-                        <td>{calificacion.evaluador ? calificacion.evaluador.username : 'N/A'}</td>
-                        <td>{calificacion.proyecto ? calificacion.proyecto.nombre : 'N/A'}</td>
-                        <td>{calificacion.innovacion}</td>
-                        <td>{calificacion.mercado}</td>
-                        <td>{calificacion.tecnica}</td>
-                        <td>{calificacion.financiera}</td>
-                        <td>{calificacion.pitch}</td>
-                        <td>{calificacion.observaciones}</td>
-                        <td className="highlight-cell">{calificacion.total}</td>
-                      </tr>
-                    ))
+                    calificacionesOrdenadas.map((calificacion) => {
+                      return (
+                        <tr key={calificacion.id}>
+                          {/* 3. Asegúrate que los nombres de las propiedades coincidan con tu API */}
+                          <td>{calificacion.evaluador ? calificacion.evaluador.username : 'N/A'}</td>
+                          <td>{calificacion.proyecto ? calificacion.proyecto.name : 'N/A'}</td>
+                          <td>{calificacion.innovacion}</td>
+                          <td>{calificacion.mercado}</td>
+                          <td>{calificacion.tecnica}</td>
+                          <td>{calificacion.financiera}</td>
+                          <td>{calificacion.pitch}</td>
+                          <td>{calificacion.observaciones}</td>
+                          <td className="highlight-cell">{calificacion.total}</td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
                       <td colSpan="9" className="empty-state">
