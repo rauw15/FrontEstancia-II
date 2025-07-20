@@ -1398,19 +1398,37 @@ const Alumno = () => {
                 Únete a la comunidad de emprendedores más innovadora de Chiapas y haz realidad tu proyecto de impacto social.
               </p>
               <div className="cta-buttons">
-                <button className="btn-primary" onClick={() => {
-                  if (isLoggedIn) {
-                    navigate('/alumno/subirProyecto');
-                  } else {
-                    showAlerta('Primero necesitas inscribirte para poder subir tus documentos. Te estamos redirigiendo al formulario de inscripción en 5 segundos...', 'info');
-                    setTimeout(() => {
-                      navigate('/alumno/inscripcion');
-                    }, 5000);
-                  }
-                }}>
-                  <Upload size={20} />
-                  Subir Documentos
-                </button>
+                {convocatoriaTerminada ? (
+                  <div style={{
+                    background: 'rgba(236,72,153,0.08)',
+                    color: '#ec4899',
+                    border: '1px solid #ec4899',
+                    borderRadius: '0.75rem',
+                    padding: '1rem 2rem',
+                    fontWeight: 600,
+                    fontSize: '1.1rem',
+                    marginBottom: '1rem',
+                    textAlign: 'center',
+                    maxWidth: 400,
+                    marginTop: '1rem'
+                  }}>
+                    La convocatoria ha terminado. Ya no es posible subir proyectos.
+                  </div>
+                ) : (
+                  <button className="btn-primary" onClick={() => {
+                    if (isLoggedIn) {
+                      navigate('/alumno/subirProyecto');
+                    } else {
+                      showAlerta('Primero necesitas inscribirte para poder subir tus documentos. Te estamos redirigiendo al formulario de inscripción en 5 segundos...', 'info');
+                      setTimeout(() => {
+                        navigate('/alumno/inscripcion');
+                      }, 5000);
+                    }
+                  }}>
+                    <Upload size={20} />
+                    Subir Documentos
+                  </button>
+                )}
                 <div style={{ position: 'relative' }}>
                   <button
                     className="btn-secondary"

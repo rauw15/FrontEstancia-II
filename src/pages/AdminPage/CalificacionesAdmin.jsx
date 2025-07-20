@@ -17,6 +17,7 @@ function CalificacionesAdmin() {
   const { isAdmin, isLoggedIn, loading: authLoading } = useAuth();
   const [AlertaComponente, showAlerta] = useAlerta();
   const [calificaciones, setCalificaciones] = useState([]);
+  const [usuarios, setUsuarios] = useState([]); // <-- Nuevo estado para usuarios
   const [isLoading, setIsLoading] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showRecursos, setShowRecursos] = useState(false);
@@ -26,6 +27,26 @@ function CalificacionesAdmin() {
 
   // Ordena las calificaciones por el total, de mayor a menor
   const calificacionesOrdenadas = [...calificaciones].sort((a, b) => (b.total || 0) - (a.total || 0));
+
+  // Obtener la categoría del alumno por username
+  const obtenerCategoriaAlumno = (username) => {
+    const usuario = usuarios.find(u => u.username === username);
+    return usuario ? usuario.categoria : 'N/A';
+  };
+
+  // Transformar datos para exportar a Excel (nombre de proyecto, evaluador y tipo planos)
+  const datosExportar = calificacionesOrdenadas.map((calificacion) => ({
+    Evaluador: calificacion.evaluador ? calificacion.evaluador.username : 'N/A',
+    Proyecto: calificacion.proyecto ? (calificacion.proyecto.nombre || calificacion.proyecto.name) : 'N/A',
+    'Tipo de Proyecto': obtenerCategoriaAlumno(calificacion.alumno?.username),
+    Innovación: calificacion.innovacion,
+    Mercado: calificacion.mercado,
+    Técnica: calificacion.tecnica,
+    Financiera: calificacion.financiera,
+    Pitch: calificacion.pitch,
+    Observaciones: calificacion.observaciones,
+    Total: calificacion.total
+  }));
 
   // Protección de la ruta
   if (authLoading) return <div className="loading-overlay">Cargando...</div>;
@@ -64,6 +85,8 @@ function CalificacionesAdmin() {
   // Cargar las calificaciones cuando el componente se monta por primera vez.
   useEffect(() => {
     handleGetCalificaciones();
+    // Cargar todos los usuarios al montar
+    apiService.getAllUsers().then(setUsuarios);
   }, []); // El array vacío asegura que solo se ejecute una vez al montar.
 
   useEffect(() => {
@@ -71,6 +94,11 @@ function CalificacionesAdmin() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Depuración: mostrar la estructura de la primera calificación
+  if (calificacionesOrdenadas.length > 0) {
+    console.log('Ejemplo de calificación:', calificacionesOrdenadas[0]);
+  }
 
   return (
     <>
@@ -165,7 +193,7 @@ function CalificacionesAdmin() {
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <BtnExportarExcel
-                  datos={calificacionesOrdenadas}
+                  datos={datosExportar}
                   nombreArchivo="Calificaciones"
                   className="refresh-btn"
                 />
@@ -185,6 +213,7 @@ function CalificacionesAdmin() {
                   <tr>
                     <th>Evaluador</th>
                     <th>Proyecto</th>
+                    <th>Tipo de Proyecto</th>
                     <th>Innovación</th>
                     <th>Mercado</th>
                     <th>Técnica</th>
@@ -199,9 +228,9 @@ function CalificacionesAdmin() {
                     calificacionesOrdenadas.map((calificacion) => {
                       return (
                         <tr key={calificacion.id}>
-                          {/* 3. Asegúrate que los nombres de las propiedades coincidan con tu API */}
                           <td>{calificacion.evaluador ? calificacion.evaluador.username : 'N/A'}</td>
-                          <td>{calificacion.proyecto ? calificacion.proyecto.name : 'N/A'}</td>
+                          <td>{calificacion.proyecto ? (calificacion.proyecto.nombre || calificacion.proyecto.name) : 'N/A'}</td>
+                          <td>{obtenerCategoriaAlumno(calificacion.alumno?.username)}</td>
                           <td>{calificacion.innovacion}</td>
                           <td>{calificacion.mercado}</td>
                           <td>{calificacion.tecnica}</td>

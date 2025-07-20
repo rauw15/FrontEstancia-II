@@ -237,6 +237,27 @@ const FormularioEntregaProyecto = () => {
     }
   `;
 
+  const convocatoriaTerminada = new Date() > new Date('2025-07-19T23:59:00');
+
+  if (convocatoriaTerminada) {
+    return (
+      <div style={{
+        background: 'rgba(236,72,153,0.08)',
+        color: '#ec4899',
+        border: '1px solid #ec4899',
+        borderRadius: '0.75rem',
+        padding: '2rem',
+        fontWeight: 600,
+        fontSize: '1.2rem',
+        margin: '2rem auto',
+        textAlign: 'center',
+        maxWidth: 500
+      }}>
+        La convocatoria ha terminado. Ya no es posible subir proyectos.
+      </div>
+    );
+  }
+
   return (
     <>
       <style>{styles}</style>
